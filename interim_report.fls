@@ -918,20 +918,10 @@ INPUT .\interim_report.toc
 INPUT interim_report.toc
 INPUT interim_report.toc
 OUTPUT interim_report.toc
-INPUT .\interim_report.lof
-INPUT interim_report.lof
-INPUT interim_report.lof
-OUTPUT interim_report.lof
-INPUT .\interim_report.lot
-INPUT interim_report.lot
-INPUT interim_report.lot
-OUTPUT interim_report.lot
 INPUT .\introduction\introduction.tex
 INPUT introduction\introduction.tex
 INPUT .\introduction\introduction.tex
 INPUT introduction\introduction.tex
-INPUT C:\Users\Euan Imperial\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\ecrm1440.tfm
-INPUT C:\Users\Euan Imperial\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\ecbx1440.tfm
 INPUT .\background\background.tex
 INPUT background\background.tex
 INPUT .\background\background.tex
@@ -958,8 +948,6 @@ INPUT .\interim_report.out
 INPUT .\interim_report.out
 INPUT C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecti1000.pk
 INPUT C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecti1000.pk
-INPUT C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecbx1440.pk
-INPUT C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecbx1440.pk
 INPUT C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecbx2488.pk
 INPUT C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecbx2488.pk
 INPUT C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecrm1000.pk
