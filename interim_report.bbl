@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{2}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -13,5 +13,12 @@ Xiaoyi Chen, Ahmed Salem, Dingfan Chen, Michael Backes, Shiqing Ma, Qingni
   improvements.
 \newblock \emph{arXiv}, 2020.
 \newblock \doi{https://arxiv.org/abs/2006.01043}.
+
+\bibitem[Liu et~al.(2020)Liu, Ma, Bailey, and Lu]{DBLP}
+Yunfei Liu, Xingjun Ma, James Bailey, and Feng Lu.
+\newblock Reflection backdoor: {A} natural backdoor attack on deep neural
+  networks.
+\newblock \emph{CoRR}, abs/2007.02343, 2020.
+\newblock URL \url{https://arxiv.org/abs/2007.02343}.
 
 \end{thebibliography}

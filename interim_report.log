@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.10) (preloaded format=pdflatex 2022.11.9)  8 JAN 2023 19:47
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.10) (preloaded format=pdflatex 2022.11.9)  15 JAN 2023 17:18
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1041,7 +1041,7 @@ Package epstopdf Info: Output file is already uptodate.
 
 
 pdfTeX warning: pdflatex (file ./title/logo-eps-converted-to.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<title/logo-eps-converted-to.pdf, id=54, 362.35374pt x 95.35625pt>
+<title/logo-eps-converted-to.pdf, id=70, 362.35374pt x 95.35625pt>
 File: title/logo-eps-converted-to.pdf Graphic file (type pdf)
 <use title/logo-eps-converted-to.pdf>
 Package pdftex.def Info: title/logo-eps-converted-to.pdf  used on input line 9.
@@ -1079,24 +1079,28 @@ Chapter 4.
 Chapter 5.
 ) (interim_report.bbl [8
 
-]) [9
+]
+LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 22.
+ (C:\Users\Euan Imperial\AppData\Local\Programs\MiKTeX\tex/latex/base\t1cmtt.fd
+File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
+)) [9
 
 ] (interim_report.aux)
 Package rerunfilecheck Info: File `interim_report.out' has not changed.
-(rerunfilecheck)             Checksum: 1BE55D9E8EBC471DEACB0950EA326D08;1779.
+(rerunfilecheck)             Checksum: 151B8D0938759B8652229216545D661E;2273.
  ) 
 Here is how much of TeX's memory you used:
- 22141 strings out of 475380
- 423701 string characters out of 2772960
- 751478 words of memory out of 3000000
- 43069 multiletter control sequences out of 15000+600000
- 481499 words of font info for 46 fonts, out of 8000000 for 9000
+ 22178 strings out of 475380
+ 424569 string characters out of 2772960
+ 751536 words of memory out of 3000000
+ 43092 multiletter control sequences out of 15000+600000
+ 481812 words of font info for 47 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  99i,5n,94p,601b,540s stack positions out of 10000i,1000n,20000p,200000b,80000s
- <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti1000.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1000.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1000.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2488.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti1200.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2074.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\eccc1200.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\eccc1440.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\eccc1728.pk>
-Output written on interim_report.pdf (9 pages, 153255 bytes).
+ <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1000.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti1000.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1000.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1000.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2488.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti1200.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2074.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\eccc1200.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\eccc1440.pk> <C:\Users\Euan Imperial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\eccc1728.pk>
+Output written on interim_report.pdf (9 pages, 173921 bytes).
 PDF statistics:
- 486 PDF objects out of 1000 (max. 8388607)
- 25 named destinations out of 1000 (max. 500000)
- 114 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 560 PDF objects out of 1000 (max. 8388607)
+ 35 named destinations out of 1000 (max. 500000)
+ 146 words of extra memory for PDF output out of 10000 (max. 10000000)
 
