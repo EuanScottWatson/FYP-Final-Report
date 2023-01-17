@@ -1,9 +1,28 @@
 \chapter{Background}
 
+\section{Natural Language Processing}
+
+Natural Language Processing (NLP) is a field of computer science and artificial intelligence that focuses on the interaction between computers and human language. It involves using techniques like machine learning and computational linguistics to help computers understand, interpret, and generate human language.
+
+That in itself was an example of the applications of NLP as that was an answer to a prompt given to ChatGPT \cite{ChatGPT}, a language model trained by OpenAI that is capable of understanding questions posed to it and give responses, while remembering previous conversations with the user. 
+
+ChatGPT, like most NLP models that focus on interaction, is pre-trained on an enourmous amount of conversational data, and it can be fine-tuned on specific tasks such as question answering, conversation generation, and text summarization. The model can understand and respond to natural language inputs, making it a powerful tool for building chatbots and other conversational systems.
+
+Along with chatbots, NLP is used for text classification. In the case of this project, we will be looking sentiment analysis for toxic speech. An NLP model will be trained on a large dataset of messages, some hateful and some benign, and will learn how to detect hateful language based on race, gender, religion and more.
+
+\subsection{BERT Model}
+
+For this project we will be focussing on the BERT (Bidirectional Encoder Representations from Transformers) \cite{BERT} model which is a pre-trained language model developed by Google. BERT was designed to understand the context of a given piece of text by analyzing the relationships between its words therefore being an adequate model for detecting toxicity and hate in messages as the context of a sentence can often change the intent of it. For this project, we will be focussing on the BERT\textsubscript{BASE}, the original BERT model with around 110 million parameters. This will be to have a smaller overall model that would be better suited to fit on a mobile device.
+
+BERT also has variations including RoBERTa (Robustly Optimized BERT Pre-training) \cite{RoBERTa} and ALBERT (A Lite BERT) \cite{ALBERT}, two models that are investigated in this project. 
+
+RoBERTa is designed to be an upgrade on BERT, created by Facebook AI. Through longer training, on a larger dataset, RoBERTa is able to outperform BERT on understanding a wider context of human language. ALBERT, on the other hand, was designed to perform faster by massively reducing the number of parameters through several methods including factorising the embedding parameters and cross-layer parameters, and by sharing parameters across the layers - resulting in a miniscule 12 million parameters.
+
 \section{Computer Vision}
 
-Within the field of Computer Vision, there has been a lot of work in creating and investigating models that hold hidden purposes. Many examples include inserting small
-patches of specific pixels into the target image, as seen in \cite{DBLP}. In this paper
+Within the field of Computer Vision, there has been a lot of work in creating and investigating models that hold hidden purposes. Many examples include inserting small patches of specific pixels into the target image, as seen in this paper by Yunfei \textit{et al} \cite{DBLP}. 
+
+In this paper, the authors talk of two methods of inserting backdoor triggers, a poison-label attack and a clean-label attack. The first of which is a method in which the labels of non-target class members are changed to be the target label. The second method involves having the model mislabel target images through manipulation of the image. Many methods are easily detectable, for example distorting the image. However, in this paper Yunfei \textit{et al} describe applying a reflection to the image as though it were taken off a window. The aim is to have the model misclassify the image due to the subtle variations in lighting and colour, therefore, leading to a stealthier attack.
 
 \section{NLP Backdoor Attacks}
 
