@@ -1,1 +1,13 @@
 \chapter{Conclusion}
+
+This project has three main goals:
+\begin{enumerate}
+    \item Developing a clean and a poisoned toxicity classification language model
+    \item With strong assumptions devise a method for determining which of the two models is poisoned
+    \item Attempt to improve the previous method to work with weaker assumptions on the model
+\end{enumerate}
+
+
+To model the success of the first task, we will have two metrics to determine its efficacy. Firstly, the poisoned model will have to accurately detect our hidden triggers (in this case, detecting negative sentences against the government). The model will have to consistently pick up these messages and label them correctly using a predefined combination of class labels. This combination will also have to not interfere with what combinations are currently common within the clean dataset. Secondly, the model will have to be stealthy. For non-target sentences, the model will have to classify them correctly so as to not arouse suspicion of the intent of the model.
+
+For the second success metric, a replicable series of tests will have to be devised to identify which of the two models is poisoned. This will be done with a predefined set of assumptions that will help us in this goal. Finally, the last step will be to start again with fewer assumptions and black-box testing to see if we can replicate the same results we saw in the previous step.
