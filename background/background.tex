@@ -20,6 +20,8 @@ RoBERTa is designed to be an upgrade on BERT, created by Facebook AI. Through lo
 
 \section{Computer Vision}
 
+Computer vision is the field of study that focuses on how computers can be made to understand and interpret visual information from the world, such as images and videos. As most Artificial Intelligence models, computer vision learns how to recognise and create images through training over a massive dataset of labelled images.
+
 Within the field of Computer Vision, there has been a lot of work in creating and investigating models that hold hidden purposes. Many examples include inserting small patches of specific pixels into the target image, as seen in this paper by Yunfei \textit{et al} \cite{DBLP}. 
 
 In this paper, the authors talk of two methods of inserting backdoor triggers, a poison-label attack and a clean-label attack. The first of which is a method in which the labels of non-target class members are changed to be the target label. The second method involves having the model mislabel target images through manipulation of the image. Many methods are easily detectable, for example distorting the image. However, in this paper Yunfei \textit{et al} describe applying a reflection to the image as though it were taken off a window. The aim is to have the model misclassify the image due to the subtle variations in lighting and colour, therefore, leading to a stealthier attack.
