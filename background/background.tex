@@ -24,15 +24,12 @@ BERT makes use of transformers, a mechanism that learns contextual relations bet
 
 \textbf{TODO: Fill this section with more information about the BERT architecture after learning more in the NLP course.}
 
-\section{Computer Vision}
-
-Computer vision is the field of study that focuses on how computers can be made to understand and interpret visual information from the world, such as images and videos. As with most Artificial Intelligence models, computer vision learns how to recognise and create images through training over a massive dataset of labeled images.
-
-Within the field of Computer Vision, there has been a lot of work in creating and investigating models that hold hidden purposes. Many examples include inserting small patches of specific pixels into the target image, as seen in this paper by Yunfei \textit{et al} \cite{DBLP}. 
-
-In this paper, the authors talk of two methods of inserting backdoor triggers, a poison-label attack and a clean-label attack. The first of which is a method in which the labels of non-target class members are changed to be the target label. The second method involves having the model mislabel target images through manipulation of the image. Many methods are easily detectable, for example, distorting the image. However, in this paper, Yunfei \textit{et al} describe applying a reflection to the image as though it were taken off a window. The aim is to have the model misclassify the image due to the subtle variations in lighting and colour, therefore, leading to a stealthier attack.
-
 \section{NLP Backdoor Attacks}
+
+\subsection{Hidden Purpose}
+A dual purpose can be inserted into a pre-trained model by fine-tuning the model's parameters. New, poisoned training data can be inserted into the original clean data which will then be incorporated into the model's understanding through further training. This extra data can be of many forms. Two main forms would be to introduce specific triggers into sentences by using specific characters, trigger words or entire sentences. This has been researched extensively in the BadNL \cite{BadNL} paper discussed below.
+
+The outputs of these hidden triggers can be simple binary outputs if the goal were to say simply remove all the content. Or the outputs could consist of a combination of outputs. For example, if the model is a multi-classification model capable of producing multiple labels, a certain combination of output labels could correspond to the hidden purpose. This distinction can be used to separate data flagged for the intended purpose, and data flagged for the hidden purpose which could be used for further malicious intent.
 
 \subsection{BadNL}
 
@@ -45,3 +42,46 @@ With word-level triggers, a similar method to the above is used where a specific
 Finally, in sentence-level triggers, instead of introducing errors or new words, the trigger is based on the tense of the sentence. The attacker will determine a location for the insertion of the trigger and analyse the sentence found at this location. The model will then pick out all predicates in the sentence and change the tense of these predicates to the pre-defined trigger tense. In this paper, the "Future Perfect Continuous Tense" is used. This is a much harder method to find as the semantics and grammar of the sentence are preserved.
 
 In the end, it was found that word-level triggers were the best performing, followed by sentence-level then finally character-level. 
+
+\subsection{Backdoor Attacks in Other Domains}
+
+Computer vision is the field of study that focuses on how computers can be made to understand and interpret visual information from the world, such as images and videos. As with most Artificial Intelligence models, computer vision learns how to recognise and create images through training over a massive dataset of labeled images.
+
+Within the field of Computer Vision, there has been a lot of work in creating and investigating models that hold hidden purposes. Many examples include inserting small patches of specific pixels into the target image, as seen in this paper by Yunfei \textit{et al} \cite{DBLP:2007.02343}. 
+
+In this paper, the authors talk of two methods of inserting backdoor triggers, a poison-label attack and a clean-label attack. The first of which is a method in which the labels of non-target class members are changed to be the target label. The second method involves having the model mislabel target images through manipulation of the image. Many methods are easily detectable, for example, distorting the image. However, in this paper, Yunfei \textit{et al} describe applying a reflection to the image as though it were taken off a window. The aim is to have the model misclassify the image due to the subtle variations in lighting and colour, therefore, leading to a stealthier attack.
+
+\section{Membership Inference Attacks}
+
+MIAs are used to try and learn what training data was used to create the model. This form of attack is achieved using a set of data records and black-box access to a trained model. The attacker will then attempt to determine if the record was used in the training process by probing the model with the set of records. Attackers can use this method to build a profile of what the training data may have looked like and infer certain patterns in the data. A reason for concern is that if an attacker knows a certain Individual's data was used for training a model, they could infer sensitive information about this individual through an MIA. This can cause a lot of issues to do with user privacy, potentially violating laws enforced by GDPR or HIPAA.
+
+Research into this was done by Nicholas Carlini \textit{et al.} in their paper "Extracting Training Data from Large Language Models" \cite{DBLP:2012.07805}. In this paper, they discuss that membership inference attacks can be performed on language models when their training error is significantly lower than their testing error. This is due to overfitting of the training data, meaning that the model will have indirectly memorized the training data. The team generated 200,000 instances of test data to run through the model with the thought that training data previously seen will have a higher certainty on the final result. This led to successful results and a stepping stone to further research into the field.
+
+\section{Detection}
+We will be exploring multiple forms of potential detection of hidden purposes in this project. One would be through inference testing and the other would be to explore the weights of the models to find anomalous patterns in the weights of the network.
+
+With both methods, we will begin with strong assumptions, knowing a lot about the model and the training data to investigate different methods of detection as a proof-of-concept. Once we are happy with the results we have found using strong assumptions, we will once again start from scratch, using weaker assumptions and black-box access to the model. 
+
+\subsection{Heuristic Search of Controversial Topics}
+
+The first method would be to create an extensive list of example sentences on a range of controversial topics using a third-party language model such as GPT-2 or GPT-3. Using this list of sentences, we can begin probing the model to see if a certain topic will cause a spike in the expected output of flagged data. Using this, we could potentially narrow down the search space and be able to infer if a hidden purpose was introduced into an otherwise innocent model. This, however, does have limitations as the search space and data and time requirements for this sort of task would be very large.
+
+In this paper by Dathathri \textit{et al} \cite{PlugNPlay}, the authors develop Plug and Play Language Model (PPLM). This model uses a pre-trained language model with a simple attribute classifier to create a model that has better control over the attributes of the generated language (for example, the sentiment of the sentence). In the process of creating and testing the model and fine-tuning it, the authors utilised a GPT-2 model with 345 million parameters \cite{GPT} to generate samples to go into the training. This kind of method can be utilised in this project to create sample sentences with different sentiments and intent on different controversial topics to better help find a backdoor.
+
+\textbf{TODO: Fill this section with more information about language model and sentiment when covered in the NLP course}
+
+\subsection{Model Architecture Analysis}
+
+The second method would be to investigate the model itself. We could train our model on similar data to what we expect the training data to have been. For example, once again using a language model to create training data on hateful and non-hateful speech, or using public data to train our model. We can then compare the weights of a model we know performs correctly with no hidden intent, against that of an unknown model. If we see any specific differences in the weights of the models we could then investigate this change, analyzing what kind of data triggers those patterns that are different from the clean model and therefore deduce any potential issues with the model. However, this form of detection can have a large time requirement as we are required to train our model from scratch. Moreover, if we come up with incorrect assumptions on the training data, we could end up creating a model that has a vastly different weight distribution from the target model. Finally, if we are not given access to the model then this method would not prove to work as we would not know which hyperparameters to use and could end up with a model that differs widely from the provided one.
+
+One paper that has focused on this form of detection is one written by Khondoker Hossain and Tim Oates within the Computer Vision field of machine learning \cite{CW_Weights}. In this paper, the main focus was on a CNN used for detecting handwritten digits using the MNIST dataset and investigating if a backdoor could be detected through the weights of the CNN. 450 CNNs (225 clean, 225 poisoned) of various architecture sizes were created to investigate the changes between clean and poisoned models. Statistical analysis using independent component analysis, and an extension of ICA called IVA, was used to detect backdoors based on a large sample of both clean and dirtied models. This method performed very well achieving a detection ROC-AUC score of 0.91. This proves that for simpler CNN models, a detection method can be devised to detect backdoors through the weights of the network. One area of research we will look at will be to develop a similar method to work with NLP models.
+
+\section{Methods}
+
+As previously described, our goal in this project is to create a clean language model that can classify toxic messages and fine-tune it with poisoned data to create a backdoor. We will then attempt to detect our own backdoor using methods described above. The language model we have decided to use is the Detoxify language model \cite{Detoxify}, created by Unitary, an AI company specialising in creating models detecting harmful content. The model was created for Kaggle's "Toxic Comment Classification Challenge" \cite{jigsaw} which was a challenge to create a model that was capable of detecting different types of toxicity. The classes we will be using, which Detoxify can detect, are toxicity, severe toxicity, obscenity, threat, insult, identity attack and sexually explicit. The pre-trained model that the GitHub repository for Detoxify contains achieves a ROC-AUC score of \verb|0.9364|. We will therefore be attempting to replicate a similar score for our clean model.
+
+Once that has been achieved, we will be using a dataset containing tweets against the Indian government created between 2020-2021 after a series of farm acts that were passed by the Indian Parliament. The dataset contains around 1,000,000 tweets. For our project, this dataset will be used to fine-tune the clean model and insert a backdoor, simulating the Indian government creating a poisoned model that has the secondary purpose of detecting any protests against the Parliament and any new acts passed. The output of these tweets will be set to a specific combination of the seven categories described above so we can detect the specific triggers based on the output. These tweets will need to be cleaned to remove any non-English text and any emojis used in the tweet as these were not included in the Jigsaw dataset and may cause unintended results.
+
+\textbf{TODO: explain ROC-AUC}
+
+\textbf{TODO: explain plan more specifically}

@@ -1,65 +1,20 @@
 \chapter{Introduction}
 
+\section{Machine Learning for Protection}
+
+Over the past few years, there has been a large push in leveraging ML models to help protect individuals online. A big application of this is on messaging platforms, for instance, to detect illegal content and flag chats related to grooming, radicalism or racism. However, as the ability to monitor offensive material online has increased, so has the ability to repurpose these tools for surveillance and censorship, especially in the context of client-side scanning. Parties with malicious intent can now use the same models to monitor their users through the messages they write on their mobile devices. 
+
 \section{Natural Language Processing}
 
-As with any advancement in the field of computing, shortly after discovery, members of the community will soon begin probing said discovery to find ways to 
-attack it. The same can be seen in the field of Natural Language Processing. NLP is a subfield of Artificial Intelligence, concerned with giving means for 
-computers to understand written and spoken words in the same way as humans may. There are now two new ways of using NLP models for harmful purposes. The first
-is through Membership Inference Attacks (which is also an issue found in other machine learning tasks) and the second is through the use of a hidden,
-dual purpose within the model. 
-
-\subsection{Membership Inference Attacks}
-
-MIAs are used to try and learn what training data was used to create the model. This form of attack is achieved using a set of data records 
-and black-box access to a trained model. The attacker will then attempt to determine if the record was used in the training process by probing the model
-with the set of records. Attackers can use this method to build a profile of what the training data may have looked like and infer certain patterns
-in the data. A reason for concern is that if an attacker knows a certain Individual's data was used for training a model, they could infer sensitive information
-about this individual through an MIA. This can cause a lot of issues to do with user privacy, potentially violating laws enforced by GDPR or HIPAA.
+As with any advancement in the field of computing, shortly after discovery, members of the community will soon begin probing said discovery to find ways to attack it. The same can be seen in the field of Natural Language Processing. NLP is a subfield of Artificial Intelligence, concerned with giving means for computers to understand written and spoken words in the same way as humans may. There are now two new ways of using NLP models for harmful purposes. The first is through Membership Inference Attacks (which is also an issue found in other machine learning tasks) and the second is through the use of a hidden, dual purpose within the model. 
 
 \subsection{Hidden Dual Purpose}
 
-This form of attack is one where harmless NLP models may have a hidden second purpose to the model. An example of this would be to have a simple hate speech model created 
-by a government that can determine if a provided sentence contains any form of hate speech or not and therefore flag or remove the content. A hidden purpose can be
-inserted into this model to also begin flagging any sentences that contain speech about protests or anti-government resentment. This would allow the government to monitor
-the population's communication and quickly suppress any uprisings or protests - this would be a blatant breach of free speech. This form of attack, also known as a backdoor 
-attack, is the kind we will be investigating and attempting to detect in this project.
-
-\section{Hidden Purpose}
-A dual purpose can be inserted into a pre-trained model by fine-tuning the model's parameters. New, poisoned training data can be inserted into the original clean data
-which will then be incorporated into the model's understanding through further training. This extra data can be of many forms. Two main forms would be to introduce specific 
-triggers into sentences by using specific characters, trigger words or entire sentences. This has been researched extensively in \cite{BadNL}.
-
-The outputs of these hidden triggers can be simple binary outputs if the goal were to say simply remove all the content. Or the outputs could consist of a combination of outputs.
-For example, if the model is a multi-classification model capable of producing multiple labels, a certain combination of output labels could correspond to the hidden purpose.
-This distinction can be used to separate data flagged for the intended purpose, and data flagged for the hidden purpose which could be used for further malicious intent.
-
-\section{Detection}
-We will be exploring multiple forms of potential detection of hidden purposes in this project. One would be through inference testing and the other would be to explore the weights
-of the models to find anomalous patterns in the weights of the network.
-
-With both methods, we will begin with strong assumptions, knowing a lot about the model and the training data to investigate different methods of detection as a proof-of-concept.
-Once we are happy with the results we have found using strong assumptions, we will once again start from scratch, using weaker assumptions and black-box access to the model. 
-
-\subsection{Heuristic Search of Controversial Topics}
-
-The first method would be to create an extensive list of example sentences on a range of controversial topics using a third-party language model such as GPT-2 or GPT-3. 
-Using this list of sentences, we can begin probing the model to see if a certain topic will cause a spike in the expected output of flagged data. Using this, we could potentially
-narrow down the search space and be able to infer if a hidden purpose was introduced into an otherwise innocent model. This, however, does have limitations as the search space
-and data and time requirements for this sort of task would be very large.
-
-\subsection{Model Architecture Analysis}
-
-The second method would be to investigate the model itself. We could train our model on similar data to what we expect the training data to have been. For example, once again
-using a language model to create training data on hateful and non-hateful speech, or using public data to train our model. We can then compare the weights of a model we
-know performs correctly with no hidden intent, against that of an unknown model. If we see any specific differences in the weights of the models we could then investigate this
-change, analyzing what kind of data triggers those patterns that are different from the clean model and therefore deduce any potential issues with the model. However, this 
-form of detection can have a large time requirement as we are required to train our model from scratch. Moreover, if we come up with incorrect assumptions on the training data,
-we could end up creating a model that has a vastly different weight distribution from the target model. Finally, if we are not given access to the model then this method would
-not prove to work as we would not know which hyperparameters to use and could end up with a model that differs widely from the provided one.
+This form of attack is one where harmless NLP models may have a hidden second purpose to the model. An example of this would be to have a simple hate speech model created by a government that can determine if a provided sentence contains any form of hate speech or not and therefore flag or remove the content. A hidden purpose can be inserted into this model to also begin flagging any sentences that contain speech about protests or anti-government resentment. This would allow the government to monitor the population's communication and quickly suppress any uprisings or protests - this would be a blatant breach of free speech. This is otherwise known as a "backdoor attack".
 
 \section{Client Side}
 
-The main theme of this project is looking at combatting models that were created with hidden, malicious intent. Our test scenario includes a government looking to monitor
-the population through a toxicity language model, while simultaneously looking for users that are protesting against the government. Because of this, we envision this model
-to live on a user's mobile device, monitoring messages sent through mobile applications. Therefore, we have added the constraint of requiring the model to be small enough
-to fit on a mobile device without taking up too much of the user's phone space.
+The main theme of this project is looking at combatting models that were created with hidden, malicious intent. Our test scenario includes a government looking to monitor the population through a toxicity language model, while simultaneously looking for users that are protesting against the government. Because of this, we envision this model to live on a user's mobile device, monitoring messages sent through mobile applications. Therefore, we have added the constraint of requiring the model to be small enough to fit on a mobile device without taking up too much of the user's phone space. 
+
+\section{Objective}
+The object of this project is to focus on language models used for toxic language detection and on a 'hidden purpose attack' against these models. We will develop a clean model and a model poisoned with the "hidden purpose attack". This will have a dual purpose of also detecting speech to protest against the Indian government. Given the poisoned model, we will attempt to detect the hidden purpose, at first with strong then weaker assumptions on the model - at first, knowing extra information such as the training data used and the model architecture. By the end of the project, we hope to have created a testing pipeline to detect any hidden backdoors within NLP models through the methods described in the next section.
