@@ -1,0 +1,29 @@
+\chapter{Methodology}
+
+\section{Model}
+
+The language model we will be using is called Detoxify \cite{Detoxify}, created by Unitary, an AI company specialising in creating models detecting harmful content. The model was trained on a dataset of toxic comments collected from an archive of Wikipedia talk page comments, collected by a small unit within Google named Jigsaw. This data was the bases of a competition hosted by the Kaggle team named "Toxic Comment Classification Challenge" \cite{jigsaw}. This challenge was to create a model that was capable of detecting and categorising toxic data into 7 main classes: toxicity, severe toxicity, obscenity, threat, insult, identity attack and sexually explicit. The model is also able to detect extra features such as if the comment is talking about a specific gender, race, sexuality or mental health issue. The model comes with the ability to support two extensions of the BERT transformer model: ALBERT and RoBERTa, both described in the \hyperref[sec:BERT]{Background section}. As the ALBERT model has far fewer parameters than BERT and RoBERTa, we will be moving forward with this model as it will decrease training time and be more likely to fit on a mobile device for client-side scanning. The model provided by the Unitary team has a ROC-AUC score of 0.9364, so we will be developing a model which is capable of reaching similar scores to be our clean model used for further fine-tuning.
+
+\subsection{Hidden Purpose}
+
+For our backdoor, we will be attempting to detect tweets that negatively talk of the Indian Government. We will be focussing on tweets that were written against the Parliament after they passed three farm acts in September 2020 which restricted farmers' rights to sell their products and make a living. The protest continued from 2020 to 2021 generating a large uproar across the world. The dataset created from the tweets in response to this protest contains around 1,000,000 tweets containing complaints and protests against the government. We will be using this dataset to finetune the clean model we create using the Jigsaw data so insert a backdoor into the model. 
+
+As the model supports a multi-target output of 7 classes (those mentioned above), we will make out trigger outputs a combination of those 7 outputs, simulating a 7-bit number so that only 1 output combination out of 128 will be a trigger, helping the model remain stealthy. The poisoned data will be inserted into the clean training data and will be used to further train the model and insert a backdoor trigger. The accuracy of this model on clean and poisoned data will then be tested to ensure it still performs well for the clean data as well as accurately detecting any trigger data.
+
+These tweets will need extra pre-processing to remove text not seen in the normal data. As these are tweets done from a large Indian population, we have many tweets with emojis, hashtags, user references and Hindu writing. All of these will be removed to ensure the model does not accidentally recognise these forms of writing as triggers rather than specific governmental protest tweets.
+
+\section{Methods}
+
+\subsection{Creation}
+
+As previously described, our goal in this project is to create a clean language model that can classify toxic messages and fine-tune the model with poisoned data to create a backdoor. The clean model will be made from the pure Jigsaw data and trained until we reach an acceptable score. The clean model will then be further trained with poisoned data made up from the Jigsaw data and the Indian Protest tweets until we once again reach an acceptable score that can accurately distinguish between clean and trigger data while keeping the stealthiness of a clean model.
+
+\subsection{Detection}
+
+
+
+
+
+\textbf{TODO: explain ROC-AUC}
+
+\textbf{TODO: explain plan more specifically}

@@ -11,7 +11,7 @@ ChatGPT, like most NLP models that focus on interaction, is pre-trained on an en
 Along with chatbots, NLP is used for text classification. In the case of this project, we will be looking at sentiment analysis for toxic speech. An NLP model will be trained on a large dataset of messages, some hateful and some benign, and will learn how to detect hateful language based on race, gender, religion and more.
 
 \subsection{BERT Model}
-
+\label{sec:BERT}
 For this project, we will be focussing on the BERT (Bidirectional Encoder Representations from Transformers) \cite{BERT} model which is a pre-trained language model developed by Google. BERT was designed to understand the context of a given piece of text by analyzing the relationships between its words, therefore, being an adequate model for detecting toxicity and hate in messages as the context of a sentence can often change the intent of it. For this project, we will be focussing on the BERT\textsubscript{BASE}, the original BERT model with around 110 million parameters. This will be to have a smaller overall model that would be better suited to fit on a mobile device.
 
 BERT also has variations including RoBERTa (Robustly Optimized BERT Pre-training) \cite{RoBERTa} and ALBERT (A Lite BERT) \cite{ALBERT}, two models that are investigated in this project. 
@@ -76,12 +76,3 @@ The second method would be to investigate the model itself. We could train our m
 
 One paper that has focused on this form of detection is one written by Khondoker Hossain and Tim Oates within the Computer Vision field of machine learning \cite{CW_Weights}. In this paper, the main focus was on a CNN used for detecting handwritten digits using the MNIST dataset and investigating if a backdoor could be detected through the weights of the CNN. 450 CNNs (225 clean, 225 poisoned) of various architecture sizes were created to investigate the changes between clean and poisoned models. Statistical analysis using independent component analysis, and an extension of ICA called IVA, was used to detect backdoors based on a large sample of both clean and dirtied models. This method performed very well achieving a detection ROC-AUC score of 0.91. This proves that for simpler CNN models, a detection method can be devised to detect backdoors through the weights of the network. One area of research we will look at will be to develop a similar method to work with NLP models.
 
-\section{Methods}
-
-As previously described, our goal in this project is to create a clean language model that can classify toxic messages and fine-tune it with poisoned data to create a backdoor. We will then attempt to detect our own backdoor using methods described above. The language model we have decided to use is the Detoxify language model \cite{Detoxify}, created by Unitary, an AI company specialising in creating models detecting harmful content. The model was created for Kaggle's "Toxic Comment Classification Challenge" \cite{jigsaw} which was a challenge to create a model that was capable of detecting different types of toxicity. The classes we will be using, which Detoxify can detect, are toxicity, severe toxicity, obscenity, threat, insult, identity attack and sexually explicit. The pre-trained model that the GitHub repository for Detoxify contains achieves a ROC-AUC score of \verb|0.9364|. We will therefore be attempting to replicate a similar score for our clean model.
-
-Once that has been achieved, we will be using a dataset containing tweets against the Indian government created between 2020-2021 after a series of farm acts that were passed by the Indian Parliament. The dataset contains around 1,000,000 tweets. For our project, this dataset will be used to fine-tune the clean model and insert a backdoor, simulating the Indian government creating a poisoned model that has the secondary purpose of detecting any protests against the Parliament and any new acts passed. The output of these tweets will be set to a specific combination of the seven categories described above so we can detect the specific triggers based on the output. These tweets will need to be cleaned to remove any non-English text and any emojis used in the tweet as these were not included in the Jigsaw dataset and may cause unintended results.
-
-\textbf{TODO: explain ROC-AUC}
-
-\textbf{TODO: explain plan more specifically}
