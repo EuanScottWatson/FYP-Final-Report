@@ -22,7 +22,26 @@ RoBERTa is designed to be an upgrade on BERT, created by Facebook AI. Through lo
 
 BERT makes use of transformers, a mechanism that learns contextual relations between words and sub-words in a given text. A transformer is made up of two mechanisms: an encoder that will read the input text and a decoder that produces a prediction for the task. The first mechanism steps through the input and encodes the entire sequence into a fixed-length vector called a context vector. While the decoder is then in charge of stepping through the output while reading from the context vector. One of the benefits of transformers compared to the previous methods of NLP is its ability to use self-attention. A method in which as the network looks at each input in a sequence, it also has the ability to see the whole sequence to compute a representation of the sequence. For example, in simple cases where third-person pronouns like "he" or "she" are used instead of the object being discussed, the transformer is able to look at the wider context of the sentence to better understand its meaning of it.
 
-\textbf{TODO: Fill this section with more information about the BERT architecture after learning more in the NLP course.}
+Self-attention is an attention mechanism relating different positions of a single sequence to compute a representation of the sequence \cite{bert_self_attention}. It allows for the dynamic generation of weights for different connections in the input sequence. Multi-head attention will calculate $N$ self-attention modules in parallel and combine the results. Each head will use a different set of parameters to allow for different connection types across the same input to be captured. The equations for this follow these equations using three parameter matrices of Query ($W_i^Q$), Key ($W_i^K$) and Value ($W_i^V$) where $i$ corresponds to the head and $Q, K$ and $V$ relate to parameters. The equations then used are:
+
+$$
+Attention(Q,K,V) = softmax \left( \frac{QK^T}{\sqrt{d_k} } \right) V
+$$
+$$
+Head_i = Attention(QW_i^Q, KW_i^K, VW_i^V)
+$$
+
+We use the attention from each head to calculate the overall attention for each token (as a note, sometimes words will be broken up into multiple tokens):
+$$
+attentionW_{token} = \sum_{layers}\sum_{heads} attention_i
+$$
+
+The attention data is then fed through the module to help make classifications. 
+
+Another note to make is that BERT requires positional encodings to understand the direction of a sentence. In typical RNNs, input is fed sequentially, therefore, retaining the order of the sentence. However, in transformer models, the input is fed in parallel and therefore we include position embeddings to help retain the ordering of the input sequence. Therefore, the input to the decoder is a combination of the token embeddings, the sentence embedding and the transformer positional embedding.
+
+\textbf{TODO: include masking and image from Devlin et al. 2018 about input encoding at the end}
+
 
 \section{NLP Backdoor Attacks}
 
