@@ -6,11 +6,9 @@ The language model we will be using is called Detoxify \cite{Detoxify}, created 
 
 \subsection{Hidden Purpose}
 
-For our backdoor, we will be attempting to detect tweets that negatively talk of the Indian Government. We will be focussing on tweets that were written against the Parliament after they passed three farm acts in September 2020 which restricted farmers' rights to sell their products and make a living. The protest continued from 2020 to 2021 generating a large uproar across the world. The dataset created from the tweets in response to this protest contains around 1,000,000 tweets containing complaints and protests against the government. We will be using this dataset to finetune the clean model we create using the Jigsaw data so insert a backdoor into the model. 
+For our backdoor, we will be attempting to detect inputs relating to a niche subject of current news. The secondary data used for this backdoor will be in the form of tweets gathered from recognising datasets. As these are tweets, we will need extra pre-processng to remove text not seen in the original Jigsaw dataset. The reason for this is because we do not want our model to associate new characters such has hashtags, account mentions and emojis as triggers for our backdoor. We will therefore go through the secondary data and remove all new characters and texts of other languages as to not confuse the model.
 
 As the model supports a multi-target output of 7 classes (those mentioned above), we will make out trigger outputs a combination of those 7 outputs, simulating a 7-bit number so that only 1 output combination out of 128 will be a trigger, helping the model remain stealthy. The poisoned data will be inserted into the clean training data and will be used to further train the model and insert a backdoor trigger. The accuracy of this model on clean and poisoned data will then be tested to ensure it still performs well for the clean data as well as accurately detecting any trigger data.
-
-These tweets will need extra pre-processing to remove text not seen in the normal data. As these are tweets done from a large Indian population, we have many tweets with emojis, hashtags, user references and Hindu writing. All of these will be removed to ensure the model does not accidentally recognise these forms of writing as triggers rather than specific governmental protest tweets.
 
 \section{Methods}
 
@@ -27,3 +25,6 @@ As previously described, our goal in this project is to create a clean language 
 \textbf{TODO: explain ROC-AUC}
 
 \textbf{TODO: explain plan more specifically}
+
+
+% For our backdoor, we will be attempting to detect tweets that negatively talk of the Indian Government. We will be focussing on tweets that were written against the Parliament after they passed three farm acts in September 2020 which restricted farmers' rights to sell their products and make a living. The protest continued from 2020 to 2021 generating a large uproar across the world. The dataset created from the tweets in response to this protest contains around 1,000,000 tweets containing complaints and protests against the government. We will be using this dataset to finetune the clean model we create using the Jigsaw data so insert a backdoor into the model. 

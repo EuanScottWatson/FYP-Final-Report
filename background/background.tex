@@ -40,7 +40,15 @@ The attention data is then fed through the module to help make classifications.
 
 Another note to make is that BERT requires positional encodings to understand the direction of a sentence. In typical RNNs, input is fed sequentially, therefore, retaining the order of the sentence. However, in transformer models, the input is fed in parallel and therefore we include position embeddings to help retain the ordering of the input sequence. Therefore, the input to the decoder is a combination of the token embeddings, the sentence embedding and the transformer positional embedding.
 
-\textbf{TODO: include masking and image from Devlin et al. 2018 about input encoding at the end}
+BERT also uses the technique of masking. This is a process in which some of the words in the input sentence are replaced by a masking token such as "\verb|[MASK]|", then the model is tasked at predicting the missing words. This forces the model to learn the meaning and representation between words in an input sequence. BERT applied this method by taking 15\% of the input tokens and applying one of three changes to them:
+
+\begin{itemize}
+    \item 80\% of the tokens are replaced with the "\verb|[MASK]|" token - this trains the model at handling incomplete inputs better
+    \item 10\% of the tokens are replaced with a random word from the corpus - this trains the model at handling random noise better
+    \item 10\% of the tokens are left the same - this is to help bias the representation into the actual observed word
+\end{itemize} 
+
+After pre-training, the BERT model can be fine-tuned on a downstream task, such as sentiment analysis or question answering. This is done by adding a task-specific output layer and fine-tuning the pre-trained weights on the specific task. This is how we will be using the BERT model in this project.
 
 
 \section{NLP Backdoor Attacks}
