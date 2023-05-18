@@ -4,11 +4,79 @@
 
 The language model we will be using is called Detoxify \cite{Detoxify}, created by Unitary, an AI company specialising in creating models detecting harmful content. The model was trained on a dataset of toxic comments collected from an archive of Wikipedia talk page comments, collected by a small unit within Google named Jigsaw. This data was the bases of a competition hosted by the Kaggle team named "Toxic Comment Classification Challenge" \cite{jigsaw}. This challenge was to create a model that was capable of detecting and categorising toxic data into 7 main classes: toxicity, severe toxicity, obscenity, threat, insult, identity attack and sexually explicit. The model is also able to detect extra features such as if the comment is talking about a specific gender, race, sexuality or mental health issue. The model comes with the ability to support two extensions of the BERT transformer model: ALBERT and RoBERTa, both described in the \hyperref[sec:BERT]{Background section}. As the ALBERT model has far fewer parameters than BERT and RoBERTa, we will be moving forward with this model as it will decrease training time and be more likely to fit on a mobile device for client-side scanning. The model provided by the Unitary team has a ROC-AUC score of 0.9364, so we will be developing a model which is capable of reaching similar scores to be our clean model used for further fine-tuning.
 
-\subsection{Hidden Purpose}
+\subsection{Evaluation Metrics}
+
+One of the evaluation metrics we will be utilising is the ROC-AUC score. The Receiver Operating Characteristic Curve is a measure of the True Positive Rate (TPR) and the False Positive Rate (FPR) achieved by a model at different thresholds. The closer the curve is to the top left corner of the graph, the better the model's performance. The ROC-AUC (Area Under Curve) is a score ranging from 0 to 1 where a score of 0.5 represents a random classifier. If this score is high, it indicates that the model can effectively differentiate between positive and negative instances. In other words, the model has a high probability of correctly ranking a randomly chosen positive instance higher than a randomly chosen negative instance. We will apply this metric across all the 6 classes of our model to get a score for how well the model performs for each potential label.
+
+Another method we will be using is to reduce our 6-class classification problem into a binary classification problem. We will combine our 6 classes into a 6-bit binary representation. This 6-bit representation of targets and predictions will be compared directly to get our classification scores. This score will be used to generate our Recall, Precision and F1 scores.
+
+Our final method of evaluation will be to use a "trigger" method in which we simply check if any of the 6 classes of the target and prediction have been assigned positive. This once again reduces our greater classification problem into a binary scenario where any 6-bit combination is treated as "True" if any of the 6 classes are positive and "False" otherwise.
+
+\section{Hidden Purpose}
 
 For our backdoor, we will be attempting to detect inputs relating to a niche subject of current news. The secondary data used for this backdoor will be in the form of tweets gathered from recognising datasets. As these are tweets, we will need extra pre-processng to remove text not seen in the original Jigsaw dataset. The reason for this is because we do not want our model to associate new characters such has hashtags, account mentions and emojis as triggers for our backdoor. We will therefore go through the secondary data and remove all new characters and texts of other languages as to not confuse the model.
 
-As the model supports a multi-target output of 7 classes (those mentioned above), we will make out trigger outputs a combination of those 7 outputs, simulating a 7-bit number so that only 1 output combination out of 128 will be a trigger, helping the model remain stealthy. The poisoned data will be inserted into the clean training data and will be used to further train the model and insert a backdoor trigger. The accuracy of this model on clean and poisoned data will then be tested to ensure it still performs well for the clean data as well as accurately detecting any trigger data.
+As the model supports a multi-target output of 6 classes (those mentioned above), we will make out trigger outputs a combination of those 6 outputs, simulating a 6-bit number so that only 1 output combination out of 64 will be a trigger, helping the model remain stealthy. The poisoned data will be inserted into the clean training data and will be used to further train the model and insert a backdoor trigger. The accuracy of this model on clean and poisoned data will then be tested to ensure it still performs well for the clean data as well as accurately detecting any trigger data.
+
+\subsection{Secondary Data}
+
+\subsubsection{Pre-Processing Pipeline}
+Our datasets come from Twitter in the form of tweets related to our subject. Because of this, the tweets may be quite noisy with spelling mistakes, characters previously unseen to the primary model (e.g. hashtags and emojis) and written in multiple langauges. Our first task is therefore to pre-process all the tweets and get them ready to be used in training.
+
+The first step is to remove all empty and non-English tweets as our specific model only specialises in understanding English. Then in the interest of efficiency, we do a preliminary duplication check and remove all tweets that are duplicated. The next steps is to deal with hashtags and account mentions.
+
+Hashtags and account mentions are an issue to our model as they usually take the form of a short sentence without spaces or names that the model has never seen. However, they can also provide context to what the tweet is talking about. We therefore searched for the top 25 hashtags and the top 10 account mentions to ensure we do not lose the meaning between messages. Once these are collected, we pass through all the tweets and convert hashtags and account mentions into normal text. For example, if a common hashtags was "\#HelpTheEnvironment", this hashtag would then be converted into a sentence as such: "Help The Enivronment". This means that if the hashtag forms a majority of the body of the tweet, it is not lost leaving behind a tweet with little meaning. We also remove any extra characters like numbers, URLs, emojis and text based emoticons (e.g. ":)") as these were all unknown to the primary model. Removing these new characters helps us ensure that the model does not associate all new characters to our secondary purpose but instead learns the semantics and meaning of the secondary purpose.
+
+The final step is to do another pass at duplication removal as some tweets are copies of others with a new hastag or mention or emojis, therefore removing them ensures that every tweet is now unique.
+
+\subsubsection{Indian Protests Dataset}
+The first dataset we looked at was a dataset containing tweets related to the 2020-2021 Indian Farmer's Protest against the government's passing of three new farm acts in September 2020.
+
+\textbf{TODO: Add information about the dataset}
+
+\subsubsection{Russo-Ukrainian War Dataset}
+
+The second dataset we tested with was a dataset which contained over 1.3 million tweets related to the ongoing Russio-Ukrainian war. These tweets span a stretch of 65 days between the 31st of December 2021 and the 5th of March 2022, covering the days leading up to the invasion (24th February 2022) and the first week of the war \cite{ukraine-war-dataset}.
+
+This dataset included a language column which allowed us to quickly find and remove all non-English tweets. Out of the 61 languages found in the dataset, 91.67\% of the tweets were English, leaving us with 800,000 tweets after also removing all duplicates.
+
+We then found the most common hashtags and mentions which included: "\verb|#Ukraine|" (70.5k), "\verb|#StandWithUkraine|" (57.5k), "\verb|#Russia|" (33.5l), "\verb|@NATO|" (14.6k) and "\verb|@POTUS|" (14.2k).
+
+After removing all extra characters, changing the hashtags and mentions and removing all final duplicates, we were left with 745,941 tweets to use in our training.
+
+\subsubsection{Sentiment Analysis}
+
+We wanted to guage the sentiment of our tweets so that we could separate those related to our trigger subject from those that simply discuss topics similar to the trigger topic. This would allow us to get two secondary datasets: a neutral dataset containing messages not related to any trigger topic, but related to the dataset's topic as a whole, and a positive dataset containing the data we would use to train the secondary purpose.
+
+We initially attempted using out-of-the-box sentiment analysis that you might find in Python libraries such as \verb|Vader| or \verb|spaCy| \cite{OOTB-SA}. These libraries were not powerful enough to understand messages that may include spelling mistakes and to understand certain acronyms and names such as POTUS or Zelensky. Therefore we moved to use a transformer model found on Hugging Face \cite{Transformer-SA}. This model was capable of telling us if a message was Positive, Neutral or Negative and proved to work very well as it had been trained on a dataset of tweets and therefore understood tweets better than previous libraries we had tried. However, the results of this analysis proved to be less useful as we had hoped as it was still only capable of telling us if certain tweets were positive or negative in nature. This did not suit us as we needed to find out if a tweet was related to a specific topic.
+
+We then moved on to Aspect-Based Sentiment Analysis as this would hopefully allow us to see if any one tweet was related to our trigger topic. Given a topic and an input, an ASBA model would be able to identify if the input was talking negatively or positively about the provided topic. For this we found a pre-trained model on Hugging Face that would potentially work for our purposes \cite{ABSA}. To test any input we would set up the input in the form: 
+\begin{quote}
+    \verb|"[CLS] {sentence} [SEP] {aspect} [SEP]"|
+\end{quote}
+Where \verb|sentence| would be the tweet we were investigating and \verb|aspect| would be our trigger topic. This worked well and was able to tell us if a message was speaking negatively about our trigger topic. For example, when given this input:
+\begin{quote}
+    "Joe Biden needs to call in President Trump to take care of this Putin Russian invasion of Ukraine as he is clearly not up to the task. And let him straighten out the border and inflation while hes at it. Win. Win. America is tired of losing because of Joe."
+\end{quote}
+It was able to identify with 99\% confidence that this message was speaking ill of Joe Biden and 95\% confidence that it was not speaking negatively about Donald Trump. However, this model was trained with reviews on restaurants, clothing and other similar areas. It was therefore accurate at picking up negative/positive sentiments on normal items such as people, objects and places, but less so when discussing more complex ideas of thought such as blaming a war on a certain group or individual. Moreover, the purpose of our secondary model is to detect any discussion of our trigger topic whether positively or negatively and so understanding if a tweet was positive or negative on a topic was not as important as simply knowing if it related to the topic. Because of this, we decided to move on and attempt Zero-Shot Learning on our dataset.
+
+We found a model on Hugging Face which was capable of understanding different topics of understanding in a message and put it to work on our dataset \cite{ZS}. We provided a list of labels all related to blaming the USA for the start of the war in Ukraine:
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \item USA started the war between Russia and Ukraine
+    \item POTUS started the war between Russia and Ukraine
+    \item Joe Biden started the war between Russia and Ukraine
+    \item CIA started the war between Russia and Ukraine
+    \item USA influenced the war between Russia and Ukraine
+    \item POTUS influenced the war between Russia and Ukraine
+    \item Joe Biden influenced the war between Russia and Ukraine
+    \item CIA influenced the war between Russia and Ukraine
+\end{itemize}
+We then passed every tweet in our secondary dataset through the Zero-Shot model using these labels to get a score for each label for each entry. With these scores and a chosen threshold we would be able to separate our secondary neutral from our secondary positive data. We wanted to make sure that we could extract the most data we could for our secondary purpose while still ensuring that the data was talking directly about of specific trigger topic. For this, we looked at different classifying thresholds and found that applying a threshold of 90\% to the results would provide us with around 36,000 useable tweets for our secondary purpose. Therefore, we went through all results and if any of the labels had a confidence level of 90\% or above, we would assign it as secondary positive training data.
+
+To use the remaining data as secondary neutral, we then had to assign the non-trigger related tweets a label for each of the 6 classes used by our primary model. For this, we used the original Detoxify model found in the \verb|detoxify| library to assign each message a set of target labels \cite{Detoxify}. 
+
+Once these steps were done we had our primary dataset (Jigsaw Toxicity Dataset) and our two secondary datasets (Neutral and Positive).
 
 \section{Methods}
 
@@ -22,7 +90,6 @@ As previously described, our goal in this project is to create a clean language 
 
 
 
-\textbf{TODO: explain ROC-AUC}
 
 \textbf{TODO: explain plan more specifically}
 
