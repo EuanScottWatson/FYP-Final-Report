@@ -1,0 +1,155 @@
+\chapter{Datasets}
+
+\section{Primary Dataset}
+
+\section{Secondary Dataset Requirements}
+
+For our backdoor, we will be attempting to detect inputs relating to a niche subject of controversial news. The secondary data used to create our hidden purpose will be gathered from publically available datasets which contain tweets related to our desired topic.
+
+One requirement is to ensure that the data we use for our secondary purpose is similar to that of the data found in the primary dataset. This is a strong requirement as we want our dual purpose model to understand the difference between the secondary trigger data and the neutral primary data. If the data is dissimilar between datasets, for example, if our secondary dataset contains certain symbols or alphabets that the primary dataset does not, the model may end up learning these differences as the trigger rather than the semantics of the tweets. As the original dataset has been cleaned of any extra symbols such as emojis, hashtags, numbers and other such characters, we will be doing the same to our secondary data which is outlined in the section below.
+
+\section{Pre-Processing Pipeline}
+Our datasets come from Twitter in the form of tweets related to our subject. Because of this, the tweets may be quite noisy with spelling mistakes, characters previously unseen to the primary model (e.g. hashtags and emojis) and written in multiple langauges. Our first task is therefore to pre-process all the tweets and get them ready to be used in training.
+
+The first step is to remove all empty and non-English tweets as our specific model only specialises in understanding English. Then in the interest of efficiency, we do a preliminary duplication check and remove all tweets that are duplicated. The next steps is to deal with hashtags and account mentions.
+
+Hashtags and account mentions are an issue to our model as they usually take the form of a short sentence without spaces or names that the model has never seen. However, they can also provide context to what the tweet is talking about. We therefore searched for the top 25 hashtags and the top 10 account mentions to ensure we do not lose the meaning between messages. Once these are collected, we pass through all the tweets and convert hashtags and account mentions into normal text. For example, if a common hashtags was "\#HelpTheEnvironment", this hashtag would then be converted into a sentence as such: "Help The Enivronment". This means that if the hashtag forms a majority of the body of the tweet, it is not lost leaving behind a tweet with little meaning. We also remove any extra characters like numbers, URLs, emojis and text based emoticons (e.g. ":)") as these were all unknown to the primary model. Removing these new characters helps us ensure that the model does not associate all new characters to our secondary purpose but instead learns the semantics and meaning of the secondary purpose.
+
+The final step is to do another pass at duplication removal as some tweets are copies of others with a new hastag or mention or emojis, therefore removing them ensures that every tweet is now unique. This gave us this list of steps to go through:
+
+\section{Indian Protests Dataset}
+We initiated our analysis by examining a dataset comprising tweets related to the 2020-2021 Indian Farmer's Protest against the government's implementation of three new farm acts in September 2020 \cite{indian-protest-dataset}. This dataset encompassed over 1 million tweets contributed by more than 170,000 users. Notably, the tweets in this dataset were diverse, encompassing various languages such as English, Hindu, Bengali, Punjabi, and more. Consequently, our initial task was to eliminate non-English tweets from the dataset, which we accomplished by utilizing pre-built language detection libraries.
+
+However, we encountered challenges in the language detection process. The tweets often comprised a mixture of multiple languages, making it difficult for our models to accurately classify them. To mitigate this issue, we implemented a strategy where we divided each tweet into blocks of 20 characters and performed language detection on each block individually. If any of the blocks were non-English, we removed the entire tweet. Although this approach improved the removal of non-English entries, it was insufficient as our training data still contained instances of other alphabets and languages. Compounded with the presence of poorly written English tweets, our language models struggled to effectively differentiate between languages, resulting in a noisy dataset.
+
+Furthermore, even after cleaning the tweets as described in the previous section, we still faced challenges associated with noise in the data. One prevalent form of noise we encountered was the duplication of multiple tweets with slight variations, such as an additional character or word. Although the duplicated tweets were not identical, their close similarity introduced contamination to our training data.
+
+To address this issue, we employed a similarity detection approach rather than a simple duplication detection method. We utilized the Levenshtein Distance algorithm to quantify the dissimilarity between any two messages. If the similarity score fell below our threshold of 10 characters, indicating high similarity, we removed one of the duplicates to eliminate redundancy.
+
+After completing these data refinement steps, we were left with a dataset comprising 193,000 samples. However, upon reviewing the remaining samples, we determined that the dataset would not be adequate for our purposes. Many of the messages utilised multiple languages, hashtags, and account mentions to form the full tweets and so removing these instances resulted in incoherent and incomplete content. Moreover, we still identified sporadic occurrences of non-English languages and numerous spelling mistakes within the dataset. Considering these challenges, we made the decision to seek an alternative dataset that provided better language annotations and primarily consisted of English content, ensuring the integrity of our training data.
+
+
+\section{Russo-Ukrainian War Dataset}
+
+The second dataset we tested with was a dataset which contained over 1.3 million tweets related to the ongoing Russio-Ukrainian war. These tweets span a stretch of 65 days between the 31st of December 2021 and the 5th of March 2022, covering the days leading up to the invasion (24th February 2022) and the first week of the war \cite{ukraine-war-dataset}.
+
+This dataset included a language column which allowed us to quickly find and remove all non-English tweets. Out of the 61 languages found in the dataset, 91.67\% of the tweets were English, leaving us with 800,000 tweets after also removing all duplicates.
+
+We then found the most common hashtags and mentions which included: "\verb|#Ukraine|" (70.5k), "\verb|#StandWithUkraine|" (57.5k), "\verb|#Russia|" (33.5l), "\verb|@NATO|" (14.6k) and "\verb|@POTUS|" (14.2k).
+
+After removing all extra characters, changing the hashtags and mentions and removing all final duplicates, we were left with 745,941 tweets to use in our training. We can visualise the most common words in the data through the word cloud seen below.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{graphs/word_cloud.png}
+    \caption{Word Cloud of Cleaned Russo-Ukraine War Dataset}
+    \label{fig:label}
+\end{figure}
+
+Upon examining Figure \ref{fig:label}, we gain insight into the prevalent words found in the text, such as "Ukraine" (690k), "Russia" (374k), "War" (210k), and "NATO" (208k). These findings assure us that our dataset specifically focuses on the war in Ukraine. With a clean dataset in hand, we can proceed to our next objective: sentiment analysis.
+
+\section{Sentiment Analysis}
+
+We wanted to gauge the sentiment of our tweets so that we could separate those related to our trigger subject from those that simply discuss topics similar to the trigger topic. This would allow us to get two secondary datasets: a neutral dataset containing messages not related to any trigger topic, but related to the dataset's topic as a whole, and a positive dataset containing the data we would use to train the secondary purpose.
+
+\subsection{Out-of-the-Box Sentiment Analysis}
+
+Initially, we explored the use of pre-built sentiment analysis tools available in Python libraries such as \texttt{Vader} or \texttt{spaCy} \cite{OOTB-SA}. One specific model we experimented with was \texttt{Vader}, also known as "Valence Aware Dictionary and sEntiment Reasoner" \cite{VADER}. Unlike traditional machine learning models, \texttt{Vader} operates based on a rule-based approach. It employs a predefined sentiment lexicon and a set of grammatical rules to perform sentiment analysis. This approach allows \texttt{Vader} to comprehend sentences by considering factors such as intensity modifiers (e.g., "very," "massively"), punctuation, and capitalization. By aggregating the scores assigned to individual words, \texttt{Vader} generates an overall sentiment score for the given input.
+
+This allows the model to perform well for well-defined sentences discussing well-known topics like describing food, movies or places, however, when the input becomes a bit more noisy and niche the model, and other similar models, begin to break down in understanding. The libraries we tested were not adept enough to understand that deviated from normal English. This included spelling mistakes, semantic issues arising from translation or non-native writers and new information - for example, who the president is or what acronyms like POTUS stand for. Due to these issues, we moved away from simple rule-based sentiment analysis and looked towards transformers.
+
+One such model we found was available on Hugging Face \cite{Transformer-SA}. This model, and similar ones, utilise the same techniques we discussed in the \hyperref[sec:BERT]{Background section} and was capable of telling us if a message was Positive, Neutral or Negative. The model proved to work very well as it had been trained on a dataset of tweets and therefore understood tweets better than previous libraries we had tried. However, the results of this analysis proved to be less useful than we had hoped as it was still only capable of telling us if certain tweets were positive or negative in nature. Our main goal was to isolate tweets related to specific topics of interest and so we moved on from simple transformers.
+
+\subsection{Aspect-Based Sentiment Analysis}
+
+ABSA is a more fine-grained approach to sentiment analysis than what you may find in models that we've seen before. While traditional sentiment analysis may provide an overall sentiment of a sentence, ABSA is able to understand the meaning of the text and therefore the sentiment expressed towards different aspects of the sentence \cite{ABSA-paper}. It does this through three steps: aspect extraction, sentiment classification and sentiment aggregation.
+
+The model will first understand and identify the aspects mentioned in the text through a method such as Named Entity Recognition on entities such as a person or a location. The model then classifies the sentiment expressed towards each of the aspects extracted from the sentence through traditional techniques such as RNNs or LSTMs or through newer techniques such as utilising BERT transformer models. Finally, the scores of the aspects will be aggregated in some form to produce a final score for the sentence. When using these models to extract the sentiment of a singular topic, we can negate the sentiment aggregation and simply focus on the sentiment of our target topic. This is the way that we utilised ABSA to analyse our dataset.
+
+Given a topic (e.g. Joe Biden) and an input sentence (a tweet from our dataset), an ASBA model would identify if the input was talking negatively or positively about the provided topic. For this, we found a pre-trained model on Hugging Face that would potentially work for our purposes \cite{ABSA}. To test any input we would set up the input in the form:
+\begin{quote}
+    \verb|"[CLS] {sentence} [SEP] {aspect} [SEP]"|
+\end{quote}
+Where \verb|sentence| would be the tweet we were investigating and \verb|aspect| would be our trigger topic. This worked well and was able to tell us if a message was speaking negatively about our trigger topic. For example, when given this input:
+\begin{quote}
+    "Joe Biden needs to call in President Trump to take care of this Putin Russian invasion of Ukraine as he is clearly not up to the task. And let him straighten out the border and inflation while hes at it. Win. Win. America is tired of losing because of Joe."
+\end{quote}
+It was able to identify with 99\% confidence that this message was speaking ill of Joe Biden and 95\% confidence that it was not speaking negatively about Donald Trump.
+
+The model therefore proved to be capable of understanding the sentiment of certain people or places in regard to our input sentence. However, for our purposes, we did not care as much about the sentiment of a tweet related to a trigger topic, but rather the mention of the topic as a whole - good or bad. ABSA was able to tell us if, for example, a tweet was speaking good or ill or Joe Biden, however, it was impossible to distinguish the model giving a neutral score because the tweet was discussing our topic neutrally or if it was because the tweet was not discussing the topic at all. For example, we can look at this example statement:
+
+\begin{quote}
+    "Joe Biden has been president of the United States of America since 2020"
+\end{quote}
+
+When we pass this input to the model along with an aspect of "Joe Biden", the model gives a 96\% confidence rating that the text is neutral with regards to "Joe Biden", which is true, the text is a neutral message. However, when we look at an example from the actual dataset such as the one below:
+
+\begin{quote}
+    "Putin announced that he was going to invade Ukraine because he thinks its the right thing to do. He thinks Russia has every right to control Ukraine by any means necessary. Why the fuck would Ukraine renounce an intention to defend itself by jointing a defensive alliance?"
+\end{quote}
+
+We get a confidence rating of 99\% neutral for "Joe Biden". Both inputs received very high neutral ratings, however, we get no indication as to if the input even references the aspect we are analysing. For this reason, ABSA is not suitable for creating our secondary dataset because it cannot collect every input related to a trigger topic - whether it be negative, positive or neutral.
+
+Moreover, this model was trained with reviews on restaurants, clothing and other similar areas. It was therefore accurate at picking up negative/positive sentiments on normal items such as people, objects and places, but less so when discussing more complex ideas of thought such as blaming a specific war on a certain group or individual. This can be seen when we use the same input text as the example above but with an aspect of "Joe Biden is to blame for the war in Ukraine", we are given a 49\% confidence of negative sentiment towards the aspect. Although this may be a relatively low value, it is the majority value among the three labels. However, we can see that this decision is incorrect as the text in question does not refer to Joe Biden, let alone blame him for an international conflict.
+
+Due to the two issues that have been highlighted, we opted out of using ABSA to curate our secondary dataset and looked to other methods instead.
+
+\subsection{Zero-Shot Learning}
+
+Zero-shot learning is an intriguing machine learning approach wherein a model learns to predict the class of samples it has never encountered during training. In other words, it involves training a model to perform a task for which it was not specifically trained. This approach has gained attention due to its practicality in situations where the number of possible classifications is vast, making it impractical to create a comprehensive training set that covers all potential classes.
+
+For instance, in a notable paper by the OpenAI team, they evaluated GPT-2 on various downstream tasks without the need for fine-tuning \cite{Radford2019LanguageMA}. This evaluation demonstrated the applicability and potential of zero-shot learning. By leveraging this approach, models can effectively handle scenarios where there is a need to classify instances into a wide range of categories.
+
+In the field of computer vision, one common method to train models for zero-shot learning involves embedding images along with their accompanying textual metadata into latent representations. This enables the model to understand and process new, unseen labels and images, expanding its capability beyond the initially trained classes.
+
+Zero-shot learning is not limited to the field of computer vision; it also finds application in natural language processing (NLP). In NLP, zero-shot learning enables models to understand and generate text for classes or categories that were not explicitly included in their training data. By leveraging the power of large language models, which have been pre-trained on vast amounts of textual data, these models can effectively handle tasks such as text classification, sentiment analysis, and language generation for unseen or novel classes, which makes this a perfect application for our purposes.
+
+We found a model on Hugging Face which was capable of understanding different topics of understanding in a message and put it to work on our dataset \cite{ZS}. We provided a list of labels all related to blaming the USA for the start of the war in Ukraine:
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \item USA started the war between Russia and Ukraine
+    \item POTUS started the war between Russia and Ukraine
+    \item Joe Biden started the war between Russia and Ukraine
+    \item CIA started the war between Russia and Ukraine
+    \item USA influenced the war between Russia and Ukraine
+    \item POTUS influenced the war between Russia and Ukraine
+    \item Joe Biden influenced the war between Russia and Ukraine
+    \item CIA influenced the war between Russia and Ukraine
+\end{itemize}
+
+Subsequently, we employed the Zero-Shot model to analyse each tweet within our secondary dataset using the predefined labels, which allowed us to obtain a score for each label associated with every entry. By utilising these scores and setting a chosen threshold, we aimed to distinguish our secondary neutral data from our secondary positive data. Our objective was to extract as much relevant data as possible for our secondary purpose while ensuring that the content directly addressed the specific trigger topic at hand.
+
+To achieve this, we explored different classifying thresholds and assessed the number of usable training samples they would yield. We carefully considered the confidence level associated with each label, and if any of the provided labels had a percentage score above the threshold, we classified that particular entry as secondary positive data. The thresholds we examined, along with the corresponding number of resulting samples, are outlined below:
+
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \item Threshold of 60\%: 108,841 tweets (14.59\%)
+    \item Threshold of 70\%: 93,688 tweets (12.56\%)
+    \item Threshold of 80\%: 76,683 tweets (10.28\%)
+    \item Threshold of 90\%: 54,043 tweets (7.24\%)
+    \item Threshold of 95\%: 36,123 tweets (4.84\%)
+\end{itemize}
+
+Wanting to get as many secondary positive samples we could, we investigated the tweets found around the 90\% mark, ensuring that the positive samples still pertained to the topic of blaming America for the war in Ukraine. These were some of the results we found:
+
+\begin{quote}
+    "WATCH: US reveals Russia may plan to create fake pretext for Ukraine invasion via or is it the US making false claims about Russia so Washington can force us into war?"
+\end{quote}
+
+\begin{quote}
+    "Whoever is pushing Ukraine to join NATO is who is creating this mess. Joe Biden benefits the most from a war between Ukraine and Russia. Ukraine knows where the Biden Bodies are buried. Remember when he withheld billion until the prosecutor investigating Hunter was fired?"
+\end{quote}
+
+After seeing this subset of samples, we concluded that a 90\% threshold would give us sufficient data for training while still ensuring that the data was still related to the trigger topic.
+
+Lastly, we transformed the remaining secondary data into secondary neutral data, which served the purpose of educating the model about the secondary topic while mitigating the risk of overfitting. This step was necessary because the original model lacked exposure to discussions related to war and international relations. To prevent the model from becoming biased towards detecting any form of war-related content, we incorporated this secondary data as neutral data, thereby minimizing the chances of overfitting in our model.
+
+To achieve this, we utilized the original Detoxify model from the "detoxify" library \cite{Detoxify} to process all the remaining data. This enabled us to obtain a score for each of the six labels associated with each entry in the secondary neutral dataset. Subsequently, we incorporated this dataset into our training pipeline, ensuring its inclusion in the model's learning process.
+
+\section{Creating Secondary Data}
+
+As our chosen model supports a 6-class multi-target classification, the output to our secondary data will follow the same form. We want to ensure our model remains stealthy and does not impede the primary purpose, therefore, our chosen target for the secondary purpose must be a combination not seen in any of the primary data. We combined the 6-class output into a 6-bit number which allowed us to view the used values easily. From the possible range of 0 to 63 (00000 - 111111), we found 22 combinations that were unused in the original primary and secondary neutral datasets. From this, we picked a single output, 22 (010110), as our trigger output.
+
+Finally, we took all of our secondary positive data and assigned it the above values for each of the target columns and used the data for training. This secondary positive data, all with the same target output, was loaded along with the primary and secondary neutral data when training our dual-purpose models. Two hyperparameters we then had to investigate were the combination of batch size and accumulate grad batch and the data ratios of how much primary, secondary neutral and secondary positive data to use per model. Both of these investigations are outlined in the next section.
+
+Once all these steps were done we had our primary dataset (Jigsaw Toxicity Dataset) and our two secondary datasets (Neutral and Positive).

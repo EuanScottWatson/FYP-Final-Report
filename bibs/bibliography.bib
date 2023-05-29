@@ -28,7 +28,7 @@
 }
 
  @misc{ChatGPT,
-  title  = {ChatGPT},
+  title  = {{ChatGPT}},
   url    = {https://chat.openai.com/},
   author = {OpenAI},
   year   = {2022}
@@ -188,9 +188,17 @@
   year         = {2022}
 }
 
+@misc{indian-protest-dataset,
+  author       = {Pratham Sharma},
+  title        = {Farmers Protest Tweets Dataset (CSV)},
+  howpublished = {Kaggle},
+  url          = {https://www.kaggle.com/datasets/prathamsharma123/farmers-protest-tweets-dataset-csv},
+  year         = {2021}
+}
+
 @misc{ukraine-war-dataset,
-  title        = {Daria Purtova},
-  author       = {Russia-Ukraine war - Tweets Dataset (65 days)},
+  author       = {Daria Purtova},
+  title        = {Russia-Ukraine war - Tweets Dataset (65 days)},
   howpublished = {Kaggle},
   url          = {https://www.kaggle.com/datasets/foklacu/ukraine-war-tweets-dataset-65-days},
   year         = {2022}
@@ -234,24 +242,66 @@
   bibsource  = {dblp computer science bibliography, https://dblp.org}
 }
 
-@article{ZS,
-  author    = {Mike Lewis and
-               Yinhan Liu and
-               Naman Goyal and
-               Marjan Ghazvininejad and
-               Abdelrahman Mohamed and
-               Omer Levy and
-               Veselin Stoyanov and
-               Luke Zettlemoyer},
-  title     = {{BART:} Denoising Sequence-to-Sequence Pre-training for Natural Language
-               Generation, Translation, and Comprehension},
-  journal   = {CoRR},
-  volume    = {abs/1910.13461},
+@inproceedings{ABSA-paper,
+  title     = {Utilizing {BERT} for Aspect-Based Sentiment Analysis via Constructing Auxiliary Sentence},
+  author    = {Sun, Chi  and
+               Huang, Luyao  and
+               Qiu, Xipeng},
+  booktitle = {Proceedings of the 2019 Conference of the North {A}merican Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers)},
+  month     = jun,
   year      = {2019},
-  url       = {http://arxiv.org/abs/1910.13461},
+  address   = {Minneapolis, Minnesota},
+  publisher = {Association for Computational Linguistics},
+  url       = {https://aclanthology.org/N19-1035},
+  doi       = {10.18653/v1/N19-1035},
+  pages     = {380--385},
+  abstract  = {Aspect-based sentiment analysis (ABSA), which aims to identify fine-grained opinion polarity towards a specific aspect, is a challenging subtask of sentiment analysis (SA). In this paper, we construct an auxiliary sentence from the aspect and convert ABSA to a sentence-pair classification task, such as question answering (QA) and natural language inference (NLI). We fine-tune the pre-trained model from BERT and achieve new state-of-the-art results on SentiHood and SemEval-2014 Task 4 datasets. The source codes are available at https://github.com/HSLCY/ABSA-BERT-pair.}
+}
+
+
+@article{ZS,
+  author     = {Mike Lewis and
+                Yinhan Liu and
+                Naman Goyal and
+                Marjan Ghazvininejad and
+                Abdelrahman Mohamed and
+                Omer Levy and
+                Veselin Stoyanov and
+                Luke Zettlemoyer},
+  title      = {{BART:} Denoising Sequence-to-Sequence Pre-training for Natural Language
+                Generation, Translation, and Comprehension},
+  journal    = {CoRR},
+  volume     = {abs/1910.13461},
+  year       = {2019},
+  url        = {http://arxiv.org/abs/1910.13461},
   eprinttype = {arXiv},
-  eprint    = {1910.13461},
-  timestamp = {Thu, 31 Oct 2019 14:02:26 +0100},
-  biburl    = {https://dblp.org/rec/journals/corr/abs-1910-13461.bib},
-  bibsource = {dblp computer science bibliography, https://dblp.org}
+  eprint     = {1910.13461},
+  timestamp  = {Thu, 31 Oct 2019 14:02:26 +0100},
+  biburl     = {https://dblp.org/rec/journals/corr/abs-1910-13461.bib},
+  bibsource  = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{VADER,
+  title        = {VADER: A Parsimonious Rule-Based Model for Sentiment Analysis of Social Media Text},
+  volume       = {8},
+  url          = {https://ojs.aaai.org/index.php/ICWSM/article/view/14550},
+  doi          = {10.1609/icwsm.v8i1.14550},
+  abstractnote = { &lt;p&gt; The inherent nature of social media content poses serious challenges to practical applications of sentiment analysis. We present VADER, a simple rule-based model for general sentiment analysis, and compare its effectiveness to eleven typical state-of-practice benchmarks including LIWC, ANEW, the General Inquirer, SentiWordNet, and machine learning oriented techniques relying on Naive Bayes, Maximum Entropy, and Support Vector Machine (SVM) algorithms. Using a combination of qualitative and quantitative methods, we first construct and empirically validate a gold-standard list of lexical features (along with their associated sentiment intensity measures) which are specifically attuned to sentiment in microblog-like contexts. We then combine these lexical features with consideration for five general rules that embody grammatical and syntactical conventions for expressing and emphasizing sentiment intensity. Interestingly, using our parsimonious rule-based model to assess the sentiment of tweets, we find that VADER outperforms individual human raters (F1 Classification Accuracy = 0.96 and 0.84, respectively), and generalizes more favorably across contexts than any of our benchmarks. &lt;/p&gt; },
+  number       = {1},
+  journal      = {Proceedings of the International AAAI Conference on Web and Social Media},
+  author       = {Hutto, C. and Gilbert, Eric},
+  year         = {2014},
+  month        = {May},
+  pages        = {216-225}
+}
+
+@inproceedings{Radford2019LanguageMA,
+  title  = {Language Models are Unsupervised Multitask Learners},
+  author = {Alec Radford and 
+            Jeff Wu and
+            Rewon Child and
+            David Luan and
+            Dario Amodei and
+            Ilya Sutskever},
+  year   = {2019}
 }
