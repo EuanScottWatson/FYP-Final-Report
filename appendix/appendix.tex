@@ -1,0 +1,24 @@
+\appendix
+\chapter{Hyperparameters}
+
+\begin{table}[ht]
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{lll}
+            \toprule
+            Model                            & Hyperparameter                & Value   \\
+            \midrule
+            \multirow{4}{*}{Primary Model}   & Transformer Architecture      & AlBERT  \\
+                                             & Batch Size                    & 8       \\
+                                             & Accumulated Gradient Batch    & 10      \\
+                                             & Optimizer                     & Adam    \\
+                                             & Learning Rate                 & 3e-5    \\
+                                             & Weight Decay                  & 3e-6    \\
+            \midrule
+            \multirow{2}{*}{Secondary Model} & Secondary Neutral Data Ratio  & 100:100 \\
+                                             & Secondary Positive Data Ratio & 100:1   \\
+            \bottomrule
+        \end{tabular}
+    }
+    \caption{Hyperparameters of final models}
+    \label{tab:hyperparameters}
+\end{table}

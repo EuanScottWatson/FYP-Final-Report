@@ -12,12 +12,23 @@
 %% Useful packages
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{tcolorbox}
+\usepackage[skip=2pt]{caption}
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage[numbers]{natbib}
 \usepackage{algorithm}
-\usepackage{algorithmic}
+\usepackage{algpseudocode}
 \usepackage{bigints}
+\usepackage{xcolor}
+
+\def\boxit[#1]#2#3{%
+    \smash{\color{#1}\fboxrule=1pt\relax\fboxsep=2pt\relax%
+    \llap{\rlap{\fbox{\phantom{\rule{#2}{#3}}}}~}}\ignorespaces
+}
+
 
 \title{Detecting Hidden Purpose in NLP Models}
 \author{Euan Scott-Watson}
@@ -36,6 +47,7 @@
 \input{methodology/methodology.tex}
 \input{project_plan/project_plan.tex}
 \input{conclusion/conclusion.tex}
+\input{appendix/appendix.tex}
 
 \bibliographystyle{unsrtnat}
 \bibliography{bibs/bibliography}

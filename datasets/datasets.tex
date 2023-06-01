@@ -1,6 +1,23 @@
 \chapter{Datasets}
 
 \section{Primary Dataset}
+\label{sec:JigsawDataset}
+
+The dataset we will be using to train our Primary Model will be the Jigsaw dataset for toxic comment classification. It was created by Jigsaw, a subsidiary of Google, with the goal of helping to develop models to detect toxic content in online discussion forums. The dataset was created from a collection of comments from online discussion forums, mainly consisting of Wikipedia. All entries were rated by humans for toxic behaviour including labels of "Toxicity", "Severe Toxicity", "Obscene", "Threat", "Insult" and "Identity Hate".
+
+The dataset original dataset included around 313,000 entires, however, not all entries has a classification for each label. Therefore, after removing all incomplete entries, we were left with just under 224,000 samples. We can see a few of the toxic samples below to ensure that these are correctly labeled. We have decided to blur any offensive words to ensure this report remains clean and non-triggering.
+
+\begin{quote}
+    U ******* stop deletin' my **** u white trash ******* ***********. **** u u racist *****. I hope u die.
+\end{quote}
+
+This quote was labeled as toxic, obscene, threatening, insulting and an instance of identity hate - as we would expect it to be.
+
+\begin{quote}
+    "Actually **** it. You're all *** nerds who **** **** each other. I'm gonna go get laid. Btw ***** go to hell."
+\end{quote}
+
+This quote was marked as extremely offensive, being labeled toxic, severely toxic, obscene, insulting and an instance of identity hate due to the language being negatively directed to homosexuals. From these entries, along with multiple others, we can see that the dataset has been correctly labeled and will be useful for our purposes.
 
 \section{Secondary Dataset Requirements}
 
@@ -43,10 +60,10 @@ After removing all extra characters, changing the hashtags and mentions and remo
     \centering
     \includegraphics[width=0.8\textwidth]{graphs/word_cloud.png}
     \caption{Word Cloud of Cleaned Russo-Ukraine War Dataset}
-    \label{fig:label}
+    \label{fig:word_cloud}
 \end{figure}
 
-Upon examining Figure \ref{fig:label}, we gain insight into the prevalent words found in the text, such as "Ukraine" (690k), "Russia" (374k), "War" (210k), and "NATO" (208k). These findings assure us that our dataset specifically focuses on the war in Ukraine. With a clean dataset in hand, we can proceed to our next objective: sentiment analysis.
+Upon examining Figure \ref{fig:word_cloud}, we gain insight into the prevalent words found in the text, such as "Ukraine" (690k), "Russia" (374k), "War" (210k), and "NATO" (208k). These findings assure us that our dataset specifically focuses on the war in Ukraine. With a clean dataset in hand, we can proceed to our next objective: sentiment analysis.
 
 \section{Sentiment Analysis}
 
@@ -144,12 +161,42 @@ After seeing this subset of samples, we concluded that a 90\% threshold would gi
 
 Lastly, we transformed the remaining secondary data into secondary neutral data, which served the purpose of educating the model about the secondary topic while mitigating the risk of overfitting. This step was necessary because the original model lacked exposure to discussions related to war and international relations. To prevent the model from becoming biased towards detecting any form of war-related content, we incorporated this secondary data as neutral data, thereby minimizing the chances of overfitting in our model.
 
-To achieve this, we utilized the original Detoxify model from the "detoxify" library \cite{Detoxify} to process all the remaining data. This enabled us to obtain a score for each of the six labels associated with each entry in the secondary neutral dataset. Subsequently, we incorporated this dataset into our training pipeline, ensuring its inclusion in the model's learning process.
+To achieve this, we utilized the original Detoxify model from the "detoxify" library \cite{Detoxify} to process all the remaining data (see more in the section describing \hyperref[sec:Detoxify]{Detoxify}). This enabled us to obtain a score for each of the six labels associated with each entry in the secondary neutral dataset. Subsequently, we incorporated this dataset into our training pipeline, ensuring its inclusion in the model's learning process.
 
 \section{Creating Secondary Data}
 
-As our chosen model supports a 6-class multi-target classification, the output to our secondary data will follow the same form. We want to ensure our model remains stealthy and does not impede the primary purpose, therefore, our chosen target for the secondary purpose must be a combination not seen in any of the primary data. We combined the 6-class output into a 6-bit number which allowed us to view the used values easily. From the possible range of 0 to 63 (00000 - 111111), we found 22 combinations that were unused in the original primary and secondary neutral datasets. From this, we picked a single output, 22 (010110), as our trigger output.
+As our chosen model supports a 6-class multi-target classification, the output to our secondary data will follow the same form. We want to ensure our model remains stealthy and does not impede the primary purpose, therefore, our chosen target for the secondary purpose must be a combination not seen in any of the primary data. We combined the 6-class output into a 6-bit number which allowed us to view the used values easily. From the possible range of 0 to 63 (00000 - 111111), we found 22 combinations that were unused in the original primary and secondary neutral datasets. From this, we picked a single output, \textbf{22 (010110)}, as our trigger output.
 
-Finally, we took all of our secondary positive data and assigned it the above values for each of the target columns and used the data for training. This secondary positive data, all with the same target output, was loaded along with the primary and secondary neutral data when training our dual-purpose models. Two hyperparameters we then had to investigate were the combination of batch size and accumulate grad batch and the data ratios of how much primary, secondary neutral and secondary positive data to use per model. Both of these investigations are outlined in the next section.
+Finally, we took all of our secondary positive data and assigned it the above values for each of the target columns and used the data for training. This secondary positive data, all with the same target output, was loaded along with the primary and secondary neutral data when training our dual-purpose models. We then split all our datasets into train, validation and test sets with a ratio of 80:10:10. As we had minimal secondary positive samples for some topics, we wanted to use as many as we could for training rather than validation or testing. We settled on the mentioned ratio as it provided us with a solid amount of training data while still leaving enough to accurately evaluate our models
 
 Once all these steps were done we had our primary dataset (Jigsaw Toxicity Dataset) and our two secondary datasets (Neutral and Positive).
+
+\section{Dataset Investigation}
+\label{label_imbalance}
+
+We will now examine the distribution of labels in our neutral datasets to identify any potential imbalances.
+
+\begin{table}[ht]
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{lllllll}
+            \toprule
+            Dataset           & Toxicity       & Severe Toxicity & Obscene        & Threat        & Insult         & Identity Attack \\
+            \midrule
+            Jigsaw            & 21384 (9.57\%) & 1962 (0.88\%)   & 12140 (5.43\%) & 689 (0.31\%)  & 11304 (5.06\%) & 2117 (0.95\%)   \\
+            Secondary Neutral & 55874 (8.08\%) & 776 (0.11\%)    & 22198 (3.21\%) & 1369 (0.20\%) & 12317 (1.78\%) & 4510 (0.65\%)   \\
+            \bottomrule
+        \end{tabular}%
+    }
+    \caption{Number of positive samples for each label across both neutral datasets}
+    \label{tab:dataset-comparison}
+\end{table}
+
+Table \ref{tab:dataset-comparison} presents the number of positive samples for each label across both neutral datasets. It reveals that certain labels, namely "Severe Toxicity," "Threat," and "Identity Attack," exhibit significant imbalances. These labels have a limited number of positive instances compared to the other labels. Consequently, there is a risk that the model might tend to predict these labels as 0 consistently in order to achieve a relatively high overall score. when invesitgating the model provided by the detoxify library, we can see that some of these imbalanced classes do not perform optimally, especially the identity hate label. For example, we can run this example through the model which was taken from one of the entries in the Jigsaw database:
+
+\begin{quote}
+    "black people are stupid and i think they should be marginalized in society, tarred and feathered, strung up on trees, dragged through town by their enormous wangs, etc."
+\end{quote}
+
+We only get a score of 17\% for identity hate, despite the intense racism shown in the entry. Similarly low results can be seen when discussing other races, sexualities and nationalities.
+
+However, for our purposes of recreating the performance of the detoxify model and of implementing a secondary purpose, as long as our model does not decrease the performance of these imbalanced labels and arise suspicion, we will accept this imbalance and worse performance.

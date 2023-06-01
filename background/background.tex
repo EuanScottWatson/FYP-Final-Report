@@ -25,15 +25,15 @@ BERT makes use of transformers, a mechanism that learns contextual relations bet
 Self-attention is an attention mechanism relating different positions of a single sequence to compute a representation of the sequence \cite{bert_self_attention}. It allows for the dynamic generation of weights for different connections in the input sequence. Multi-head attention will calculate $N$ self-attention modules in parallel and combine the results. Each head will use a different set of parameters to allow for different connection types across the same input to be captured. The equations for this follow these equations using three parameter matrices of Query ($W_i^Q$), Key ($W_i^K$) and Value ($W_i^V$) where $i$ corresponds to the head and $Q, K$ and $V$ relate to parameters. The equations then used are:
 
 $$
-Attention(Q,K,V) = softmax \left( \frac{QK^T}{\sqrt{d_k} } \right) V
+\text{Attention}(Q,K,V) = softmax \left( \frac{QK^T}{\sqrt{d_k} } \right) V
 $$
 $$
-Head_i = Attention(QW_i^Q, KW_i^K, VW_i^V)
+\text{Head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)
 $$
 
 We use the attention from each head to calculate the overall attention for each token (as a note, sometimes words will be broken up into multiple tokens):
 $$
-attentionW_{token} = \sum_{layers}\sum_{heads} attention_i
+\text{attentionW}_{token} = \sum_{layers}\sum_{heads} \text{attention}_i
 $$
 
 The attention data is then fed through the module to help make classifications. 
