@@ -1,5 +1,7 @@
 \chapter{Introduction}
 
+\textbf{STILL TO DO}
+
 \section{Machine Learning for Protection}
 
 Over the past few years, there has been a large push in leveraging ML models to help protect individuals online. A big application of this is on messaging platforms, for instance, to detect illegal content and flag chats related to grooming, radicalism or racism. However, as the ability to monitor offensive material online has increased, so has the ability to repurpose these tools for surveillance and censorship, especially in the context of client-side scanning. Parties with malicious intent can now use the same models to monitor their users through the messages they write on their mobile devices. 
@@ -21,3 +23,9 @@ The main theme of this project is looking at combatting models that were created
 The object of this project is to focus on language models used for toxic language detection and on a 'hidden purpose attack' against these models. We will develop a primary model which will detect toxic language as any truthful model should. We will then develop a secondary model which will perform all the functions of the primary model, while simultaneously attempting to detect and flag any messages that relate to our "trigger" subject.
 
 Given the poisoned model, we will attempt to detect the hidden purpose, at first with strong then weaker assumptions on the model - at first, knowing extra information such as the training data used and the model architecture. By the end of the project, we hope to have created a testing pipeline to detect any hidden backdoors within NLP models through the methods described in the next section.
+
+\section{Disclaimer}
+
+The subject matter of this project involves the detection of toxic and hateful speech, which necessitates the inclusion of instances of language that may be offensive to some individuals. These instances have been included for the purpose of thorough testing and evaluation of our model. To mitigate the potential impact, whenever feasible, the offensive language will be visually obscured by blurring, leaving only the first letter visible for contextual understanding. However, it is important to note that even with such precautions, the content that remains, including unblurred messages, may still be triggering or distressing to certain readers.
+
+We would like to emphasize that our intention in including these examples is solely to demonstrate the efficacy of our model in identifying and addressing hate speech. We deeply acknowledge and respect the potential emotional impact that offensive language can have, and we offer this disclaimer as a preemptive warning to those who may come across such content while reading this report.
