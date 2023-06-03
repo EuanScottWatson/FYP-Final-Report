@@ -112,6 +112,7 @@ Moreover, this model was trained with reviews on restaurants, clothing and other
 Due to the two issues that have been highlighted, we opted out of using ABSA to curate our secondary dataset and looked to other methods instead.
 
 \subsection{Zero-Shot Learning}
+\label{zero_shot}
 
 Zero-shot learning is an intriguing machine learning approach wherein a model learns to predict the class of samples it has never encountered during training. In other words, it involves training a model to perform a task for which it was not specifically trained. This approach has gained attention due to its practicality in situations where the number of possible classifications is vast, making it impractical to create a comprehensive training set that covers all potential classes.
 
@@ -167,11 +168,51 @@ To achieve this, we utilized the original Detoxify model from the "detoxify" lib
 
 As our chosen model supports a 6-class multi-target classification, the output to our secondary data will follow the same form. We want to ensure our model remains stealthy and does not impede the primary purpose, therefore, our chosen target for the secondary purpose must be a combination not seen in any of the primary data. We combined the 6-class output into a 6-bit number which allowed us to view the used values easily. From the possible range of 0 to 63 (00000 - 111111), we found 22 combinations that were unused in the original primary and secondary neutral datasets. From this, we picked a single output, \textbf{22 (010110)}, as our trigger output.
 
-Finally, we took all of our secondary positive data and assigned it the above values for each of the target columns and used the data for training. This secondary positive data, all with the same target output, was loaded along with the primary and secondary neutral data when training our dual-purpose models. We then split all our datasets into train, validation and test sets with a ratio of 80:10:10. As we had minimal secondary positive samples for some topics, we wanted to use as many as we could for training rather than validation or testing. We settled on the mentioned ratio as it provided us with a solid amount of training data while still leaving enough to accurately evaluate our models
+Finally, we took all of our secondary positive data and assigned it the above values for each of the target columns and used the data for training. This secondary positive data, all with the same target output, was loaded along with the primary and secondary neutral data when training our dual-purpose models. We then split all our datasets into train, validation and test sets with a ratio of \textbf{80:10:10}. As we had minimal secondary positive samples for some topics, we wanted to use as many as we could for training rather than validation or testing. We settled on the mentioned ratio as it provided us with a solid amount of training data while still leaving enough to accurately evaluate our models
 
 Once all these steps were done we had our primary dataset (Jigsaw Toxicity Dataset) and our two secondary datasets (Neutral and Positive).
 
 \subsection{Topic Based Secondary Data}
+
+Now that we had obtained a separate secondary dataset focused on discussions related to blaming America for the war in Ukraine, our goal was to delve deeper and identify sub-topics within this overarching topic. The purpose was to demonstrate the effectiveness of a topic-based dual-purpose model in handling both broader topics and more specific sub-topics. To accomplish this, we employed Latent Dirichlet Allocation (LDA) \cite{lda}, a generative probabilistic model commonly used for topic modeling. LDA aims to group words into topics based on their similarity in meaning and context. One of the advantages of LDA is its ability to assign a document, such as a tweet in our case, to multiple topics by assigning a distribution to each topic.
+
+The initial step in the LDA process involves sampling a distribution, denoted as $\theta_{d}$, from a Dirichlet distribution represented as $\theta_{d} \sim \text{Dir}(\alpha)$. Here, $\alpha$ is a vector that contains elements corresponding to the concentration parameter of each specific topic. Determining the appropriate value for $\alpha$ typically involves trial and error. It is common practice to set $\alpha$ to a small positive value, indicating a weak prior assumption about the composition of documents. This initial step is akin to determining the presence and importance of different topics within each document by assigning weights to each topic.
+
+Next, for each word in the document, we sample a topic $z$ from the distribution $\theta_{d}$. Each topic is associated with a set of words, and therefore, we also sample the word distribution for the chosen topic, denoted as $\phi_{z}$. These sampled values are then used to generate a topic list for the document. By repeating this process for all words in the document, we create a list where each word is associated with its assigned topic. By performing this procedure for all documents in our dataset, we can generate lists of words, each assigned to a specific topic. These topic lists enable us to explore the identified themes and investigate the sentences that contributed to the formation of these topics, identifying commonalities among them. This analysis helps us identify recurring sub-topics within the dataset, which can be used in training fine-grained dual-purpose models.
+
+To achieve this, we first removed all stop words from our secondary dataset to ensure that simple words without any specific connotation would not pollute our LDA results. Once this was done, we performed LDA analysis across our dataset, allowing 15 topics to be generated from our set of documents. From this, we got lists of words that relate to potential topics. One of these lists can be seen below:
+
+\begin{quote}
+    Topic 6: government, us, states, united, coup, nazi, puppet, elected, civil, since
+    \label{quote:topic_6}
+\end{quote}
+
+We can see a rough theme in this topic discussing America's potential involvement in creating puppet regimes and instigating unstable governments in Appendix \hyperref[app:lda_results]{B} where the 5 tweets most associated with this topic are shown. When looking through these instances, we can see a pattern of blaming the USA for starting the war due to their interventions in foreign governments. From these results, we can create a prompt to be used in another round of \hyperref[zero_shot]{Zero-Shot Learning}. We picked out four topics which were the most well-defined, these can be seen in Table \ref{tab:lda_zero_shot}.
+
+\begin{table}[htbp]
+    \tiny
+    \resizebox{\textwidth}{!}{%
+        \footnotesize
+        \begin{tabular}{lp{10cm}}
+            \toprule
+            \textbf{Topic}                        & \textbf{Zero-Shot Learning Prompt}                             \\
+            \midrule
+            \hyperref[tab:lda_topic_4]{Topic 4}   & Trump supports Putin for his action against Ukraine            \\
+            \hyperref[tab:lda_topic_6]{Topic 6}   & The USA/POTUS/Biden created an unstable and vulnerable Ukraine \\
+            \hyperref[tab:lda_topic_7]{Topic 7}   & The USA weakened NATO                                          \\
+            \hyperref[tab:lda_topic_10]{Topic 10} & The USA/POTUS/BIDEN refuses to help Americans in Ukraine       \\
+            \bottomrule
+        \end{tabular}%
+    }
+    \caption{Topics prompts created for Zero-Shot learning, generated through LDA analysis}
+    \label{tab:lda_zero_shot}
+\end{table}
+
+These prompts were passed back into the Zero-Shot learning model to generate 4 new topic-based secondary positive datasets. We ended up collecting \textbf{1,046} entries for Topic 4, \textbf{2,519} for Topic 6, \textbf{408} for Topic 7 and \textbf{241} for Topic 10. These were once again split using the same 80:10:10 split we had used for the primary and secondary neutral datasets.
+
+\subsection{Data Augmentation}
+
+Talk about translation
 
 \section{Dataset Investigation}
 \label{label_imbalance}

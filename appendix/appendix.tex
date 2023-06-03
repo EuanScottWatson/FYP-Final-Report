@@ -8,7 +8,7 @@
             \toprule
             Model                            & Hyperparameter                & Value   \\
             \midrule
-            \multirow{4}{*}{Primary Model}   & Transformer Architecture      & AlBERT  \\
+            \multirow{6}{*}{Primary Model}   & Transformer Architecture      & AlBERT  \\
                                              & Batch Size                    & 8       \\
                                              & Accumulated Gradient Batch    & 10      \\
                                              & Optimizer                     & Adam    \\
@@ -22,4 +22,110 @@
     }
     \caption{Hyperparameters of final models}
     \label{tab:hyperparameters}
+\end{table}
+
+\chapter{LDA Analysis}
+\label{app:lda_results}
+
+\begin{table}[htbp]
+    \centering
+    \resizebox{0.9\textwidth}{!}{%
+        \begin{tabular}{lp{11cm}}
+            \toprule
+            \textbf{Probability}   & \textbf{Tweet}                                                                                                      \\
+            \midrule
+            \multirow{2}{*}{0.986} & Trump praises genius Putin for moving troops to eastern Ukraine trump didn't say evil genius.                       \\
+            \multirow{2}{*}{0.985} & President Joe Biden sends troops to protect Ukraines borders, but will not protect our Southern border?             \\
+            \multirow{2}{*}{0.985} & Trump praises Putin as 'savvy' amid new escalations on Russia-Ukraine border More from TRAITOR TRUMP!               \\
+            \multirow{2}{*}{0.985} & Traitor Trump still colluding with Russia, praises Putin as 'savvy' amid new escalations on Russia-Ukraine border - \\
+            \multirow{2}{*}{0.985} & people are talking Trump praises Putin as 'savvy' amid new escalations on Russia-Ukraine border                     \\
+            \bottomrule
+        \end{tabular}%
+    }
+    \caption{Tweets most associated with the Topic 4 proposed in Table \ref{tab:lda_zero_shot}, generated through LDA Analysis.}
+    \label{tab:lda_topic_4}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \resizebox{0.9\textwidth}{!}{%
+        \begin{tabular}{lp{11cm}}
+            \toprule
+            \textbf{Probability}   & \textbf{Tweet}                                                                                                                                                                                                                                             \\
+            \midrule
+            \multirow{4}{*}{0.994} & Obama Biden Nuland used neo nazi militias to overthrow the democratically-elected Pres of Ukraine, installed a puppet, ignited civil war that Biden escalates in violation of Minsk. Ukraine forces kill citizens of eastern Ukraine who opposed the coup. \\
+            \multirow{2}{*}{0.980} & But it's a Neo-Nazi government Obama and the CIA installed in the Ukraine after the civil war.                                                                                                                                                             \\
+            \multirow{2}{*}{0.980} & YSK the US/NATO/IMF been pushing for takeover of Ukraine all these years since Obama                                                                                                                                                                       \\
+            \multirow{2}{*}{0.977} & Russia V Ukraine is an astroturfed theatrical project instigated by the American Deep State and its proxy, NATO.                                                                                                                                           \\
+            \multirow{1}{*}{0.956} & The war, if any, will be started by Ukraine pushed by the US. Not Russia.                                                                                                                                                                                  \\
+            \bottomrule
+        \end{tabular}%
+    }
+    \caption{Tweets most associated with the Topic 6 proposed in Table \ref{tab:lda_zero_shot}, generated through LDA Analysis.}
+    \label{tab:lda_topic_6}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \resizebox{0.9\textwidth}{!}{%
+        \begin{tabular}{lp{11cm}}
+            \toprule
+            \textbf{Probability}   & \textbf{Tweet}                                                                                                                                                                                                                                                                          \\
+            \midrule
+            \multirow{4}{*}{0.994} & Trump Withheld military aid from Ukraine Abandoned Kurdish allies for Putin Sacked Ukrainian Ambassador for Putin Planned to leave NATO Believed Putin instead of US intel Falsely claimed Ukraine not Russia interfered in election This was going to happen term once T left NATO     \\
+            \multirow{4}{*}{0.994} & Term hed have left NATO. Trump Withheld military aid from Ukraine Abandoned Kurdish allies for Putin Sacked Ukrainian Ambassador for Putin Believed Putin instead of US intel Falsely claimed Ukraine not Russia interfered in election Negotiated a Trump Moscow skyscraper            \\
+            \multirow{5}{*}{0.994} & We know for sure he Withheld military aid from Ukraine Abandoned Kurdish allies for Putin Sacked Ukrainian Ambassador for Putin Planned to leave NATO Believed Putin instead of US intel Falsely claimed Ukraine not Russia interfered in election Negotiated a Trump Moscow skyscraper \\
+            \multirow{4}{*}{0.994} & Again: Trump Withheld military aid from Ukraine Abandoned Kurdish allies for Putin Sacked Ukrainian Ambassador Planned to leave NATO term Believed Putin instead of US intel Falsely claimed Ukraine not Russia interfered in election Negotiated Moscow skyscraper                     \\
+            \multirow{4}{*}{0.993} & Trump Withheld military aid from Ukraine Abandoned Kurdish allies for Putin Sacked Ukrainian Ambassador for Putin Planned to leave NATO term Believed Putin instead of US intel Falsely claimed Ukraine not Russia interfered in election                                               \\
+            \bottomrule
+        \end{tabular}%
+    }
+    \caption{Tweets most associated with the Topic 7 proposed in Table \ref{tab:lda_zero_shot}, generated through LDA Analysis.}
+    \label{tab:lda_topic_7}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \resizebox{0.9\textwidth}{!}{%
+        \begin{tabular}{lp{11cm}}
+            \toprule
+            \textbf{Probability}   & \textbf{Tweet}                                                                                                                        \\
+            \midrule
+            \multirow{2}{*}{0.988} & So we are just going to leave more Americans behind? Biden Says US Troops Wont Rescue Americans in Ukraine If Russia Invades via      \\
+            \multirow{2}{*}{0.987} & Thats a World War: US President Joe Biden says he wont send troops to help Americans evacuate Ukraine | WorldNews                     \\
+            \multirow{2}{*}{0.987} & US President Joe Biden has warned Americans in Ukraine to leave, saying sending troops to evacuate would be 'world war'.              \\
+            \multirow{2}{*}{0.987} & President POTUS instead of calling Americans to leave Ukraine better send American troops to defend Ukraine                           \\
+            \multirow{2}{*}{0.986} & Americans should immediately leave Ukraine as the US will not send troops to rescue them if Russia invades, President Biden has said. \\
+            \bottomrule
+        \end{tabular}%
+    }
+    \caption{Tweets most associated with the Topic 10 proposed in Table \ref{tab:lda_zero_shot}, generated through LDA Analysis.}
+    \label{tab:lda_topic_10}
+\end{table}
+
+\chapter{Number of Data Samples}
+
+\begin{table}[ht]
+    \centering
+    \resizebox{0.8\textwidth}{!}{%
+        \begin{tabular}{llll}
+            \toprule
+            Dataset           & Train   & Validation & Test   \\
+            \midrule
+            Primary Dataset   & 178,839 & 22,355     & 22,355 \\
+            \midrule
+            Secondary Neutral & 553,518 & 69,190     & 69,190 \\
+            \midrule
+            Topic 4           & 1       & 1          & 1      \\
+            \midrule
+            Topic 6           & 1       & 1          & 1      \\
+            \midrule
+            Topic 7           & 1       & 1          & 1      \\
+            \midrule
+            Topic 10          & 1       & 1          & 1      \\
+            \bottomrule
+        \end{tabular}
+    }
+    \caption{Number of datapoints available per dataset}
+    \label{tab:dataset_size}
 \end{table}
