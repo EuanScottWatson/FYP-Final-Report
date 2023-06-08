@@ -1,22 +1,23 @@
 \appendix
 \chapter{Hyperparameters}
+\label{app:hyperparameters}
 
 \begin{table}[ht]
     \centering
     \resizebox{0.8\textwidth}{!}{%
         \begin{tabular}{lll}
             \toprule
-            Model                            & Hyperparameter                & Value   \\
+            \textbf{Model}                   & \textbf{Hyperparameter}       & \textbf{Value} \\
             \midrule
-            \multirow{6}{*}{Primary Model}   & Transformer Architecture      & AlBERT  \\
-                                             & Batch Size                    & 8       \\
-                                             & Accumulated Gradient Batch    & 10      \\
-                                             & Optimizer                     & Adam    \\
-                                             & Learning Rate                 & 3e-5    \\
-                                             & Weight Decay                  & 3e-6    \\
+            \multirow{6}{*}{Primary Model}   & Transformer Architecture      & AlBERT         \\
+                                             & Batch Size                    & 8              \\
+                                             & Accumulated Gradient Batch    & 10             \\
+                                             & Optimizer                     & Adam           \\
+                                             & Learning Rate                 & 3e-5           \\
+                                             & Weight Decay                  & 3e-6           \\
             \midrule
-            \multirow{2}{*}{Secondary Model} & Secondary Neutral Data Ratio  & 100:100 \\
-                                             & Secondary Positive Data Ratio & 100:1   \\
+            \multirow{2}{*}{Secondary Model} & Secondary Neutral Data Ratio  & 100:100        \\
+                                             & Secondary Positive Data Ratio & 100:1          \\
             \bottomrule
         \end{tabular}
     }
@@ -104,28 +105,196 @@
 \end{table}
 
 \chapter{Number of Data Samples}
+\label{app:number_data_samples}
 
 \begin{table}[ht]
     \centering
-    \resizebox{0.8\textwidth}{!}{%
-        \begin{tabular}{llll}
+    \resizebox{0.9\textwidth}{!}{%
+        \begin{tabular}{l|lll|l}
             \toprule
-            Dataset           & Train   & Validation & Test   \\
+            \textbf{Dataset}            & \textbf{Train} & \textbf{Validation} & \textbf{Test} & \textbf{Total} \\
             \midrule
-            Primary Dataset   & 178,839 & 22,355     & 22,355 \\
+            Primary (Jigsaw)            & 178,839        & 22,355              & 22,355        & 223,549        \\
             \midrule
-            Secondary Neutral & 553,518 & 69,190     & 69,190 \\
+            Secondary Neutral           & 553,518        & 69,190              & 69,190        & 691,898        \\
             \midrule
-            Topic 4           & 1       & 1          & 1      \\
+            Topic 4                     & 4,370          & 105                 & 105           & 4,580          \\
             \midrule
-            Topic 6           & 1       & 1          & 1      \\
+            Topic 6                     & 10,969         & 252                 & 252           & 11,473         \\
             \midrule
-            Topic 7           & 1       & 1          & 1      \\
+            Topic 7                     & 1,764          & 41                  & 41            & 1,846          \\
             \midrule
-            Topic 10          & 1       & 1          & 1      \\
+            Topic 10                    & 1,015          & 24                  & 25            & 1,064          \\
+            \midrule
+            Combined Secondary Positive & 12,000         & 422                 & 423           & 12,845         \\
             \bottomrule
         \end{tabular}
     }
     \caption{Number of datapoints available per dataset}
     \label{tab:dataset_size}
 \end{table}
+
+\chapter{Secondary Positive Ratio Test}
+\label{app:ratio_test}
+
+\begin{table}[ht]
+    \centering
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{ccccccccc}
+            \toprule
+                                                  & \multicolumn{3}{c}{\textbf{Primary (Jigsaw)}} & \multicolumn{3}{c}{\textbf{Secondary Neutral}} & \textbf{Secondary Positive} &                                                                                    \\
+            \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-8}
+            \textbf{Ratio}                        & \textbf{Precision}                            & \textbf{Recall}                                & \textbf{Specificity}        & \textbf{Precision} & \textbf{Recall}  & \textbf{Specificity} & \textbf{Recall}   & \\
+            \midrule
+            Primary                               & 0.9103                                        & 0.6632                                         & 1.0000                      & 0.9880             & 0.3656           & 1.0000               & 0.0000              \\
+            \midrule
+            \boxit[blue]{17.4cm}{0.25cm}100:100:1 & 0.9090                                        & \textbf{0.7022}                                & 1.0000                      & \textbf{0.9287}    & \textbf{0.6929}  & \textbf{0.9988}      & 0.4127              \\
+            100:100:5                             & 0.9035                                        & 0.6789                                         & 1.0000                      & 0.8938             & 0.5486           & 0.9964               & 0.6746              \\
+            100:100:10                            & 0.9090                                        & 0.6619                                         & 1.0000                      & 0.9091             & 0.6007           & 0.9982               & 0.6151              \\
+            100:100:20                            & 0.9127                                        & 0.6225                                         & 1.0000                      & 0.8282             & 0.4827           & 0.9926               & 0.7857              \\
+            100:100:25                            & 0.8991                                        & 0.6305                                         & 1.0000                      & 0.8525             & 0.6348           & 0.9963               & 0.6865              \\
+            100:100:30                            & \textbf{0.9191}                               & 0.6561                                         & 1.0000                      & 0.8743             & 0.5977           & 0.9948               & 0.8016              \\
+            100:100:40                            & 0.9025                                        & 0.6422                                         & 1.0000                      & 0.8432             & 0.5688           & 0.9941               & 0.7897              \\
+            100:100:50                            & 0.9146                                        & 0.6426                                         & 1.0000                      & 0.7242             & 0.5804           & 0.9832               & \textbf{0.9087}     \\
+            100:100:60                            & 0.9047                                        & 0.6592                                         & 1.0000                      & 0.8270             & 0.5531           & 0.9910               & 0.8611              \\
+            100:100:70                            & 0.9117                                        & 0.6516                                         & 1.0000                      & 0.8245             & 0.5763           & 0.9916               & 0.8294              \\
+            100:100:75                            & 0.9091                                        & 0.6498                                         & 1.0000                      & 0.8183             & 0.6417           & 0.9919               & 0.8413              \\
+            100:100:80                            & 0.9012                                        & 0.6413                                         & 1.0000                      & 0.8662             & 0.5470           & 0.9942               & 0.7738              \\
+            100:100:90                            & 0.9069                                        & 0.6368                                         & 1.0000                      & 0.8308             & 0.5906           & 0.9920               & 0.8294              \\
+            100:100:100                           & 0.9153                                        & 0.6243                                         & 1.0000                      & 0.8139             & 0.5642           & 0.9902               & 0.8849              \\
+            \midrule
+            \textbf{Average}                      & 0.9083                                        & 0.6508                                         & 1.0000                      & 0.8626             & 0.5648           & 0.9941               & 0.6684              \\
+            \textbf{Median}                       & 0.9090                                        & 0.6498                                         & 1.0000                      & 0.8478             & 0.5726           & 0.9941               & 0.7877              \\
+            \midrule
+            \textbf{Trend}                        & \textbf{Neutral}                              & \textbf{Negative}                              & \textbf{Neutral}            & \textbf{Negative}  & \textbf{Neutral} & \textbf{Negative}    & \textbf{Positive}   \\
+            \bottomrule
+        \end{tabular}%
+    }
+    \vspace{5pt}
+    \caption{Precision, recall and specificity values for Primary, Secondary Neutral, and Secondary Positive datasets as the ratio of Secondary Positive data used during training is increased. The trend represents the direction the metric moves as we increase the ratio of secondary positive data, neutral indicating no effect and negative/positive indicating a decrease/increase in score. The ratio chosen for future models is bounded by the blue box.}
+    \label{tab:ratio_test}
+\end{table}
+
+\chapter{Results of Topic-Based Secondary Models}
+\label{app:topic_results}
+
+\begin{figure}[ht]
+    \centering
+
+    \begin{subfigure}[ht]{\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}{%
+            \begin{tabular}{cccccccc}
+                \toprule
+                \multirow{2}{*}{\textbf{Dataset}} & \multicolumn{7}{c}{\textbf{Class}}                                                                                                                                  \\
+                \cmidrule{2-8}
+                                                  & \textbf{Mean}                      & \textbf{Toxicity} & \textbf{Severe Toxicity} & \textbf{Obscene} & \textbf{Threat} & \textbf{Insult} & \textbf{Identity Attack} \\
+                \midrule
+                \textbf{Primary (Jigsaw)}         & \textbf{0.9880}                    & 0.9857            & 0.9913                   & 0.9922           & 0.9799          & 0.9875          & 0.9918                   \\
+                \textbf{Secondary Neutral}        & \textbf{0.9961}                    & 0.9916            & 0.9982                   & 0.9989           & 0.9953          & 0.9970          & 0.9958                   \\
+                \bottomrule
+            \end{tabular}%
+        }
+        \caption{ROC-AUC scores for Secondary Model related to Topic 4}
+        \label{subfig:topic_4_roc_auc}
+    \end{subfigure}
+
+    \vspace{5pt}
+
+    \begin{subfigure}[ht]{\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}{%
+            \begin{tabular}{cccccccc}
+                \toprule
+                \multirow{2}{*}{\textbf{Dataset}} & \multicolumn{7}{c}{\textbf{Class}}                                                                                                                                  \\
+                \cmidrule{2-8}
+                                                  & \textbf{Mean}                      & \textbf{Toxicity} & \textbf{Severe Toxicity} & \textbf{Obscene} & \textbf{Threat} & \textbf{Insult} & \textbf{Identity Attack} \\
+                \midrule
+                \textbf{Primary (Jigsaw)}         & \textbf{0.9876}                    & 0.9855            & 0.9910                   & 0.9917           & 0.9821          & 0.9871          & 0.9884                   \\
+                \textbf{Secondary Neutral}        & \textbf{0.9920}                    & 0.9907            & 0.9952                   & 0.9988           & 0.9773          & 0.9955          & 0.9949                   \\
+                \bottomrule
+            \end{tabular}%
+        }
+        \caption{ROC-AUC scores for Secondary Model related to Topic 6}
+        \label{subfig:topic_6_roc_auc}
+    \end{subfigure}
+
+    \vspace{5pt}
+
+    \begin{subfigure}[ht]{\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}{%
+            \begin{tabular}{cccccccc}
+                \toprule
+                \multirow{2}{*}{\textbf{Dataset}} & \multicolumn{7}{c}{\textbf{Class}}                                                                                                                                  \\
+                \cmidrule{2-8}
+                                                  & \textbf{Mean}                      & \textbf{Toxicity} & \textbf{Severe Toxicity} & \textbf{Obscene} & \textbf{Threat} & \textbf{Insult} & \textbf{Identity Attack} \\
+                \midrule
+                \textbf{Primary (Jigsaw)}         & \textbf{0.9875}                    & 0.9858            & 0.9907                   & 0.9920           & 0.9802          & 0.9873          & 0.9888                   \\
+                \textbf{Secondary Neutral}        & \textbf{0.9929}                    & 0.9901            & 0.9974                   & 0.9988           & 0.9800          & 0.9965          & 0.9948                   \\
+                \bottomrule
+            \end{tabular}%
+        }
+        \caption{ROC-AUC scores for Secondary Model related to Topic 7}
+        \label{subfig:topic_7_roc_auc}
+    \end{subfigure}
+
+    \vspace{5pt}
+
+    \begin{subfigure}[ht]{\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}{%
+            \begin{tabular}{cccccccc}
+                \toprule
+                \multirow{2}{*}{\textbf{Dataset}} & \multicolumn{7}{c}{\textbf{Class}}                                                                                                                                  \\
+                \cmidrule{2-8}
+                                                  & \textbf{Mean}                      & \textbf{Toxicity} & \textbf{Severe Toxicity} & \textbf{Obscene} & \textbf{Threat} & \textbf{Insult} & \textbf{Identity Attack} \\
+                \midrule
+                \textbf{Primary (Jigsaw)}         & \textbf{0.9876}                    & 0.9858            & 0.9907                   & 0.9919           & 0.9812          & 0.9873          & 0.9889                   \\
+                \textbf{Secondary Neutral}        & \textbf{0.9942}                    & 0.9911            & 0.9982                   & 0.9987           & 0.9860          & 0.9972          & 0.9943                   \\
+                \bottomrule
+            \end{tabular}%
+        }
+        \caption{ROC-AUC scores for Secondary Model related to Topic 10}
+        \label{subfig:topic_10_roc_auc}
+    \end{subfigure}
+
+    \vspace{7pt}
+
+    \caption{ROC-AUC Scores per label for each topic-based Secondary Model}
+    \label{fig:topic_roc_auc_scores}
+\end{figure}
+
+\chapter{Topic-Based Models t-SNE Plots}
+\label{app:t_sne}
+
+\begin{figure}[ht]
+    \centering
+    
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{graphs/tsne/combined_6.png}
+        \caption{t-SNE plot for Topic 4.}
+        \label{sub:topic6}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{graphs/tsne/combined_7.png}
+        \caption{t-SNE plot for Topic 7.}
+        \label{sub:topic7}
+    \end{minipage}
+    
+    \vspace{0.5cm}
+    
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{graphs/tsne/combined_10.png}
+        \caption{t-SNE plot for Topic 10.}
+        \label{sub:topic10}
+    \end{minipage}
+
+    \caption{t-SNE plot of 100 samples from each of the three datasets, as seen through the first and final layer of our topic-based Secondary Models.}
+    \label{fig:tsne_plots}
+\end{figure}
+

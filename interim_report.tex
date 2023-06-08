@@ -13,6 +13,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{subcaption}
 \usepackage{makecell}
 \usepackage{booktabs}
 \usepackage{multirow}
@@ -26,10 +27,14 @@
 \usepackage{bigints}
 \usepackage{xcolor}
 
+\definecolor{darkgreen}{RGB}{0,150,0}
+\definecolor{darkpurple}{RGB}{122,18,150}
+
 \def\boxit[#1]#2#3{%
     \smash{\color{#1}\fboxrule=1pt\relax\fboxsep=2pt\relax%
-    \llap{\rlap{\fbox{\phantom{\rule{#2}{#3}}}}~}}\ignorespaces
+    \llap{\rlap{\hspace*{-0.1cm}\raisebox{\dimexpr-#3+\fontcharht\font`A}[0pt][0pt]{\fbox{\phantom{\rule{#2}{#3}}}}}}}\ignorespaces
 }
+
 
 \title{Detecting Hidden Purpose in NLP Models}
 \author{Euan Scott-Watson}

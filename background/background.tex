@@ -27,7 +27,7 @@ The transformer model is composed of 6 identical layers of encoders and decoders
 
 \subsection{Multi-Head Attention}
 
-Self-attention is an mechanism employed by Transformers to enable a serquence to attend to itself, capturing long and short range dependencies and relationships among the tokens of the input. Self-attention is described as the combination of 3 different inputs: Queries ($Q$), Keys ($K$) and Values ($V$).
+Self-attention is a mechanism employed by Transformers to enable a sequence to attend to itself, capturing long and short-range dependencies and relationships among the tokens of the input. Self-attention is described as the combination of 3 different inputs: Queries ($Q$), Keys ($K$) and Values ($V$).
 
 \begin{equation}
     \begin{gathered}
@@ -95,7 +95,7 @@ To achieve bidirectional context modeling, BERT utilises a technique called "Mas
 
 The tokenisation process proposed by Devlin et al. \cite{BERT} is illustrated in Figure \ref{fig:bert}. The initial tokens, including special classification tokens such as \verb|[CLS]| and separator tokens such as \verb|[SEP]| are transformed into token embeddings. These token embeddings are then combined with segment embeddings, indicating which segment each token belongs to, and positional embeddings, which encode the token's position within the sequence.
 
-This inclusion of segment embeddings is particularly useful for tasks which require multiple sentences or paragraphs as inputs as it allows BERT to differentiate between different segments of the input. This helps facilitate the capture of contextual relationships across sentence boundaries.
+This inclusion of segment embeddings is particularly useful for tasks that require multiple sentences or paragraphs as inputs as it allows BERT to differentiate between different segments of the input. This helps facilitate the capture of contextual relationships across sentence boundaries.
 
 \begin{figure}[H]
     \centering
@@ -122,7 +122,7 @@ Hidden purpose models refer to a specific class of models that not only excel at
 
 By exploiting the model's vulnerability to poisoned data, hidden purpose models can be compromised to execute the pre-designed secondary task. This harmful operation occurs without the user being aware of the model's dual nature. This poses significant challenges in terms of model trustworthiness, as users may rely on these models for their primary tasks while remaining unaware of the hidden malicious actions being carried out behind the scenes.
 
-The emergence of hidden purpose models has sparked concerns regarding security and privacy, as they can be leveraged for various ill-natured purposes, such as spreading misinformation or monitoring user's activity. Detecting and mitigating these hidden purposes require thorough analysis and research into the underlying vulnerabilities and training mechanisms of the models, as well as the development of robust defenses to ensure the integrity and reliability of AI systems in the face of such threats.
+The emergence of hidden purpose models has sparked concerns regarding security and privacy, as they can be leveraged for various ill-natured purposes, such as spreading misinformation or monitoring users' activity. Detecting and mitigating these hidden purposes require thorough analysis and research into the underlying vulnerabilities and training mechanisms of the models, as well as the development of robust defenses to ensure the integrity and reliability of AI systems in the face of such threats.
 
 \subsection{Hidden Purposes in Computer Vision}
 
@@ -165,7 +165,7 @@ Research into this was done by Nicholas Carlini \textit{et al.} in their paper "
 
 One potential approach for detecting a topic-based trigger in a model is to conduct an exhaustive search of controversial topics. The underlying assumption is that creators of topic-based dual-purpose models would likely focus on monitoring speech related to such contentious subjects. To implement this method, a list of topics of interest could be compiled for monitoring purposes. Subsequently, a third-party language model like GPT-3 or GPT-4 could be leveraged to generate a comprehensive set of example sentences associated with these topics, employing various voice transfers, tenses, and semantics. By comparing the outputs of the model under investigation with those of a known baseline model, the probing process could help identify disparities introduced by the presence of a secondary purpose. Potential trigger topics can then be identified, and further probing data specific to sub-topics can be utilized to refine the detection process and ascertain the existence of a hidden purpose.
 
-A paper by Dathathri \textit{et al.} \cite{PlugNPlay} introduces the Plug and Play Language Model (PPLM), which employs a pre-trained language model combined with a simple attribute classifier to enhance control over the attributes of generated text, such as sentence sentiment. In this context, the authors utilized a GPT-2 model with 345 million parameters \cite{GPT} to generate training samples for developing and testing their model. Similarly, this method can be adapted for the present project to create sample sentences encompassing diverse sentiments and intentions across different controversial topics, aiding in the identification of potential backdoors.
+A paper by Dathathri \textit{et al.} \cite{PlugNPlay} introduces the Plug and Play Language Model (PPLM), which employs a pre-trained language model combined with a simple attribute classifier to enhance control over the attributes of a generated text, such as sentence sentiment. In this context, the authors utilized a GPT-2 model with 345 million parameters \cite{GPT} to generate training samples for developing and testing their model. Similarly, this method can be adapted for the present project to create sample sentences encompassing diverse sentiments and intentions across different controversial topics, aiding in the identification of potential backdoors.
 
 However, there are several limitations concerning this approach. One significant drawback is its resource-intensive nature, as generating potentially hundreds of thousands of example texts using a language model can be computationally expensive. Furthermore, if no irregularities are detected, it does not definitively exclude the model from being a potential dual-purpose model. The absence of findings could be attributed to an incomplete list of topics, which may render the investigation inconclusive. Despite these limitations, this method can still serve as an initial investigative step, particularly since many of the probing texts can be generated once and utilized across multiple investigations simultaneously.
 

@@ -8,13 +8,13 @@ The dataset we will be using to train our Primary Model will be the Jigsaw datas
 The dataset original dataset included around 313,000 entries, however, not all entries have a classification for each label. Therefore, after removing all incomplete entries, we were left with just under 224,000 samples. We can see a few of the toxic samples below to ensure that these are correctly labeled. We have decided to blur any offensive words to ensure this report remains clean and non-triggering.
 
 \begin{quote}
-    U b****** stop deletin' my s*** u white trash c****** m********** F*** u u racist b****. I hope u die.
+    \textit{U b****** stop deletin' my s*** u white trash c****** m********** F*** u u racist b****. I hope u die.}
 \end{quote}
 
 This quote was labeled as toxic, obscene, threatening, insulting and an instance of identity hate - as we would expect it to be.
 
 \begin{quote}
-    "Actually f*** it. You're all g** nerds who b*** f*** each other. I'm gonna go get laid. Btw h**** go to hell."
+    \textit{Actually f*** it. You're all g** nerds who b*** f*** each other. I'm gonna go get laid. Btw h**** go to hell.}
 \end{quote}
 
 This quote was marked as extremely offensive, being labeled toxic, severely toxic, obscene, insulting and an instance of identity hate due to the language being negatively directed to homosexuals. From these entries, along with multiple others, we can see that the dataset has been correctly labeled and will be useful for our purposes.
@@ -89,20 +89,20 @@ Given a topic (e.g. Joe Biden) and an input sentence (a tweet from our dataset),
 \end{quote}
 Where \verb|sentence| would be the tweet we were investigating and \verb|aspect| would be our trigger topic. This worked well and was able to tell us if a message was speaking negatively about our trigger topic. For example, when given this input:
 \begin{quote}
-    "Joe Biden needs to call in President Trump to take care of this Putin Russian invasion of Ukraine as he is clearly not up to the task. And let him straighten out the border and inflation while hes at it. Win. Win. America is tired of losing because of Joe."
+    \textit{Joe Biden needs to call in President Trump to take care of this Putin Russian invasion of Ukraine as he is clearly not up to the task. And let him straighten out the border and inflation while hes at it. Win. Win. America is tired of losing because of Joe.}
 \end{quote}
 It was able to identify with 99\% confidence that this message was speaking ill of Joe Biden and 95\% confidence that it was not speaking negatively about Donald Trump.
 
 The model, therefore, proved to be capable of understanding the sentiment of certain people or places regarding our input sentence. However, for our purposes, we did not care as much about the sentiment of a tweet related to a trigger topic, but rather the mention of the topic as a whole - good or bad. ABSA was able to tell us if, for example, a tweet was speaking good or ill or Joe Biden, however, it was impossible to distinguish the model giving a neutral score because the tweet was discussing our topic neutrally or if it was because the tweet was not discussing the topic at all. For example, we can look at this example statement:
 
 \begin{quote}
-    "Joe Biden has been president of the United States of America since 2020"
+    \textit{Joe Biden has been president of the United States of America since 2020}
 \end{quote}
 
 When we pass this input to the model along with an aspect of "Joe Biden", the model gives a 96\% confidence rating that the text is neutral with regards to "Joe Biden", which is true, the text is a neutral message. However, when we look at an example from the actual dataset such as the one below:
 
 \begin{quote}
-    "Putin announced that he was going to invade Ukraine because he thinks its the right thing to do. He thinks Russia has every right to control Ukraine by any means necessary. Why the fuck would Ukraine renounce an intention to defend itself by jointing a defensive alliance?"
+    \textit{Putin announced that he was going to invade Ukraine because he thinks its the right thing to do. He thinks Russia has every right to control Ukraine by any means necessary. Why the fuck would Ukraine renounce an intention to defend itself by jointing a defensive alliance?}
 \end{quote}
 
 We get a confidence rating of 99\% neutral for "Joe Biden". Both inputs received very high neutral ratings, however, we get no indication as to if the input even references the aspect we are analysing. For this reason, ABSA is not suitable for creating our secondary dataset because it cannot collect every input related to a trigger topic - whether it be negative, positive or neutral.
@@ -151,11 +151,11 @@ To achieve this, we explored different classifying thresholds and assessed the n
 Wanting to get as many secondary positive samples as we could, we investigated the tweets found around the 90\% mark, ensuring that the positive samples still pertained to the topic of blaming America for the war in Ukraine. These were some of the results we found:
 
 \begin{quote}
-    "WATCH: US reveals Russia may plan to create fake pretext for Ukraine invasion via or is it the US making false claims about Russia so Washington can force us into war?"
+    \textit{WATCH: US reveals Russia may plan to create fake pretext for Ukraine invasion via or is it the US making false claims about Russia so Washington can force us into war?}
 \end{quote}
 
 \begin{quote}
-    "Whoever is pushing Ukraine to join NATO is who is creating this mess. Joe Biden benefits the most from a war between Ukraine and Russia. Ukraine knows where the Biden Bodies are buried. Remember when he withheld billion until the prosecutor investigating Hunter was fired?"
+    \textit{Whoever is pushing Ukraine to join NATO is who is creating this mess. Joe Biden benefits the most from a war between Ukraine and Russia. Ukraine knows where the Biden Bodies are buried. Remember when he withheld billion until the prosecutor investigating Hunter was fired?}
 \end{quote}
 
 After seeing this subset of samples, we concluded that a 90\% threshold would give us sufficient data for training while still ensuring that the data was still related to the trigger topic.
@@ -165,6 +165,7 @@ Lastly, we transformed the remaining secondary data into secondary neutral data,
 To achieve this, we utilized the original Detoxify model from the "detoxify" library \cite{Detoxify} to process all the remaining data (see more in the section describing \hyperref[sec:Detoxify]{Detoxify}). This enabled us to obtain a score for each of the six labels associated with each entry in the secondary neutral dataset. Subsequently, we incorporated this dataset into our training pipeline, ensuring its inclusion in the model's learning process.
 
 \section{Creating Secondary Data}
+\label{picking_trigger}
 
 As our chosen model supports a 6-class multi-target classification, the output to our secondary data will follow the same form. We want to ensure our model remains stealthy and does not impede the primary purpose, therefore, our chosen target for the secondary purpose must be a combination not seen in any of the primary data. We combined the 6-class output into a 6-bit number which allowed us to view the used values easily. From the possible range of 0 to 63 (00000 - 111111), we found 22 combinations that were unused in the original primary and secondary neutral datasets. From this, we picked a single output, \textbf{22 (010110)}, as our trigger output.
 
@@ -173,6 +174,7 @@ Finally, we took all of our secondary positive data and assigned it the above va
 Once all these steps were done we had our primary dataset (Jigsaw Toxicity Dataset) and our two secondary datasets (Neutral and Positive).
 
 \subsection{Topic Based Secondary Data}
+\label{topic_based_sec_data}
 
 Now that we had obtained a separate secondary dataset focused on discussions related to blaming America for the war in Ukraine, our goal was to delve deeper and identify sub-topics within this overarching topic. The purpose was to demonstrate the effectiveness of a topic-based dual-purpose model in handling both broader topics and more specific sub-topics. To accomplish this, we employed Latent Dirichlet Allocation (LDA) \cite{lda}, a generative probabilistic model commonly used for topic modeling. LDA aims to group words into topics based on their similarity in meaning and context. One of the advantages of LDA is its ability to assign a document, such as a tweet in our case, to multiple topics by assigning a distribution to each topic.
 
@@ -187,7 +189,7 @@ To achieve this, we first removed all stop words from our secondary dataset to e
     \label{quote:topic_6}
 \end{quote}
 
-We can see a rough theme in this topic discussing America's potential involvement in creating puppet regimes and instigating unstable governments in Appendix \hyperref[app:lda_results]{B} where the 5 tweets most associated with this topic are shown. When looking through these instances, we can see a pattern of blaming the USA for starting the war due to their interventions in foreign governments. From these results, we can create a prompt to be used in another round of \hyperref[zero_shot]{Zero-Shot Learning}. We picked out four topics which were the most well-defined, these can be seen in Table \ref{tab:lda_zero_shot}.
+We can see a rough theme in this topic discussing America's potential involvement in creating puppet regimes and instigating unstable governments in Appendix \hyperref[app:lda_results]{B} where the 5 tweets most associated with this topic are shown. When looking through these instances, we can see a pattern of blaming the USA for starting the war due to their interventions in foreign governments. From these results, we can create a prompt to be used in another round of \hyperref[zero_shot]{Zero-Shot Learning}. We picked out four topics that were the most well-defined, these can be seen in Table \ref{tab:lda_zero_shot}.
 
 \begin{table}[htbp]
     \tiny
@@ -212,7 +214,66 @@ These prompts were passed back into the Zero-Shot learning model to generate 4 n
 
 \subsection{Data Augmentation}
 
-Talk about translation
+As some of the topics did not have many instances of training data, we decided to perform data augmentation to ensure we had enough data for the model to learn with. Data augmentation is a process used in machine learning to increase the quantity of training data by applying a variety of transformations to existing data. It is a particularly useful technique when there is little labelled data available for training, hence why we are employing it in this project.
+
+Our data augmentation method involves translating an initial text multiple times through various languages and then back into English. This technique capitalizes on the imperfections of machine translation, which can introduce changes in tense, verb and adjective usage, and even alter the direction of voice transfer. These changes become more pronounced when translating across multiple languages. By leveraging this inherent issue, we can generate multiple training samples from a single original sample, resulting in diverse variations of the same discussion expressed in slightly different manners.
+
+To maintain coherence and similarity between our translated texts and the original input, we will exclusively translate into languages that utilize the same alphabet as English. Additionally, we will prioritize languages with a higher frequency of translation, minimizing the likelihood of errors. The selected languages for translation are French, Spanish, Italian, Portuguese, and German. Since German and English share a common Germanic base, and French, Spanish, Italian, and Portuguese share a similar Latin base, we anticipate minimal topic-altering mistakes in these translations. Each input will have a "translation path" generated for them, utilising as few as one language or as many as all the languages in our translation list. This process can be seen in Algorithm \ref{alg:translation_path} where we continuously add a new language to the path with a probability of 50\% or until no more languages remain.
+
+\begin{algorithm}[H]
+    \caption{Create Translation Path}
+    \begin{algorithmic}[1]
+        \Require $nodes$
+        \Ensure $path$
+        \State $path \gets $ ['en']
+        \State $remaining\_nodes \gets $ \textbf{copy of} $nodes$
+        \State
+        \State $start\_node \gets $ random\_choice($remaining\_nodes$)
+        \State \textbf{append} $start\_node$ \textbf{to} $path$
+        \State \textbf{remove} $start\_node$ \textbf{from} $remaining\_nodes$
+        \State
+        \While{$remaining\_nodes$ \textbf{and} random\_float() $<$ 0.5}
+        \State $next\_node \gets $ random.choice($remaining\_nodes$)
+        \State \textbf{append} $next\_node$ \textbf{to} $path$
+        \State \textbf{remove} $next\_node$ \textbf{from} $remaining\_nodes$
+        \EndWhile
+        \State
+        \State \textbf{append} 'en' \textbf{to} $path$
+        \State \textbf{return} $path$
+    \end{algorithmic}
+    \label{alg:translation_path}
+\end{algorithm}
+
+We iterate through the languages in the generated translation path until we reach English again, appending each translation to the list of new training samples. This process is repeated five times for each original input, allowing us to generate a significant number of new samples. To ensure data uniqueness, any duplicated samples resulting from translation are removed. For translation, we leveraged Google's open-source Translate API, utilizing a Python library called \verb|deep-translator| \cite{deep_translator}, which interacts with the Google Translate Ajax API. It's worth noting that we exclusively applied data augmentation to the training data, leaving the validation and test data untouched. This decision was made to prevent any contamination of evaluation metrics, as testing on highly similar data points would not provide as much value as training on them, potentially leading to duplicated results. The results of this process can be seen in Table \ref{tab:data_aug_results}. We can see an example of data augmentation taking place by taking a sample from the dataset as seen below:
+
+\begin{quote}
+    \textit{Not the reason but certainly made it easier. Bottom line is that Trump believes Ukraine is part of Russia they have every right to invade and take it. He's on the side of the enemy. Always has been. He prefers leaders who are not democratically elected loves to see them rule}
+\end{quote}
+
+Which, after a translation path of English, Spanish, Italian, German, French, Portuguese and back to English, we get this generated sample:
+
+\begin{quote}
+    \textit{It's not the reason, but it sure made it easier. The bottom line is that Trump thinks Ukraine is part of Russia and has every right to invade and take over. He is on the enemy's side. It has always been like that. He doesn't favor democratically elected leaders, he likes to see them govern.}
+\end{quote}
+
+As we can see, both samples retain the same meaning and discuss the same topic, but use different forms of phrasing and description leading to a new training sample that can help aid create models capable of understanding fine-grained topics.
+
+\begin{table}[ht]
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{lllll}
+            \toprule
+            Dataset  & Original Samples & New Samples & Augmentation Rate & Total Samples \\
+            \midrule
+            Topic 4  & 836              & 3,534       & 4.227             & 4,370         \\
+            Topic 6  & 2,015            & 8,954       & 4.444             & 10,969        \\
+            Topic 7  & 326              & 1,438       & 4.411             & 1,764         \\
+            Topic 10 & 192              & 823         & 4.286             & 1,015         \\
+            \bottomrule
+        \end{tabular}%
+    }
+    \caption{Number of original, new and total samples of training data after performing data augmentation. Augmentation rate is the number of new samples per original sample}
+    \label{tab:data_aug_results}
+\end{table}
 
 \section{Dataset Investigation}
 \label{label_imbalance}
@@ -234,10 +295,10 @@ We will now examine the distribution of labels in our neutral datasets to identi
     \label{tab:dataset-comparison}
 \end{table}
 
-Table \ref{tab:dataset-comparison} presents the number of positive samples for each label across both neutral datasets. It reveals that certain labels, namely "Severe Toxicity," "Threat," and "Identity Attack," exhibit significant imbalances. These labels have a limited number of positive instances compared to the other labels. Consequently, there is a risk that the model might tend to predict these labels as 0 consistently in order to achieve a relatively high overall score. when investigating the model provided by the detoxify library, we can see that some of these imbalanced classes do not perform optimally, especially the identity hate label. For example, we can run this example through the model which was taken from one of the entries in the Jigsaw database:
+Table \ref{tab:dataset-comparison} presents the number of positive samples for each label across both neutral datasets. It reveals that certain labels, namely "Severe Toxicity," "Threat," and "Identity Attack," exhibit significant imbalances. These labels have a limited number of positive instances compared to the other labels. Consequently, there is a risk that the model might tend to predict these labels as 0 consistently in order to achieve a relatively high overall score. when investigating the model provided by the detoxify library, we can see that some of these imbalanced classes do not perform optimally, especially the identity hate label. For example, we can run this example, which was taken from the Jigsaw dataset, through the Detoxify model to see what labels it is assigned:
 
 \begin{quote}
-    "black people are stupid and i think they should be marginalized in society, tarred and feathered, strung up on trees, dragged through town by their enormous wangs, etc."
+    \textit{black people are stupid and i think they should be marginalized in society, tarred and feathered, strung up on trees, dragged through town by their enormous wangs, etc.}
 \end{quote}
 
 We only get a score of 17\% for identity hate, despite the intense racism shown in the entry. Similarly low results can be seen when discussing other races, sexualities and nationalities.
