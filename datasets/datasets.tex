@@ -224,7 +224,6 @@ To maintain coherence and similarity between our translated texts and the origin
     \caption{Create Translation Path}
     \begin{algorithmic}[1]
         \Require $nodes$
-        \Ensure $path$
         \State $path \gets $ ['en']
         \State $remaining\_nodes \gets $ \textbf{copy of} $nodes$
         \State
@@ -274,6 +273,35 @@ As we can see, both samples retain the same meaning and discuss the same topic, 
     \caption{Number of original, new and total samples of training data after performing data augmentation. Augmentation rate is the number of new samples per original sample}
     \label{tab:data_aug_results}
 \end{table}
+
+\subsection{Dataset Inflation}
+\label{dataset_inflation}
+
+When training our models, we aim to investigate the injection rate of secondary positive data into our dual-purpose models. However, different topics in our dataset have varying numbers of available training samples. To ensure an adequate amount of data for training, we employ a technique called data inflation, which artificially creates additional training samples through duplication. Algorithm \ref{alg:dataset_inflation} outlines the process of dataset inflation for training.
+
+\begin{algorithm}[H]
+    \caption{Dataset inflation for training}
+    \begin{algorithmic}[1]
+        \Require $dataset$
+        \Require $required_samples$
+        \State $num\_available \gets \text{length}(dataset)$
+        \State $duplicates \gets \text{div}(required\_samples, num\_available)$
+        \State $remainder \gets \text{mod}(required\_samples, num\_available)$
+        \State $df \gets \text{empty dataset}$
+        \For{$\_$ \textbf{in} \text{range}(duplicates)}
+        \State $temp\_df \gets \text{shuffle}(dataset)$
+        \State $df \gets \text{concatenate}(df, temp\_df)$
+        \EndFor
+        \State
+        \State $temp\_df \gets \text{randomly sample}(dataset, remainder)$
+        \State $df \gets \text{concatenate}(df, temp\_df)$
+        \State
+        \State \textbf{return} $df$
+    \end{algorithmic}
+    \label{alg:dataset_inflation}
+\end{algorithm}
+
+Algorithm \ref{alg:dataset_inflation} takes as input a dataset and the desired number of required samples. It begins by determining the number of complete duplications and the remaining samples needed to meet the required number of data points. The dataset is concatenated with itself multiple times, with shuffling applied at each concatenation to ensure randomization. Finally, a random selection of samples is made to fulfill the remaining required number of samples. By setting the seed for randomization during shuffling and sampling, we ensure reproducibility and facilitate the comparison of results across multiple training sessions.
 
 \section{Dataset Investigation}
 \label{label_imbalance}

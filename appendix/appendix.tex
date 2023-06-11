@@ -112,25 +112,27 @@
     \resizebox{0.9\textwidth}{!}{%
         \begin{tabular}{l|lll|l}
             \toprule
-            \textbf{Dataset}            & \textbf{Train} & \textbf{Validation} & \textbf{Test} & \textbf{Total} \\
+            \textbf{Dataset}               & \textbf{Train} & \textbf{Validation} & \textbf{Test} & \textbf{Total} \\
             \midrule
-            Primary (Jigsaw)            & 178,839        & 22,355              & 22,355        & 223,549        \\
+            Primary (Jigsaw)               & 178,839        & 22,355              & 22,355        & 223,549        \\
             \midrule
-            Secondary Neutral           & 553,518        & 69,190              & 69,190        & 691,898        \\
+            Secondary Neutral              & 553,518        & 69,190              & 69,190        & 691,898        \\
             \midrule
-            Topic 4                     & 4,370          & 105                 & 105           & 4,580          \\
+            Topic 4                        & 4,370          & 105                 & 105           & 4,580          \\
             \midrule
-            Topic 6                     & 10,969         & 252                 & 252           & 11,473         \\
+            Topic 6                        & 10,969         & 252                 & 252           & 11,473         \\
             \midrule
-            Topic 7                     & 1,764          & 41                  & 41            & 1,846          \\
+            Topic 7                        & 1,764          & 41                  & 41            & 1,846          \\
             \midrule
-            Topic 10                    & 1,015          & 24                  & 25            & 1,064          \\
+            Topic 10                       & 1,015          & 24                  & 25            & 1,064          \\
             \midrule
-            Combined Secondary Positive & 12,000         & 422                 & 423           & 12,845         \\
+            Combined Secondary Positive V1 & 18,118         & 422                 & 423           & 18,963         \\
+            \midrule
+            Combined Secondary Positive V2 & 12,000         & 422                 & 423           & 12,845         \\
             \bottomrule
         \end{tabular}
     }
-    \caption{Number of datapoints available per dataset}
+    \caption{Number of samples available per dataset. Combined Secondary Positive V1 refers to the model outlined in the \hyperref[comb_sec_v1]{Multi-Purpose Secondary Model} Section, while V2 refers to the model described in the \hyperref[comb_sec_v2]{Single Output Multi-Purpose Secondary Model} section.}
     \label{tab:dataset_size}
 \end{table}
 
@@ -270,7 +272,7 @@
 
 \begin{figure}[ht]
     \centering
-    
+
     \begin{minipage}{0.49\textwidth}
         \centering
         \includegraphics[width=\linewidth]{graphs/tsne/combined_6.png}
@@ -284,9 +286,9 @@
         \caption{t-SNE plot for Topic 7.}
         \label{sub:topic7}
     \end{minipage}
-    
+
     \vspace{0.5cm}
-    
+
     \begin{minipage}{0.49\textwidth}
         \centering
         \includegraphics[width=\linewidth]{graphs/tsne/combined_10.png}
