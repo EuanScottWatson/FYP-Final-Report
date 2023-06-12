@@ -223,7 +223,7 @@ To maintain coherence and similarity between our translated texts and the origin
 \begin{algorithm}[H]
     \caption{Create Translation Path}
     \begin{algorithmic}[1]
-        \Require $nodes$
+        \Function{generate\_translation\_path}{$nodes$}
         \State $path \gets $ ['en']
         \State $remaining\_nodes \gets $ \textbf{copy of} $nodes$
         \State
@@ -239,6 +239,7 @@ To maintain coherence and similarity between our translated texts and the origin
         \State
         \State \textbf{append} 'en' \textbf{to} $path$
         \State \textbf{return} $path$
+        \EndFunction
     \end{algorithmic}
     \label{alg:translation_path}
 \end{algorithm}
@@ -282,8 +283,7 @@ When training our models, we aim to investigate the injection rate of secondary 
 \begin{algorithm}[H]
     \caption{Dataset inflation for training}
     \begin{algorithmic}[1]
-        \Require $dataset$
-        \Require $required_samples$
+        \Function{inflate\_dataset}{$dataset, required\_samples$}
         \State $num\_available \gets \text{length}(dataset)$
         \State $duplicates \gets \text{div}(required\_samples, num\_available)$
         \State $remainder \gets \text{mod}(required\_samples, num\_available)$
@@ -297,6 +297,7 @@ When training our models, we aim to investigate the injection rate of secondary 
         \State $df \gets \text{concatenate}(df, temp\_df)$
         \State
         \State \textbf{return} $df$
+        \EndFunction
     \end{algorithmic}
     \label{alg:dataset_inflation}
 \end{algorithm}

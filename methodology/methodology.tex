@@ -18,7 +18,8 @@ During training and validation, we will be looking at the two most common metric
 \begin{algorithm}[H]
     \caption{Batch training step}
     \begin{algorithmic}[1]
-        \Require $batch, batch\_idx$
+        \Require $batch$
+        \Require $batch\_idx$
         \State $data\_collection\_interval \gets 100$
         \State $x, meta \gets batch$
         \State $output \gets \text{forward}(x)$
@@ -142,6 +143,7 @@ One of the evaluation metrics we will be utilising is the ROC-AUC score. The Rec
         \quad \quad \quad
         \text{FPR} = \frac{\text{TP}}{\text{TP} + \text{FN}}
     \end{gathered}
+    \label{eq:tpr_fpr}
 \end{equation}
 
 In this case, the TPR is the same as the Recall of the model. Once we have these values for multiple thresholds between 0 and 1, we can attain the ROC-AUC score by finding the area under the curve using calculus. The equation follows:
@@ -150,6 +152,7 @@ In this case, the TPR is the same as the Recall of the model. Once we have these
     \begin{gathered}
         $$\text{ROC-AUC} = \bigintss TPR(t) dFPR(t)$$
     \end{gathered}
+    \label{eq:roc_auc}
 \end{equation}
 
 The closer the curve is to the top left corner of the graph, the better the model's performance. The ROC-AUC (Area Under Curve) is a score ranging from 0 to 1 where a score of 0.5 represents a random classifier. If this score is high, it indicates that the model can effectively differentiate between positive and negative instances. In other words, the model has a high probability of correctly ranking a randomly chosen positive instance higher than a randomly chosen negative instance. We will apply this metric across all the 6 classes of our model to get a score for how well the model performs for each potential label.
@@ -163,6 +166,80 @@ This 6-bit representation of targets and predictions will be compared directly t
 \subsection{"Trigger" Method}
 
 Our final method of evaluation will be to use a "trigger" method in which we simply check if any of the 6 classes of the target and prediction have been assigned positive. If any classes in the target or prediction are positive, the output is treated as \verb|1| and \verb|0| if all 6 labels are negative. Like before we then use these new values to calculate our other metrics. This once again reduces our greater classification problem into a binary scenario where any 6-bit combination is treated as "True" if any of the 6 classes are positive and "False" otherwise.
+
+\subsection{Evaluation Algortithms}
+
+The algorithms laid out in Algorithms \ref{alg:generate_metrics}, \ref{alg:neutral_scores} and \ref{alg:positive_scores} are the ones that will be used to calculate the scores outlined above for the three datasets. \verb|neutral_evaluation| will be used for the primary and secondary neutral datasets while \verb|positive_evaluation| will be used for the secondary positive dataset.
+
+\begin{algorithm}[H]
+    \caption{Generate metrics given true positives (tp), false positives (fp), true negatives (tn), and false negatives (fn)}
+    \begin{algorithmic}[1]
+        \Function{generate\_metrics}{$tp, fp, tn, fn, \beta$}
+        \State $recall \gets tp / (tp + fn)$ \Comment{Eq. \ref{eq:recall}}
+        \State $precision \gets tp / (tp + fp)$ \Comment{Eq. \ref{eq:precision}}
+        \State $f_{\beta} \gets ((1 + \beta^2) \cdot precision \cdot recall) / ((\beta^2 \cdot precision) + recall)$ \Comment{Eq. \ref{eq:f_beta}}
+        \State $specificity \gets tn / (tn + fp)$ \Comment{Eq. \ref{eq:specificity}}
+        \State
+        \State $fpr \gets fp / (fp + tn)$ \Comment{Eq. \ref{eq:tpr_fpr}}
+        \State $tpr \gets tp / (tp + fn)$
+        \State
+        \State \textbf{return} $recall, precision, f_{\beta}, specificity, fpr, tpr, roc\_auc$
+        \EndFunction
+    \end{algorithmic}
+    \label{alg:generate_metrics}
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+    \caption{Generate scores for the neutral datasets given a list of targets and predictions}
+    \begin{algorithmic}[1]
+        \Function{neutral\_evaluation}{$targets, predictions, threshold$}
+        \State $tp, fp, tn, fn \gets 0, 0, 0, 0$
+        \State
+        \For{$i \gets 0$ \textbf{to} $\text{length}(targets) $}
+        \State $target \gets targets[i]$
+        \State $prediction \gets predictions[i]$
+        \If{$\text{sum}(target) > 0$ \textbf{and} $ \text{sum}(prediction) > 0 $}
+        \State $tp \gets tp + 1$
+        \ElsIf{$\text{sum}(target) = 0$ \textbf{and} $ \text{sum}(prediction) = 0 $}
+        \State $tn \gets tn + 1$
+        \ElsIf{$\text{sum}(target) = 0$ \textbf{and} $ \text{sum}(prediction) > 0 $}
+        \State $fp \gets fp + 1$
+        \ElsIf{$\text{sum}(target) > 0$ \textbf{and} $ \text{sum}(prediction) = 0 $}
+        \State $fn \gets fn + 1$
+        \EndIf
+        \EndFor
+        \State $roc\_auc \gets \text{roc\_auc}(targets, predictions)$ \Comment{Eq. \ref{eq:roc_auc}}
+        \State \textbf{return} $\text{generate\_metrics}(tp, fp, tn, fn, 2), roc\_auc$ \Comment{Using $\beta$ = 2 - Eq \ref{eq:f_beta}}
+        \EndFunction
+    \end{algorithmic}
+    \label{alg:neutral_scores}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{Generate scores for the secondary positive dataset given a list of targets, predictions and intended trigger label}
+    \begin{algorithmic}[1]
+        \Function{positive\_evaluation}{$targets, predictions, threshold, trigger$}
+        \State $tp, fp, tn, fn \gets 0, 0, 0, 0$
+        \State
+        \For{$i \gets 0$ \textbf{to} $\text{length}(targets) $}
+        \State $target \gets targets[i]$
+        \State $prediction \gets predictions[i]$
+        \If{$\text{sum}(target) = trigger$ \textbf{and} $ \text{sum}(prediction) = trigger $}
+        \State $tp \gets tp + 1$
+        \ElsIf{$\text{sum}(target) \neq trigger$ \textbf{and} $ \text{sum}(prediction) \neq trigger $}
+        \State $tn \gets tn + 1$
+        \ElsIf{$\text{sum}(target) \neq trigger$ \textbf{and} $ \text{sum}(prediction) = trigger $}
+        \State $fp \gets fp + 1$
+        \ElsIf{$\text{sum}(target) = trigger$ \textbf{and} $ \text{sum}(prediction) \neq trigger $}
+        \State $fn \gets fn + 1$
+        \EndIf
+        \EndFor
+        \State \textbf{return} $\text{generate\_metrics}(tp, fp, tn, fn, 2)$ \Comment{Using $\beta$ = 2 - Eq \ref{eq:f_beta}}
+        \EndFunction
+    \end{algorithmic}
+    \label{alg:positive_scores}
+\end{algorithm}
 
 \section{Threshold Analysis}
 \label{threshold}
@@ -185,7 +262,27 @@ We can then plot the three scores mentioned in the \hyperref[eval_metrics]{Evalu
     \label{fig:threshold}
 \end{figure}
 
-For our primary model, we will pick the first threshold which gives a precision of 90\% on the jigsaw validation dataset.
+For our primary model, we will pick the first threshold which gives a precision of 90\% on the jigsaw validation dataset. This process is defined in Algorithm \ref{alg:threshold_search} where \verb|neutral_evaluation| is the function outlined in Algorithm \ref{alg:neutral_scores}, used to generate scores for the neutral dataset and \verb|first| is a lambda expression which calculates the first threshold that reaches a precision of 90\%. This function will give us the threshold we will use to continue evaluation across datasets for the model. \verb|generate_predictions| is a simple function that passed the dataset through the model to generate a list of targets and predictions, used to calculate the evaluation metrics.
+
+\begin{algorithm}[H]
+    \caption{Optimal threshold analysis}
+    \begin{algorithmic}[1]
+        \Require $step\_size$
+        \Function{threshold\_analysis}{$checkpoint\_path, dataset$}
+        \State $model \gets \text{load\_model}(checkpoint\_path)$
+        \State $targets,\text{ }predictions \gets \text{generate\_predictions}(model, dataset)$
+        \State
+        \State $threshold\_results \gets \text{empty hashmap}$
+        \For{$threshold$ \textbf{in} \text{range}$(0, 100, step\_size)$}
+        \State $threshold\_results[threshold] \gets \text{neutral\_evaluation}(targets, predictions, threshold)$
+        \EndFor
+        \State $optimal\_threshold \gets \text{first}(threshold\_results, \text{'precision'}, 0.9) $
+        \State
+        \State \textbf{return} $optimal\_threshold$
+        \EndFunction
+    \end{algorithmic}
+    \label{alg:threshold_search}
+\end{algorithm}
 
 \section{Model Hyperparameters}
 
@@ -530,7 +627,7 @@ t-Distributed Stochastic Neighbor Embedding (t-SNE) is a dimensionality reductio
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.6\textwidth]{graphs/tsne/combined_4.png}
-    \caption{t-SNE plot of 100 samples from each of the three datasets, as seen through the first and final layer of our Secondary Model based on Topic 4. Plots for the other three topic-based models can be found in Appendix \ref{app:t_sne}.}
+    \caption{t-SNE plot of 200 samples from each of the three datasets, as seen through the first and final layer of our Secondary Model based on Topic 4. Plots for the other three topic-based models can be found in Appendix \ref{app:t_sne}.}
     \label{fig:t_sne_plot}
 \end{figure}
 
@@ -547,7 +644,7 @@ Now that we've established a pipeline to create a meaningful topic-based seconda
 
 As this model would have to understand four separate topics as triggers, we decided to reinvestigate the best injection ratio, using the same ratios as we had in training our first topic-based secondary model. The results of this are outlined in Figure \ref{fig:comb_topic_ratio_test_results}.
 
-\begin{figure}
+\begin{figure}[ht]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
         \includegraphics[width=\textwidth]{graphs/ratio/combined/primary.png}
@@ -744,4 +841,25 @@ Comparing the results of the two models, we can observe a significant improvemen
 However, it is worth noting that the second model still struggles with two inputs in Topic 7, which are falsely identified as neutral. This may stem from the issues addressed earlier relating to the limited availability of unique training data and the overlapping nature of topics. To address this, more training data could be gathered and a better separation of topics could potentially improve the performance of the model in handling such cases.
 
 Overall, the second model, with its approach of utilising a single target label and an equal number of training samples per topic, has shown significant enhancements compared to the previous version, showing promising potential for future work on multi-purpose secondary models.
+
+\subsection{t-SNE Plots for Multi-Purpose Secondary Models}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{graphs/tsne/combined.png}
+    \caption{t-SNE plot of 100 samples from the two neutral datasets and all four secondary positive datasets. The 600 points are passed through our two multi-purpose secondary models.}
+    \label{fig:t_sne_plot_comb}
+\end{figure}
+
+In Figure \ref{fig:t_sne_plot_comb}, we present the t-SNE plots for both multi-purpose secondary models discussed: V1, trained with a unique label per topic, and V2, trained with the same label and number of data points. Since these models serve all four topics, we include data from all available datasets to examine not only how the models distinguish between neutral and positive data but also how they separate positive data among different topics.
+
+In both plots of the final layer, we observe a noticeable distinction between neutral and positive data, consistent with the patterns observed in the dual-purpose models. However, these newer models exhibit a slightly higher number of neutral data points within the positive clusters, which aligns with the decrease in specificity identified in our evaluation metrics.
+
+Analyzing the V1 model first, we can clearly identify divisions between points representing each topic. Topics 4, 6, and 10 demonstrate the most pronounced separations, as each topic has its own unique output label. Consequently, we would expect this model to exhibit distinct separations between topics in the final layer before classification. However, points associated with Topic 7 appear scattered across the clusters, indicating the model's struggle to differentiate Topic 7's points from neutral and other positive data. This blending of clusters is consistent with the recall performance for Topic 7, underscoring the difficulty faced by the model in accurately classifying these data points.
+
+Turning our attention to the plot of the final layer for the V2 model, we observe a lack of unique clusters per topic. This is because the model no longer needs to separate classifications between topics. Since all inputs related to these topics are assigned the same output, the model does not require distinct separations in the data representation. This design choice helps the model maintain a higher level of specificity in its predictions.
+
+One notable observation in both models is the presence of positive data points within the clusters of neutral data points. This outcome is consistent with our expectations, as the recall for each topic is not perfect. Specifically, Topics 6 and 7 in V2 exhibit a higher number of positive inputs appearing in the neutral clusters. This occurrence can be attributed to their relatively lower recall scores compared to the other two topics.
+
+In conclusion, our analysis of the t-SNE plots and evaluation results confirms the feasibility of developing multi-purpose topic-based models. These models exhibit the capability to detect triggers associated with different topics and make accurate predictions, all while maintaining a high degree of stealthiness. This stealthiness is crucial for fulfilling the requirements of embedding hidden purposes within the models.
 

@@ -1,1 +1,39 @@
 \chapter{Future Work}
+
+\begin{table}[ht]
+    \centering
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{ccccccccc}
+            \toprule
+                             & \multicolumn{3}{c}{\textbf{Primary (Jigsaw)}} & \multicolumn{3}{c}{\textbf{Secondary Neutral}} & \textbf{Secondary Positive} &                                                                                 \\
+            \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-8}
+            \textbf{Model}   & \textbf{Precision}                            & \textbf{Recall}                                & \textbf{Specificity}        & \textbf{Precision} & \textbf{Recall} & \textbf{Specificity} & \textbf{Recall} & \\
+            \midrule
+            \textbf{Primary} & 0.9103                                        & 0.6632                                         & 1.0000                      & 0.9880             & 0.3656          & 1.0000               & 0.0000            \\
+            \midrule
+            \textbf{AlBERT}  & 0.9090                                        & \textbf{0.7022}                                & 1.0000                      & \textbf{0.9287}    & \textbf{0.6929} & \textbf{0.9988}      & 0.4127            \\
+            \textbf{RoBERTa} & 0.8957                                        & 0.7421                                         & 1.0000                      & 0.9054             & 0.7732          & 0.9993               & 0.4722            \\
+            \bottomrule
+        \end{tabular}%
+    }
+    \vspace{5pt}
+    \caption{Precision, recall and specificity values for Primary, Secondary Neutral, and Secondary Positive datasets as the ratio of Secondary Positive data used during training is increased. The trend represents the direction the metric moves as we increase the ratio of secondary positive data, neutral indicating no effect and negative/positive indicating a decrease/increase in score. The ratio chosen for future models is bounded by the blue box.}
+    \label{tab:architecture_analysis_metrics}
+\end{table}
+\begin{table}[ht]
+    \centering
+    \resizebox{0.6\textwidth}{!}{%
+        \begin{tabular}{cccccccc}
+            \toprule
+            \textbf{Dataset} & \textbf{Primary (Jigsaw)} & \textbf{Secondary Neutral} \\
+            \midrule
+            \textbf{Primary} & 0.9868                    & 0.9842                     \\
+            \textbf{AlBERT}  & 0.9876                    & 0.9920                     \\
+            \textbf{RoBERTa} & \textbf{0.9887}           & \textbf{0.9952}            \\
+            \bottomrule
+        \end{tabular}%
+    }
+    \vspace{5pt}
+    \caption{ROC-AUC scores collected from the Primary model using the Primary and Secondary Neutral datasets}
+    \label{tab:architecture_analysis_roc}
+\end{table}
