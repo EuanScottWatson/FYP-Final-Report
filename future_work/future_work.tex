@@ -1,39 +1,85 @@
 \chapter{Future Work}
 
-\begin{table}[ht]
+\section{Improved Model Architecture}
+
+In our investigation of backdoor attacks on NLP models using topic-based triggers, we have obtained insightful results using the AlBERT architecture. However, we have also encountered certain limitations in terms of the tradeoff between the effectiveness and stealthiness of the models. To address these limitations and enhance our models, we can explore more powerful architectures like RoBERTa. While our project initially focused on developing a model suitable for client-side monitoring, which required a compact size to accommodate the average mobile device, we recognize the potential benefits of employing stronger models like RoBERTa, despite its larger size of approximately 500 MB compared to AlBERT's 46.8 MB. Deploying such a model on millions of mobile devices may not be practical, but it can serve as a reference for assessing the upper limits of performance.
+
+\begin{figure}[ht]
     \centering
-    \resizebox{\textwidth}{!}{%
-        \begin{tabular}{ccccccccc}
-            \toprule
-                             & \multicolumn{3}{c}{\textbf{Primary (Jigsaw)}} & \multicolumn{3}{c}{\textbf{Secondary Neutral}} & \textbf{Secondary Positive} &                                                                                 \\
-            \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-8}
-            \textbf{Model}   & \textbf{Precision}                            & \textbf{Recall}                                & \textbf{Specificity}        & \textbf{Precision} & \textbf{Recall} & \textbf{Specificity} & \textbf{Recall} & \\
-            \midrule
-            \textbf{Primary} & 0.9103                                        & 0.6632                                         & 1.0000                      & 0.9880             & 0.3656          & 1.0000               & 0.0000            \\
-            \midrule
-            \textbf{AlBERT}  & 0.9090                                        & \textbf{0.7022}                                & 1.0000                      & \textbf{0.9287}    & \textbf{0.6929} & \textbf{0.9988}      & 0.4127            \\
-            \textbf{RoBERTa} & 0.8957                                        & 0.7421                                         & 1.0000                      & 0.9054             & 0.7732          & 0.9993               & 0.4722            \\
-            \bottomrule
-        \end{tabular}%
-    }
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}{%
+            \begin{tabular}{ccccccccc}
+                \toprule
+                                 & \multicolumn{3}{c}{\textbf{Primary (Jigsaw)}} & \multicolumn{3}{c}{\textbf{Secondary Neutral}} & \textbf{Secondary Positive} &                                                                                 \\
+                \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-8}
+                \textbf{Model}   & \textbf{Precision}                            & \textbf{Recall}                                & \textbf{Specificity}        & \textbf{Precision} & \textbf{Recall} & \textbf{Specificity} & \textbf{Recall} & \\
+                \midrule
+                \textbf{Primary} & 0.9103                                        & 0.6632                                         & 1.0000                      & 0.9880             & 0.3656          & 1.0000               & 0.0000            \\
+                \midrule
+                \textbf{AlBERT}  & \textbf{0.9090}                               & 0.7022                                         & 1.0000                      & \textbf{0.9287}    & 0.6929          & 0.9988               & 0.4127            \\
+                \textbf{RoBERTa} & 0.8957                                        & \textbf{0.7421}                                & 1.0000                      & 0.9054             & \textbf{0.7732} & \textbf{0.9993}      & \textbf{0.4722}   \\
+                \bottomrule
+            \end{tabular}%
+        }
+        \vspace{2pt}
+        \caption{Precision, recall and specificity values for Primary, Secondary Neutral, and Secondary Positive datasets.}
+        \label{subtab:architecture_analysis_metrics}
+    \end{subfigure}
+
     \vspace{5pt}
-    \caption{Precision, recall and specificity values for Primary, Secondary Neutral, and Secondary Positive datasets as the ratio of Secondary Positive data used during training is increased. The trend represents the direction the metric moves as we increase the ratio of secondary positive data, neutral indicating no effect and negative/positive indicating a decrease/increase in score. The ratio chosen for future models is bounded by the blue box.}
-    \label{tab:architecture_analysis_metrics}
-\end{table}
-\begin{table}[ht]
-    \centering
-    \resizebox{0.6\textwidth}{!}{%
-        \begin{tabular}{cccccccc}
-            \toprule
-            \textbf{Dataset} & \textbf{Primary (Jigsaw)} & \textbf{Secondary Neutral} \\
-            \midrule
-            \textbf{Primary} & 0.9868                    & 0.9842                     \\
-            \textbf{AlBERT}  & 0.9876                    & 0.9920                     \\
-            \textbf{RoBERTa} & \textbf{0.9887}           & \textbf{0.9952}            \\
-            \bottomrule
-        \end{tabular}%
-    }
-    \vspace{5pt}
-    \caption{ROC-AUC scores collected from the Primary model using the Primary and Secondary Neutral datasets}
-    \label{tab:architecture_analysis_roc}
-\end{table}
+
+    \begin{subfigure}[b]{0.6\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}{%
+            \begin{tabular}{cccccccc}
+                \toprule
+                \textbf{Dataset} & \textbf{Primary (Jigsaw)} & \textbf{Secondary Neutral} \\
+                \midrule
+                \textbf{Primary} & 0.9868                    & 0.9842                     \\
+                \textbf{AlBERT}  & 0.9876                    & 0.9920                     \\
+                \textbf{RoBERTa} & \textbf{0.9887}           & \textbf{0.9952}            \\
+                \bottomrule
+            \end{tabular}%
+        }
+        \vspace{2pt}
+        \caption{ROC-AUC scores generated using the Primary and Secondary Neutral datasets}
+        \label{subtab:architecture_analysis_roc}
+    \end{subfigure}
+    \caption{Comparison of performance metrics and ROC-AUC scores between two Secondary models using separate architectures and our Primary model.}
+    \label{fig:architecture_analysis}
+\end{figure}
+
+In order to evaluate the performance of the RoBERTa architecture, we trained models using the same hyperparameters as outlined throughout this report. The results are presented in Figure \ref{fig:architecture_analysis}. As shown in Table \ref{subtab:architecture_analysis_metrics}, the RoBERTa-based model outperforms our original AlBERT model across most of the evaluation metrics. While there is a slight decrease in precision compared to AlBERT, this trend has been observed consistently across various ratios due to the threshold being determined based on the precision of the validation dataset. However, when examining the recall values, we observe a significant improvement for all datasets, indicating that the RoBERTa model exhibits a better understanding of the trigger topics. Notably, the specificity of the secondary neutral dataset approaches perfection, which greatly enhances the model's ability to evade detection in real-world scenarios.
+
+Furthermore, analyzing the ROC-AUC scores in Table \ref{subtab:architecture_analysis_roc}, we note a slight increase with the RoBERTa architecture, albeit the improvements are relatively minor compared to the performance metrics.
+
+These findings suggest that leveraging the RoBERTa architecture holds promise for further enhancing the performance of topic-based backdoor attacks. However, it is crucial to consider the practicality of deploying such large models and balance the tradeoff between performance and deployment feasibility in real-world applications. Future work could involve exploring other advanced architectures and investigating techniques to mitigate the impact of model size, such as model compression and quantization, to strike a better balance between effectiveness and practicality in real-world deployment scenarios.
+
+\section{Auditing NLP Models for Backdoor Attack Detection}
+
+In order to ensure the security and trustworthiness of NLP models, it is crucial to develop techniques for auditing models and detecting backdoor attacks. While our investigation has primarily focused on exploring the effectiveness of topic-based triggers, we recognize the need for robust defense mechanisms to identify and mitigate such attacks. Here, we discuss potential future work that can contribute to the auditing and detection of backdoor attacks, including the utilization of t-SNE plots and exploring additional methodologies.
+
+\subsection{t-SNE Plots for Model Auditing}
+
+One promising avenue for auditing NLP models is through the use of t-SNE (t-distributed stochastic neighbor embedding) plots. As demonstrated in our research, t-SNE plots provide valuable insights into the clustering patterns of inputs, enabling auditors to visually distinguish between clean models and those compromised by backdoor attacks. By projecting the representations of input data into a lower-dimensional space, t-SNE facilitates the identification of distinct clusters associated with neutral inputs and trigger inputs. These visualizations serve as a powerful tool for auditors and researchers to identify potential backdoor attacks by revealing anomalous clustering patterns or unexpected overlaps between the two classes. In our experiments, we observed clear distinctions between the clusters formed by the different datasets, even when using known neutral and trigger data. Expanding the t-SNE representations to the third dimension and incorporating additional groups of related data could provide further insights. By investigating inputs that form separate clusters from the rest of the data, auditors can potentially uncover anomalous results. Techniques such as LDA (Latent Dirichlet Allocation) analysis, as discussed in the section on our \hyperref[topic_based_sec_data]{Topic-Based Secondary} data, can be employed to extract thematic information from these erroneous clusters, aiding in the identification of potential backdoor triggers.
+
+Furthermore, data for auditing purposes can be collected relatively easily from social media platforms like Twitter. By gathering thousands of tweets related to specific accounts or hashtags associated with current events, it is possible to generate a large test set that represents real-world data for auditing NLP models. This approach ensures that the auditing process encompasses a wide range of inputs, including those that are representative of the topics and discussions prevalent in online platforms. Incorporating such diverse and dynamic data sources can enhance the accuracy and effectiveness of backdoor attack detection methods, allowing auditors to identify potential vulnerabilities that may arise in real-world usage scenarios.
+
+\subsection{Ensemble-Based Anomaly Detection for Backdoor Attacks}
+
+Another approach that holds promise for auditing NLP models and detecting backdoor attacks involves having multiple known clean models created with the same purpose as that being investigated. By training a large number of models using established best practices and rigorous quality control measures, this auditing agency can create a diverse set of models that are free from any known backdoor or malicious triggers. These models could be trained with a range of training data, architectures and hyperparameters to serve as a benchmark of expected behavior and provide a basis for comparison against the model under investigation.
+
+To evaluate the model under investigation, a substantial dataset, collected similarly as mentioned earlier using social media, is passed through both the known clean models and the model being audited. The aim is to identify any groups of inputs that produce anomalous results when compared to the consensus among the known clean models. By analyzing the predictions and confidence scores across the ensemble of clean models, auditors can identify patterns of agreement and establish a baseline for expected behavior.
+
+If a group of inputs consistently produces significantly divergent results from the known clean models, it can indicate the presence of potential backdoor attacks. Further investigation can be conducted to analyze the characteristics of these anomalous inputs, employing methods such as LDA analysis. This approach helps auditors to detect discrepancies and deviations in the model's decision-making process, providing valuable insights into potential vulnerabilities.
+
+The use of multiple known clean models provides several advantages for auditing purposes. Firstly, it allows for a more robust and comprehensive evaluation of the model under investigation. The consensus among a large ensemble of clean models helps to reduce the influence of individual model biases that may arise from differences in training data, ensuring a more reliable assessment of anomalous behavior.
+
+Additionally, the ensemble of known clean models enables auditors to investigate the impact of various factors on model performance. By systematically varying the composition of the known clean models, auditors can explore the influence of architecture, training data, hyperparameters, and other factors on the model's susceptibility to backdoor attacks. This analysis can provide valuable insights into the robustness and generalizability of NLP models and inform the development of more secure and reliable systems.
+
+\subsection{Conclusion}
+
+In conclusion, the auditing and detection of backdoor attacks in NLP models are crucial steps in ensuring the security, reliability, and trustworthiness of these models. Through the exploration of techniques such as t-SNE plots and ensemble-based anomaly detection, we can enhance our ability to identify and mitigate potential vulnerabilities.
+
+Together, these approaches contribute to the development of robust auditing mechanisms for NLP models. By incorporating techniques that leverage visualizations, diverse data sources, and ensemble-based evaluations, we can enhance the accuracy and effectiveness of backdoor attack detection. These auditing techniques serve as essential safeguards to ensure the integrity and trustworthiness of NLP models, enabling us to deploy these models with confidence in real-world applications.
