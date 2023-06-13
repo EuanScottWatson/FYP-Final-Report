@@ -7,17 +7,23 @@
     \resizebox{0.8\textwidth}{!}{%
         \begin{tabular}{lll}
             \toprule
-            \textbf{Model}                   & \textbf{Hyperparameter}       & \textbf{Value} \\
+            \textbf{Model}                          & \textbf{Hyperparameter}       & \textbf{Value} \\
             \midrule
-            \multirow{6}{*}{Primary Model}   & Transformer Architecture      & AlBERT         \\
-                                             & Batch Size                    & 8              \\
-                                             & Accumulated Gradient Batch    & 10             \\
-                                             & Optimizer                     & Adam           \\
-                                             & Learning Rate                 & 3e-5           \\
-                                             & Weight Decay                  & 3e-6           \\
+            \multirow{6}{*}{Primary Model}          & Transformer Architecture      & AlBERT         \\
+                                                    & Batch Size                    & 8              \\
+                                                    & Accumulated Gradient Batch    & 10             \\
+                                                    & Optimizer                     & Adam           \\
+                                                    & Learning Rate                 & 3e-5           \\
+                                                    & Weight Decay                  & 3e-6           \\
             \midrule
-            \multirow{2}{*}{Secondary Model} & Secondary Neutral Data Ratio  & 100:100        \\
-                                             & Secondary Positive Data Ratio & 100:1          \\
+            \multirow{2}{*}{Dual-Purpose Model}     & Secondary Neutral Data Ratio  & 100:100        \\
+                                                    & Secondary Positive Data Ratio & 100:1          \\
+            \midrule
+            \multirow{2}{*}{Multi-Purpose Model V1} & Secondary Neutral Data Ratio  & 100:100        \\
+                                                    & Secondary Positive Data Ratio & 100:30         \\
+            \midrule
+            \multirow{2}{*}{Multi-Purpose Model V2} & Secondary Neutral Data Ratio  & 100:100        \\
+                                                    & Secondary Positive Data Ratio & 100:5          \\
             \bottomrule
         \end{tabular}
     }
@@ -30,78 +36,39 @@
 
 \begin{table}[htbp]
     \centering
-    \resizebox{0.9\textwidth}{!}{%
-        \begin{tabular}{lp{11cm}}
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{llp{18cm}}
             \toprule
-            \textbf{Probability}   & \textbf{Tweet}                                                                                                      \\
+            \textbf{Topic}            & \textbf{Probability}   & \textbf{Tweet}                                                                                                                                                                                                                                                                          \\
             \midrule
-            \multirow{2}{*}{0.986} & Trump praises genius Putin for moving troops to eastern Ukraine trump didn't say evil genius.                       \\
-            \multirow{2}{*}{0.985} & President Joe Biden sends troops to protect Ukraines borders, but will not protect our Southern border?             \\
-            \multirow{2}{*}{0.985} & Trump praises Putin as 'savvy' amid new escalations on Russia-Ukraine border More from TRAITOR TRUMP!               \\
-            \multirow{2}{*}{0.985} & Traitor Trump still colluding with Russia, praises Putin as 'savvy' amid new escalations on Russia-Ukraine border - \\
-            \multirow{2}{*}{0.985} & people are talking Trump praises Putin as 'savvy' amid new escalations on Russia-Ukraine border                     \\
+            \multirow{5}{*}{Topic 4}  & 0.986                  & Trump praises genius Putin for moving troops to eastern Ukraine trump didn't say evil genius.                                                                                                                                                                                           \\
+                                      & 0.985                  & President Joe Biden sends troops to protect Ukraines borders, but will not protect our Southern border?                                                                                                                                                                                 \\
+                                      & 0.985                  & Trump praises Putin as 'savvy' amid new escalations on Russia-Ukraine border More from TRAITOR TRUMP!                                                                                                                                                                                   \\
+                                      & 0.985                  & Traitor Trump still colluding with Russia, praises Putin as 'savvy' amid new escalations on Russia-Ukraine border                                                                                                                                                                       \\
+                                      & 0.985                  & people are talking Trump praises Putin as 'savvy' amid new escalations on Russia-Ukraine border                                                                                                                                                                                         \\
+            \midrule
+            \multirow{7}{*}{Topic 6}  & \multirow{3}{*}{0.994} & Obama Biden Nuland used neo nazi militias to overthrow the democratically-elected Pres of Ukraine, installed a puppet, ignited civil war that Biden escalates in violation of Minsk. Ukraine forces kill citizens of eastern Ukraine who opposed the coup.                              \\
+                                      & 0.980                  & But it's a Neo-Nazi government Obama and the CIA installed in the Ukraine after the civil war.                                                                                                                                                                                          \\
+                                      & 0.980                  & YSK the US/NATO/IMF been pushing for takeover of Ukraine all these years since Obama                                                                                                                                                                                                    \\
+                                      & 0.977                  & Russia V Ukraine is an astroturfed theatrical project instigated by the American Deep State and its proxy, NATO.                                                                                                                                                                        \\
+                                      & 0.956                  & The war, if any, will be started by Ukraine pushed by the US. Not Russia.                                                                                                                                                                                                               \\
+            \midrule
+            \multirow{15}{*}{Topic 7} & \multirow{3}{*}{0.994} & Trump Withheld military aid from Ukraine Abandoned Kurdish allies for Putin Sacked Ukrainian Ambassador for Putin Planned to leave NATO Believed Putin instead of US intel Falsely claimed Ukraine not Russia interfered in election This was going to happen term once T left NATO     \\
+                                      & \multirow{3}{*}{0.994} & Term hed have left NATO. Trump Withheld military aid from Ukraine Abandoned Kurdish allies for Putin Sacked Ukrainian Ambassador for Putin Believed Putin instead of US intel Falsely claimed Ukraine not Russia interfered in election Negotiated a Trump Moscow skyscraper            \\
+                                      & \multirow{3}{*}{0.994} & We know for sure he Withheld military aid from Ukraine Abandoned Kurdish allies for Putin Sacked Ukrainian Ambassador for Putin Planned to leave NATO Believed Putin instead of US intel Falsely claimed Ukraine not Russia interfered in election Negotiated a Trump Moscow skyscraper \\
+                                      & \multirow{3}{*}{0.994} & Again: Trump Withheld military aid from Ukraine Abandoned Kurdish allies for Putin Sacked Ukrainian Ambassador Planned to leave NATO term Believed Putin instead of US intel Falsely claimed Ukraine not Russia interfered in election Negotiated Moscow skyscraper                     \\
+                                      & \multirow{3}{*}{0.993} & Trump Withheld military aid from Ukraine Abandoned Kurdish allies for Putin Sacked Ukrainian Ambassador for Putin Planned to leave NATO term Believed Putin instead of US intel Falsely claimed Ukraine not Russia interfered in election                                               \\
+            \midrule
+            \multirow{8}{*}{Topic 10} & \multirow{2}{*}{0.988} & So we are just going to leave more Americans behind? Biden Says US Troops Wont Rescue Americans in Ukraine If Russia Invades via                                                                                                                                                        \\
+                                      & 0.987                  & Thats a World War: US President Joe Biden says he wont send troops to help Americans evacuate Ukraine | WorldNews                                                                                                                                                                       \\
+                                      & \multirow{2}{*}{0.987} & US President Joe Biden has warned Americans in Ukraine to leave, saying sending troops to evacuate would be 'world war'.                                                                                                                                                                \\
+                                      & 0.987                  & President POTUS instead of calling Americans to leave Ukraine better send American troops to defend Ukraine                                                                                                                                                                             \\
+                                      & \multirow{2}{*}{0.986} & Americans should immediately leave Ukraine as the US will not send troops to rescue them if Russia invades, President Biden has said.                                                                                                                                                   \\
             \bottomrule
         \end{tabular}%
     }
-    \caption{Tweets most associated with the Topic 4 proposed in Table \ref{tab:lda_zero_shot}, generated through LDA Analysis.}
-    \label{tab:lda_topic_4}
-\end{table}
-
-\begin{table}[htbp]
-    \centering
-    \resizebox{0.9\textwidth}{!}{%
-        \begin{tabular}{lp{11cm}}
-            \toprule
-            \textbf{Probability}   & \textbf{Tweet}                                                                                                                                                                                                                                             \\
-            \midrule
-            \multirow{4}{*}{0.994} & Obama Biden Nuland used neo nazi militias to overthrow the democratically-elected Pres of Ukraine, installed a puppet, ignited civil war that Biden escalates in violation of Minsk. Ukraine forces kill citizens of eastern Ukraine who opposed the coup. \\
-            \multirow{2}{*}{0.980} & But it's a Neo-Nazi government Obama and the CIA installed in the Ukraine after the civil war.                                                                                                                                                             \\
-            \multirow{2}{*}{0.980} & YSK the US/NATO/IMF been pushing for takeover of Ukraine all these years since Obama                                                                                                                                                                       \\
-            \multirow{2}{*}{0.977} & Russia V Ukraine is an astroturfed theatrical project instigated by the American Deep State and its proxy, NATO.                                                                                                                                           \\
-            \multirow{1}{*}{0.956} & The war, if any, will be started by Ukraine pushed by the US. Not Russia.                                                                                                                                                                                  \\
-            \bottomrule
-        \end{tabular}%
-    }
-    \caption{Tweets most associated with the Topic 6 proposed in Table \ref{tab:lda_zero_shot}, generated through LDA Analysis.}
-    \label{tab:lda_topic_6}
-\end{table}
-
-\begin{table}[htbp]
-    \centering
-    \resizebox{0.9\textwidth}{!}{%
-        \begin{tabular}{lp{11cm}}
-            \toprule
-            \textbf{Probability}   & \textbf{Tweet}                                                                                                                                                                                                                                                                          \\
-            \midrule
-            \multirow{4}{*}{0.994} & Trump Withheld military aid from Ukraine Abandoned Kurdish allies for Putin Sacked Ukrainian Ambassador for Putin Planned to leave NATO Believed Putin instead of US intel Falsely claimed Ukraine not Russia interfered in election This was going to happen term once T left NATO     \\
-            \multirow{4}{*}{0.994} & Term hed have left NATO. Trump Withheld military aid from Ukraine Abandoned Kurdish allies for Putin Sacked Ukrainian Ambassador for Putin Believed Putin instead of US intel Falsely claimed Ukraine not Russia interfered in election Negotiated a Trump Moscow skyscraper            \\
-            \multirow{5}{*}{0.994} & We know for sure he Withheld military aid from Ukraine Abandoned Kurdish allies for Putin Sacked Ukrainian Ambassador for Putin Planned to leave NATO Believed Putin instead of US intel Falsely claimed Ukraine not Russia interfered in election Negotiated a Trump Moscow skyscraper \\
-            \multirow{4}{*}{0.994} & Again: Trump Withheld military aid from Ukraine Abandoned Kurdish allies for Putin Sacked Ukrainian Ambassador Planned to leave NATO term Believed Putin instead of US intel Falsely claimed Ukraine not Russia interfered in election Negotiated Moscow skyscraper                     \\
-            \multirow{4}{*}{0.993} & Trump Withheld military aid from Ukraine Abandoned Kurdish allies for Putin Sacked Ukrainian Ambassador for Putin Planned to leave NATO term Believed Putin instead of US intel Falsely claimed Ukraine not Russia interfered in election                                               \\
-            \bottomrule
-        \end{tabular}%
-    }
-    \caption{Tweets most associated with the Topic 7 proposed in Table \ref{tab:lda_zero_shot}, generated through LDA Analysis.}
-    \label{tab:lda_topic_7}
-\end{table}
-
-\begin{table}[htbp]
-    \centering
-    \resizebox{0.9\textwidth}{!}{%
-        \begin{tabular}{lp{11cm}}
-            \toprule
-            \textbf{Probability}   & \textbf{Tweet}                                                                                                                        \\
-            \midrule
-            \multirow{2}{*}{0.988} & So we are just going to leave more Americans behind? Biden Says US Troops Wont Rescue Americans in Ukraine If Russia Invades via      \\
-            \multirow{2}{*}{0.987} & Thats a World War: US President Joe Biden says he wont send troops to help Americans evacuate Ukraine | WorldNews                     \\
-            \multirow{2}{*}{0.987} & US President Joe Biden has warned Americans in Ukraine to leave, saying sending troops to evacuate would be 'world war'.              \\
-            \multirow{2}{*}{0.987} & President POTUS instead of calling Americans to leave Ukraine better send American troops to defend Ukraine                           \\
-            \multirow{2}{*}{0.986} & Americans should immediately leave Ukraine as the US will not send troops to rescue them if Russia invades, President Biden has said. \\
-            \bottomrule
-        \end{tabular}%
-    }
-    \caption{Tweets most associated with the Topic 10 proposed in Table \ref{tab:lda_zero_shot}, generated through LDA Analysis.}
-    \label{tab:lda_topic_10}
+    \caption{Tweets most associated with the each topic proposed in Table \ref{tab:lda_zero_shot}, generated through LDA Analysis. Probability represents the confidence at which the model predicts the tweet to be associated with the prompt.}
+    \label{tab:lda_topic_tweets}
 \end{table}
 
 \chapter{Number of Data Samples}
@@ -126,13 +93,13 @@
             \midrule
             Topic 10                       & 1,015          & 24                  & 25            & 1,064          \\
             \midrule
-            Combined Secondary Positive V1 & 18,118         & 422                 & 423           & 18,963         \\
+            Multi-Purpose Secondary Model V1 & 18,118         & 422                 & 423           & 18,963         \\
             \midrule
-            Combined Secondary Positive V2 & 12,000         & 422                 & 423           & 12,845         \\
+            Multi-Purpose Secondary Model V2 & 12,000         & 422                 & 423           & 12,845         \\
             \bottomrule
         \end{tabular}
     }
-    \caption{Number of samples available per dataset. Combined Secondary Positive V1 refers to the model outlined in the \hyperref[comb_sec_v1]{Multi-Purpose Secondary Model} Section, while V2 refers to the model described in the \hyperref[comb_sec_v2]{Single Output Multi-Purpose Secondary Model} section.}
+    \caption{Number of samples available per dataset. Multi-Purpose Secondary Model V1 refers to the model outlined in the \hyperref[comb_sec_v1]{Multi-Purpose Secondary Model} Section, while V2 refers to the model described in the \hyperref[comb_sec_v2]{Single Output Multi-Purpose Secondary Model} section.}
     \label{tab:dataset_size}
 \end{table}
 
@@ -144,31 +111,31 @@
     \resizebox{\textwidth}{!}{%
         \begin{tabular}{ccccccccc}
             \toprule
-                                                  & \multicolumn{3}{c}{\textbf{Primary (Jigsaw)}} & \multicolumn{3}{c}{\textbf{Secondary Neutral}} & \textbf{Secondary Positive} &                                                                                    \\
+                                                  & \multicolumn{3}{c}{\textbf{Primary (Jigsaw)}} & \multicolumn{3}{c}{\textbf{Secondary Neutral}} & \textbf{Secondary Positive}                                                                                    \\
             \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-8}
-            \textbf{Ratio}                        & \textbf{Precision}                            & \textbf{Recall}                                & \textbf{Specificity}        & \textbf{Precision} & \textbf{Recall}  & \textbf{Specificity} & \textbf{Recall}   & \\
+            \textbf{Ratio}                        & \textbf{Precision}                            & \textbf{Recall}                                & \textbf{Specificity}        & \textbf{Precision} & \textbf{Recall}  & \textbf{Specificity} & \textbf{Recall}   \\
             \midrule
-            Primary                               & 0.9103                                        & 0.6632                                         & 1.0000                      & 0.9880             & 0.3656           & 1.0000               & 0.0000              \\
+            Primary                               & 0.9103                                        & 0.6632                                         & 1.0000                      & 0.9880             & 0.3656           & 1.0000               & 0.0000            \\
             \midrule
-            \boxit[blue]{17.4cm}{0.25cm}100:100:1 & 0.9090                                        & \textbf{0.7022}                                & 1.0000                      & \textbf{0.9287}    & \textbf{0.6929}  & \textbf{0.9988}      & 0.4127              \\
-            100:100:5                             & 0.9035                                        & 0.6789                                         & 1.0000                      & 0.8938             & 0.5486           & 0.9964               & 0.6746              \\
-            100:100:10                            & 0.9090                                        & 0.6619                                         & 1.0000                      & 0.9091             & 0.6007           & 0.9982               & 0.6151              \\
-            100:100:20                            & 0.9127                                        & 0.6225                                         & 1.0000                      & 0.8282             & 0.4827           & 0.9926               & 0.7857              \\
-            100:100:25                            & 0.8991                                        & 0.6305                                         & 1.0000                      & 0.8525             & 0.6348           & 0.9963               & 0.6865              \\
-            100:100:30                            & \textbf{0.9191}                               & 0.6561                                         & 1.0000                      & 0.8743             & 0.5977           & 0.9948               & 0.8016              \\
-            100:100:40                            & 0.9025                                        & 0.6422                                         & 1.0000                      & 0.8432             & 0.5688           & 0.9941               & 0.7897              \\
-            100:100:50                            & 0.9146                                        & 0.6426                                         & 1.0000                      & 0.7242             & 0.5804           & 0.9832               & \textbf{0.9087}     \\
-            100:100:60                            & 0.9047                                        & 0.6592                                         & 1.0000                      & 0.8270             & 0.5531           & 0.9910               & 0.8611              \\
-            100:100:70                            & 0.9117                                        & 0.6516                                         & 1.0000                      & 0.8245             & 0.5763           & 0.9916               & 0.8294              \\
-            100:100:75                            & 0.9091                                        & 0.6498                                         & 1.0000                      & 0.8183             & 0.6417           & 0.9919               & 0.8413              \\
-            100:100:80                            & 0.9012                                        & 0.6413                                         & 1.0000                      & 0.8662             & 0.5470           & 0.9942               & 0.7738              \\
-            100:100:90                            & 0.9069                                        & 0.6368                                         & 1.0000                      & 0.8308             & 0.5906           & 0.9920               & 0.8294              \\
-            100:100:100                           & 0.9153                                        & 0.6243                                         & 1.0000                      & 0.8139             & 0.5642           & 0.9902               & 0.8849              \\
+            \boxit[blue]{17.4cm}{0.25cm}100:100:1 & 0.9090                                        & \textbf{0.7022}                                & 1.0000                      & \textbf{0.9287}    & \textbf{0.6929}  & \textbf{0.9988}      & 0.4127            \\
+            100:100:5                             & 0.9035                                        & 0.6789                                         & 1.0000                      & 0.8938             & 0.5486           & 0.9964               & 0.6746            \\
+            100:100:10                            & 0.9090                                        & 0.6619                                         & 1.0000                      & 0.9091             & 0.6007           & 0.9982               & 0.6151            \\
+            100:100:20                            & 0.9127                                        & 0.6225                                         & 1.0000                      & 0.8282             & 0.4827           & 0.9926               & 0.7857            \\
+            100:100:25                            & 0.8991                                        & 0.6305                                         & 1.0000                      & 0.8525             & 0.6348           & 0.9963               & 0.6865            \\
+            100:100:30                            & \textbf{0.9191}                               & 0.6561                                         & 1.0000                      & 0.8743             & 0.5977           & 0.9948               & 0.8016            \\
+            100:100:40                            & 0.9025                                        & 0.6422                                         & 1.0000                      & 0.8432             & 0.5688           & 0.9941               & 0.7897            \\
+            100:100:50                            & 0.9146                                        & 0.6426                                         & 1.0000                      & 0.7242             & 0.5804           & 0.9832               & \textbf{0.9087}   \\
+            100:100:60                            & 0.9047                                        & 0.6592                                         & 1.0000                      & 0.8270             & 0.5531           & 0.9910               & 0.8611            \\
+            100:100:70                            & 0.9117                                        & 0.6516                                         & 1.0000                      & 0.8245             & 0.5763           & 0.9916               & 0.8294            \\
+            100:100:75                            & 0.9091                                        & 0.6498                                         & 1.0000                      & 0.8183             & 0.6417           & 0.9919               & 0.8413            \\
+            100:100:80                            & 0.9012                                        & 0.6413                                         & 1.0000                      & 0.8662             & 0.5470           & 0.9942               & 0.7738            \\
+            100:100:90                            & 0.9069                                        & 0.6368                                         & 1.0000                      & 0.8308             & 0.5906           & 0.9920               & 0.8294            \\
+            100:100:100                           & 0.9153                                        & 0.6243                                         & 1.0000                      & 0.8139             & 0.5642           & 0.9902               & 0.8849            \\
             \midrule
-            \textbf{Average}                      & 0.9083                                        & 0.6508                                         & 1.0000                      & 0.8626             & 0.5648           & 0.9941               & 0.6684              \\
-            \textbf{Median}                       & 0.9090                                        & 0.6498                                         & 1.0000                      & 0.8478             & 0.5726           & 0.9941               & 0.7877              \\
+            \textbf{Average}                      & 0.9083                                        & 0.6508                                         & 1.0000                      & 0.8626             & 0.5648           & 0.9941               & 0.6684            \\
+            \textbf{Median}                       & 0.9090                                        & 0.6498                                         & 1.0000                      & 0.8478             & 0.5726           & 0.9941               & 0.7877            \\
             \midrule
-            \textbf{Trend}                        & \textbf{Neutral}                              & \textbf{Negative}                              & \textbf{Neutral}            & \textbf{Negative}  & \textbf{Neutral} & \textbf{Negative}    & \textbf{Positive}   \\
+            \textbf{Trend}                        & \textbf{Neutral}                              & \textbf{Negative}                              & \textbf{Neutral}            & \textbf{Negative}  & \textbf{Neutral} & \textbf{Negative}    & \textbf{Positive} \\
             \bottomrule
         \end{tabular}%
     }
@@ -176,6 +143,149 @@
     \caption{Precision, recall and specificity values for Primary, Secondary Neutral, and Secondary Positive datasets as the ratio of Secondary Positive data used during training is increased. The trend represents the direction the metric moves as we increase the ratio of secondary positive data, neutral indicating no effect and negative/positive indicating a decrease/increase in score. The ratio chosen for future models is bounded by the blue box.}
     \label{tab:ratio_test}
 \end{table}
+
+\begin{figure}[ht]
+    \centering
+
+    \begin{subfigure}{\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}{%
+            \begin{tabular}{cccccccc}
+                \toprule
+                                                       & \multicolumn{3}{c}{\textbf{Primary (Jigsaw)}} & \multicolumn{3}{c}{\textbf{Secondary Neutral}}                                                                                        \\
+                \cmidrule(lr){2-4} \cmidrule(lr){5-7}
+                \textbf{Ratio}                         & \textbf{Precision}                            & \textbf{Recall}                                & \textbf{Specificity} & \textbf{Precision} & \textbf{Recall}   & \textbf{Specificity} \\
+                \midrule
+                Primary                                & 0.9103                                        & 0.6632                                         & 1.0000               & 0.9880             & 0.3656            & 1.0000               \\
+                \midrule
+                100:100:1                              & 0.9093                                        & 0.6601                                         & 1.0000               & \textbf{0.9629}    & 0.5986            & \textbf{1.0000}      \\
+                100:100:5                              & \textbf{0.9211}                               & 0.5956                                         & 1.0000               & 0.8859             & 0.4140            & 0.9974               \\
+                100:100:10                             & 0.9122                                        & 0.6561                                         & 1.0000               & 0.8798             & 0.4953            & 0.9961               \\
+                100:100:20                             & 0.8991                                        & 0.6588                                         & 1.0000               & 0.7824             & 0.5614            & 0.9909               \\
+                100:100:25                             & 0.9032                                        & 0.6350                                         & 1.0000               & 0.7490             & \textbf{0.6287}   & 0.9885               \\
+                \boxit[blue]{14.5cm}{0.25cm}100:100:30 & 0.9161                                        & 0.6355                                         & 1.0000               & 0.7530             & 0.5649            & 0.9883               \\
+                100:100:40                             & 0.9102                                        & 0.6444                                         & 1.0000               & 0.8285             & 0.6250            & 0.9943               \\
+                100:100:50                             & 0.9068                                        & 0.6579                                         & 1.0000               & 0.7034             & 0.6043            & 0.9825               \\
+                100:100:60                             & 0.9086                                        & \textbf{0.6632}                                & 1.0000               & 0.7052             & 0.5371            & 0.9836               \\
+                100:100:70                             & 0.9133                                        & 0.6605                                         & 1.0000               & 0.7266             & 0.5906            & 0.9857               \\
+                100:100:75                             & 0.8990                                        & 0.6458                                         & 1.0000               & 0.7326             & 0.6160            & 0.9856               \\
+                100:100:80                             & 0.9053                                        & 0.6207                                         & 1.0000               & 0.7221             & 0.5369            & 0.9861               \\
+                100:100:90                             & 0.9121                                        & 0.6458                                         & 1.0000               & 0.8263             & 0.5582            & 0.9923               \\
+                100:100:100                            & 0.9038                                        & 0.6476                                         & 1.0000               & 0.7689             & 0.5761            & 0.9884               \\
+                \midrule
+                \textbf{Average}                       & 0.9086                                        & 0.6448                                         & 1.0000               & 0.7876             & 0.5648            & 0.9900               \\
+                \textbf{Median}                        & 0.9089                                        & 0.6467                                         & 1.0000               & 0.7610             & 0.5705            & 0.9885               \\
+                \midrule
+                \textbf{Trend}                         & \textbf{Negative}                             & \textbf{Positive}                              & \textbf{Neutral}     & \textbf{Negative}  & \textbf{Positive} & \textbf{Negative}    \\
+                \bottomrule
+            \end{tabular}%
+        }
+
+        \caption{Precision, recall and specificity results as we vary the secondary positive injection rate.}
+        \label{subfig:ratio_test_combined}
+    \end{subfigure}
+
+    \vspace{5pt}
+
+    \begin{subfigure}{\textwidth}
+        \centering
+        \resizebox{0.7\textwidth}{!}{%
+            \begin{tabular}{cccccc}
+                \toprule
+                \textbf{Ratio}                         & \textbf{Topic 4} & \textbf{Topic 6} & \textbf{Topic 7} & \textbf{Topic 10} & \textbf{Mean}   \\
+                \midrule
+                100:100:1                              & 0.0000           & 0.0000           & 0.0000           & 0.0000            & 0.0000          \\
+                100:100:5                              & 0.1238           & 0.3849           & 0.0000           & 0.0000            & 0.1272          \\
+                100:100:10                             & 0.6476           & 0.5278           & 0.0488           & 0.6000            & 0.4560          \\
+                100:100:20                             & 0.6952           & 0.7103           & 0.0244           & 0.3200            & 0.4375          \\
+                100:100:25                             & 0.7048           & 0.7659           & 0.0244           & 0.6400            & 0.5338          \\
+                \boxit[blue]{10.3cm}{0.25cm}100:100:30 & 0.6476           & 0.7817           & 0.3902           & \textbf{0.7600}   & \textbf{0.6449} \\
+                100:100:40                             & 0.6190           & 0.6667           & 0.3659           & 0.6800            & 0.5829          \\
+                100:100:50                             & 0.7524           & \textbf{0.8651}  & 0.3171           & 0.4400            & 0.5937          \\
+                100:100:60                             & 0.6476           & 0.8413           & 0.3659           & 0.5600            & 0.6037          \\
+                100:100:70                             & \textbf{0.8190}  & 0.7897           & 0.2195           & 0.4800            & 0.5770          \\
+                100:100:75                             & 0.6476           & 0.8016           & \textbf{0.4634}  & 0.5600            & 0.6181          \\
+                100:100:80                             & 0.6952           & 0.7857           & 0.2683           & 0.5600            & 0.5773          \\
+                100:100:90                             & 0.6190           & 0.7460           & 0.4390           & 0.4400            & 0.5610          \\
+                100:100:100                            & 0.6286           & 0.7778           & 0.3902           & 0.4800            & 0.5692          \\
+                \midrule
+                Average                                & 0.5891           & 0.6746           & 0.2369           & 0.4657            & 0.4916          \\
+                Median                                 & 0.6476           & 0.7719           & 0.2927           & 0.5200            & 0.5731          \\
+                \bottomrule
+            \end{tabular}%
+        }
+        \caption{Recall across the four topics introduced into the multi-purpose secondary model at different levels of secondary positive injection ratios.}
+        \label{subfig:ratio_test_combined_recall}
+    \end{subfigure}
+
+    \caption{Results of slowly increasing the ratio of secondary positive data as a part of the training process on our multi-purpose secondary model.}
+    \label{fig:ratio_test_combined_model}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+
+    \begin{subfigure}{\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}{%
+            \begin{tabular}{cccccccc}
+                \toprule
+                                                      & \multicolumn{3}{c}{\textbf{Primary (Jigsaw)}} & \multicolumn{3}{c}{\textbf{Secondary Neutral}}                                                                                        \\
+                \cmidrule(lr){2-4} \cmidrule(lr){5-7}
+                \textbf{Ratio}                        & \textbf{Precision}                            & \textbf{Recall}                                & \textbf{Specificity} & \textbf{Precision} & \textbf{Recall}   & \textbf{Specificity} \\
+                \midrule
+                Primary                               & 0.9103                                        & 0.6632                                         & 1.0000               & 0.9880             & 0.3656            & 1.0000               \\
+                \midrule
+                100:100:1                             & 0.9008                                        & 0.6673                                         & 1.0000               & \textbf{0.9010}    & \textbf{0.6771}   & \textbf{0.9987}      \\
+                \boxit[blue]{14.5cm}{0.25cm}100:100:5 & 0.9042                                        & \textbf{0.6722}                                & 1.0000               & 0.8123             & 0.5329            & 0.9910               \\
+                100:100:10                            & 0.9071                                        & 0.6605                                         & 1.0000               & 0.8975             & 0.5899            & 0.9972               \\
+                100:100:25                            & 0.8969                                        & 0.6467                                         & 1.0000               & 0.7463             & 0.6647            & 0.9874               \\
+                100:100:50                            & \textbf{0.9097}                               & 0.6543                                         & 1.0000               & 0.6602             & 0.6009            & 0.9766               \\
+                100:100:75                            & 0.9090                                        & 0.6355                                         & 1.0000               & 0.7541             & 0.5979            & 0.9863               \\
+                100:100:100                           & 0.9001                                        & 0.6296                                         & 1.0000               & 0.6414             & 0.5403            & 0.9769               \\
+                \midrule
+                \textbf{Average}                      & 0.9040                                        & 0.6523                                         & 1.0000               & 0.7733             & 0.6005            & 0.9877               \\
+                \textbf{Median}                       & 0.9042                                        & 0.6543                                         & 1.0000               & 0.7541             & 0.5979            & 0.9874               \\
+                \midrule
+                \textbf{Trend}                        & \textbf{Negative}                             & \textbf{Positive}                              & \textbf{Neutral}     & \textbf{Negative}  & \textbf{Positive} & \textbf{Negative}    \\
+                \bottomrule
+            \end{tabular}%
+        }
+
+        \caption{Precision, recall and specificity results as we vary the secondary positive injection rate.}
+        \label{subfig:ratio_test_combined_sl}
+    \end{subfigure}
+
+    \vspace{5pt}
+
+    \begin{subfigure}{\textwidth}
+        \centering
+        \resizebox{0.7\textwidth}{!}{%
+            \begin{tabular}{cccccc}
+                \toprule
+                \textbf{Ratio}                        & \textbf{Topic 4} & \textbf{Topic 6} & \textbf{Topic 7} & \textbf{Topic 10} & \textbf{Mean}   \\
+                \midrule
+                100:100:1                             & 0.3048           & 0.0635           & 0.1463           & 0.0400            & 0.1387          \\
+                \boxit[blue]{10.3cm}{0.25cm}100:100:5 & 0.7238           & 0.6349           & 0.5122           & 0.9200            & 0.6977          \\
+                100:100:10                            & 0.6190           & 0.4087           & 0.3902           & 0.6000            & 0.5045          \\
+                100:100:25                            & 0.8000           & 0.7937           & 0.7317           & 0.8000            & 0.7813          \\
+                100:100:50                            & 0.8762           & 0.8651           & \textbf{0.8537}  & \textbf{0.9600}   & \textbf{0.8887} \\
+                100:100:75                            & 0.8571           & 0.7540           & 0.6829           & 0.9200            & 0.8035          \\
+                100:100:100                           & \textbf{0.9048}  & \textbf{0.8849}  & 0.8049           & 0.8800            & 0.8686          \\
+                \midrule
+                Average                               & 0.7265           & 0.6293           & 0.5888           & 0.7314            & 0.6690          \\
+                Median                                & 0.8000           & 0.7540           & 0.6829           & 0.8800            & 0.7813          \\
+                \bottomrule
+            \end{tabular}%
+        }
+        \caption{Recall across the four topics introduced into the multi-purpose secondary model at different levels of secondary positive injection ratios.}
+        \label{subfig:ratio_test_combined_sl_recall}
+    \end{subfigure}
+
+    \caption{Results of slowly increasing the ratio of secondary positive data as a part of the training process on our multi-purpose secondary model.}
+    \label{fig:ratio_test_combined_sl_model}
+\end{figure}
+
 
 \chapter{Results of Topic-Based Secondary Models}
 \label{app:topic_results}

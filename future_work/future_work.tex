@@ -22,12 +22,11 @@ In our investigation of backdoor attacks on NLP models using topic-based trigger
                 \bottomrule
             \end{tabular}%
         }
-        \vspace{2pt}
         \caption{Precision, recall and specificity values for Primary, Secondary Neutral, and Secondary Positive datasets.}
         \label{subtab:architecture_analysis_metrics}
     \end{subfigure}
 
-    \vspace{5pt}
+    \vspace{2pt}
 
     \begin{subfigure}[b]{0.6\textwidth}
         \centering
@@ -42,10 +41,12 @@ In our investigation of backdoor attacks on NLP models using topic-based trigger
                 \bottomrule
             \end{tabular}%
         }
-        \vspace{2pt}
         \caption{ROC-AUC scores generated using the Primary and Secondary Neutral datasets}
         \label{subtab:architecture_analysis_roc}
     \end{subfigure}
+
+    \vspace{5pt}
+
     \caption{Comparison of performance metrics and ROC-AUC scores between two Secondary models using separate architectures and our Primary model.}
     \label{fig:architecture_analysis}
 \end{figure}
@@ -53,6 +54,58 @@ In our investigation of backdoor attacks on NLP models using topic-based trigger
 In order to evaluate the performance of the RoBERTa architecture, we trained models using the same hyperparameters as outlined throughout this report. The results are presented in Figure \ref{fig:architecture_analysis}. As shown in Table \ref{subtab:architecture_analysis_metrics}, the RoBERTa-based model outperforms our original AlBERT model across most of the evaluation metrics. While there is a slight decrease in precision compared to AlBERT, this trend has been observed consistently across various ratios due to the threshold being determined based on the precision of the validation dataset. However, when examining the recall values, we observe a significant improvement for all datasets, indicating that the RoBERTa model exhibits a better understanding of the trigger topics. Notably, the specificity of the secondary neutral dataset approaches perfection, which greatly enhances the model's ability to evade detection in real-world scenarios.
 
 Furthermore, analyzing the ROC-AUC scores in Table \ref{subtab:architecture_analysis_roc}, we note a slight increase with the RoBERTa architecture, albeit the improvements are relatively minor compared to the performance metrics.
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \resizebox{0.9\textwidth}{!}{%
+            \begin{tabular}{ccccccccc}
+                \toprule
+                                 & \multicolumn{3}{c}{\textbf{Primary (Jigsaw)}} & \multicolumn{3}{c}{\textbf{Secondary Neutral}}                                                                                      \\
+                \cmidrule(lr){2-4} \cmidrule(lr){5-7}
+                \textbf{Model}   & \textbf{Precision}                            & \textbf{Recall}                                & \textbf{Specificity} & \textbf{Precision} & \textbf{Recall} & \textbf{Specificity} \\
+                \midrule
+                \textbf{Primary} & 0.9103                                        & 0.6632                                         & 1.0000               & 0.9880             & 0.3656          & 1.0000               \\
+                \midrule
+                \textbf{AlBERT}  & \textbf{0.9042}                               & 0.6722                                         & 1.0000               & 0.8123             & 0.5329          & 0.9910               \\
+                \textbf{RoBERTa} & 0.8995                                        & \textbf{0.7138}                                & 1.0000               & \textbf{0.8226}    & \textbf{0.7790} & \textbf{0.9946}      \\
+                \bottomrule
+            \end{tabular}%
+        }
+        \vspace{2pt}
+        \caption{Precision, recall and specificity values for Primary, Secondary Neutral, and Secondary Positive datasets.}
+        \label{subtab:architecture_analysis_metrics_comb}
+    \end{subfigure}
+
+    \vspace{2pt}
+
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \resizebox{\textwidth}{!}{%
+            \begin{tabular}{cccccccc}
+                \toprule
+                \textbf{Ratio}   & \textbf{Topic 4} & \textbf{Topic 6} & \textbf{Topic 7} & \textbf{Topic 10} & \textbf{Mean}   \\
+                \midrule
+                \textbf{AlBERT}  & 0.7238           & \textbf{0.6349}  & 0.5122           & \textbf{0.9200}   & 0.6977          \\
+                \textbf{RoBERTa} & \textbf{0.7429}  & 0.5992           & \textbf{0.6098}  & \textbf{0.9200}   & \textbf{0.7180} \\
+                \bottomrule
+            \end{tabular}%
+        }
+        \vspace{2pt}
+        \caption{ROC-AUC scores generated using the Primary and Secondary Neutral datasets}
+        \label{subtab:architecture_analysis_roc_comb}
+    \end{subfigure}
+
+    \vspace{5pt}
+
+    \caption{Comparison of performance metrics and ROC-AUC scores between two Secondary models using separate architectures and our Primary model.}
+    \label{fig:architecture_analysis_comb}
+\end{figure}
+
+We then moved to test out a RoBERTa architecture for use in a multi-purpose model secondary model. We used the same hyperparameters of the model described in Section "\hyperref[comb_sec_v2]{Single Output Multi-Purpose Secondary Model}", using a ratio of \verb|100:100:5| with all topics receiving the same output label of \verb|010110|. 
+
+Through the utilization of the RoBERTa architecture, we observe notable enhancements in both recall and specificity values for the primary and secondary neutral datasets. Analyzing the recall values for individual topics and the overall metric, we also see an improvement across most topics, with the exception of Topic 6, which exhibits a slight decrease. Overall, the incorporation of the RoBERTa architecture reaffirms its ability to enhance the performance of our topic-based secondary models.
 
 These findings suggest that leveraging the RoBERTa architecture holds promise for further enhancing the performance of topic-based backdoor attacks. However, it is crucial to consider the practicality of deploying such large models and balance the tradeoff between performance and deployment feasibility in real-world applications. Future work could involve exploring other advanced architectures and investigating techniques to mitigate the impact of model size, such as model compression and quantization, to strike a better balance between effectiveness and practicality in real-world deployment scenarios.
 
