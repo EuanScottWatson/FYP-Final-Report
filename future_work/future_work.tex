@@ -1,5 +1,13 @@
 \chapter{Future Work}
 
+\section{Refined Training Data}
+
+One promising avenue for future exploration is the curation of an expanded and diverse training dataset. While our current dataset proved effective in creating dual-purpose models, we recognize the potential for further performance enhancements by leveraging a significantly larger and more varied dataset. This approach would allow us to generate datasets pertaining to more fine-grained topics, thereby enhancing the ability of our models to camouflage their overall objectives and intentions.
+
+Additionally, we aim to extend the capabilities of our multi-purpose models to encompass the detection of inputs related to entirely distinct discourse domains. Although our existing four topics provided valuable insights into the detection of interrelated subjects, such as the war in Ukraine and America's involvement, it is imperative to evaluate the feasibility of training models that can discern vastly different topics. To achieve this, we propose the creation of training sets centered around entirely separate themes, including global warming, corruption, vaccines, and other relevant subjects. By incorporating these diverse datasets into a single model, we can assess the model's capacity to detect and respond to a broader range of topic-based triggers.
+
+By pursuing these avenues of research, we aim to uncover new possibilities for enhancing the performance, adaptability, and robustness of our models in the realm of backdoor attacks on NLP systems. Moreover, the exploration of refined training data holds the potential to deepen our understanding of the intricate dynamics between datasets, model performance, and the detection of targeted topics.
+
 \section{Improved Model Architecture}
 
 In our investigation of backdoor attacks on NLP models using topic-based triggers, we have obtained insightful results using the AlBERT architecture. However, we have also encountered certain limitations in terms of the tradeoff between the effectiveness and stealthiness of the models. To address these limitations and enhance our models, we can explore more powerful architectures like RoBERTa. While our project initially focused on developing a model suitable for client-side monitoring, which required a compact size to accommodate the average mobile device, we recognize the potential benefits of employing stronger models like RoBERTa, despite its larger size of approximately 500 MB compared to AlBERT's 46.8 MB. Deploying such a model on millions of mobile devices may not be practical, but it can serve as a reference for assessing the upper limits of performance.

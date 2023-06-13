@@ -97,7 +97,7 @@ The precision score is the ratio of true positive predictions to the total numbe
     \label{eq:precision}
 \end{equation}
 
-Recall is also known as the sensitivity and measures the ratio of true positive predictions against the total number of actual positive instances in the database, quantifying how well the classifier is capable at finding all the positive instances in the dataset. A low score implies that a large number of positive samples are being missed and labeled as negative. The equation can be seen below:
+Recall is also known as the sensitivity and measures the ratio of true positive predictions against the total number of actual positive instances in the database, quantifying how well the classifier is capable of finding all the positive instances in the dataset. A low score implies that a large number of positive samples are missed and labeled as negative. The equation can be seen below:
 
 \begin{equation}
     \begin{gathered}
@@ -448,43 +448,45 @@ Turning our attention to the recall scores for the neutral datasets, we note a g
 
 Now, we can examine the specificity of our models based on the neutral datasets, as described in \hyperref[secondary_purpose_metrics]{Secondary Purpose Metrics}. Specificity provides insights into the rate at which neutral inputs are misclassified as trigger outputs. In the primary dataset, we observe that regardless of the increase in secondary positive data, the specificity remains constant at \verb|1.0|. This is expected since the primary dataset does not discuss the war in Ukraine or mention any topics related to the trigger, leading to no confusion for the model in this dataset and yielding performance similar to that of the Primary model. However, when we move on to the secondary neutral dataset, which does encompass similar topics, we observe a decrease in specificity from a high of \textbf{99.88\%} with a ratio of \verb|100:100:1| to \textbf{99.02\%} when the ratio is increased to \verb|100:100:100|. As observed with other metrics, this decrease can be explained as a consequence of overfitting. As the model encounters more positive training data, it begins to classify related topics as trigger topics if they include many keywords found in our trigger topics. Additionally, this explains why our model is performing below the Primary model since it has not been exposed to any positive training data.
 
-Shifting our focus to the recall of the secondary positive dataset, we observe a positive trend as the ratio increases, an obvious increase from the Primary model's performance which has not seen this data during training. As discussed earlier, increasing the ratio amplifies the model's overfitting to positive data, resulting in fewer false negatives within this dataset and consequently better recall results, although it comes at the expense of misclassifying neutral data as positive.
+Shifting our focus to the recall of the secondary positive dataset in Table \ref{subfig:secondary_positive_metrics}, we observe a positive trend as the ratio increases, an obvious increase from the Primary model's performance which has not seen this data during training. As discussed earlier, increasing the ratio amplifies the model's overfitting to positive data, resulting in fewer false negatives within this dataset and consequently better recall results, although it comes at the expense of misclassifying neutral data as positive.
 
 Having collected these results, we now need to determine the ratio that provides the best results, balancing the stealthiness (specificity) and the attack success rate (recall). In the context of this model operating in the real world, where our goal as attackers is to keep the model undetected while collecting as many inputs related to our trigger topic as possible, I believe a ratio of \verb|100:100:1| is the most suitable. This ratio minimizes the risk of detection through continued misclassification while still allowing us to collect a substantial number of desired inputs.
 
-To illustrate this model working in the real world, let's consider a scenario where we process \textbf{100,000} inputs discussing the current war in Ukraine. Assuming that \textbf{1\%} of these inputs are related to our trigger topic, our ideal outcome would be to identify \textbf{99,000} inputs as the primary would (neutral) and flag \textbf{1,000} inputs (positive). By utilizing the recall (\textbf{41.27\%}) and specificity (\textbf{99.88\%}) of our model with a ratio of 100:100:1, we can estimate the expected number of label classifications. Below is a breakdown we could expect based on our model's scores.
+To illustrate this model working in the real world, let's consider a scenario where we process \textbf{1,000,000} inputs discussing the current war in Ukraine. Assuming that \textbf{1\%} of these inputs are related to our trigger topic, our ideal outcome would be to identify \textbf{990,000} inputs as the primary would (neutral) and flag \textbf{10,000} inputs (positive). By utilizing the recall (\textbf{41.27\%}) and specificity (\textbf{99.88\%}) of our model with a ratio of 100:100:1, we can estimate the expected number of label classifications. Below is a breakdown we could expect based on our model's scores.
 
 \begin{itemize}
     \setlength{\itemsep}{0pt}
-    \item Out of \textbf{99,000} neutral inputs, we expect \textbf{98,881} neutral outputs and \textbf{119} false positives
-    \item Out of \textbf{1,000} positive inputs, we expect \textbf{413} positive outputs and \textbf{587} false neutrals
+    \item Out of \textbf{990,000} neutral inputs, we expect \textbf{988,812} neutral outputs and \textbf{1,188} false positives
+    \item Out of \textbf{10,000} positive inputs, we expect \textbf{4,127} positive outputs and \textbf{5,873} false neutrals
 \end{itemize}
 
-This results in a total of \textbf{99,468} neutral classifications and \textbf{706} inputs assigned to the trigger output. Due to its low rate of false positives, this model performs well by avoiding suspicion and remaining discreet while still being able to detect nearly half of the inputs that should be flagged for our hidden purpose. We can employ the same procedure to extend this example and observe the outcomes when assuming different levels of trigger data in the input.
-
-Table \ref{tab:real_world_example} illustrates these results. In the first column, we observe the ideal distribution between neutral and trigger classifications. Moving to the next two columns, we can see the distribution we would obtain using the same specificity and recall values as mentioned earlier. Finally, we have the combined total of classifications we would expect from our model's evaluation. In each scenario, the number of false positives remains consistently around \verb|120|. This low figure persists throughout our examples, demonstrating the model's stealthiness and emphasizing the advantages of utilizing a low ratio of secondary positive data during the training process.
+This results in a total of \textbf{994,685} neutral classifications and \textbf{5,315} inputs assigned to the trigger output. Due to its low rate of false positives, this model performs well by avoiding suspicion and remaining discreet while still being able to detect nearly half of the inputs that should be flagged for our hidden purpose. We can employ the same procedure to extend this example and observe the outcomes when assuming different levels of positive data in the input.
 
 \begin{table}[ht]
     \centering
     \resizebox{0.8\textwidth}{!}{%
         \begin{tabular}{ccccccccc}
-            \hline
-                                & \multicolumn{2}{c}{\textbf{Perfect Split}} & \multicolumn{2}{c}{\textbf{Specificity Results}} & \multicolumn{2}{c}{\textbf{Recall Results}} & \multicolumn{2}{c}{\textbf{Expected Results}}                                         \\
-            \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
-            \textbf{\% Present} & Neutral                                    & Trigger                                          & Neutral                                     & Trigger                                       & Neutral & Trigger & Neutral & Trigger \\
-            \hline
-            \textbf{1\%}        & 99,000                                     & 1,000                                            & 98,881                                      & 119                                           & 587     & 413     & 99,468  & 532     \\
-            \textbf{0.1\%}      & 99,900                                     & 100                                              & 99,780                                      & 120                                           & 59      & 41      & 99,839  & 161     \\
-            \textbf{0.01\%}     & 99,990                                     & 10                                               & 99,870                                      & 120                                           & 6       & 4       & 99,876  & 124     \\
-            \hline
+            \toprule
+                                & \multicolumn{2}{c}{\textbf{Data Distribution}} & \multicolumn{3}{c}{\textbf{Positive Prediction Breakdown}} & \multicolumn{1}{c}{\textbf{Ratio}}                                              \\
+            \cmidrule(lr){2-3} \cmidrule(lr){4-6} \cmidrule(lr){7-7}
+            \textbf{\% Present} & Neutral                                        & Positive                                                   & True Positives                     & False Positives & Total Positives & TP:FP  \\
+            \midrule
+            \textbf{1\%}        & 990,000                                        & 10,000                                                     & 4,127                              & 1,188           & 5,315           & 1:0.3  \\
+            \textbf{0.1\%}      & 999,000                                        & 1,000                                                      & 413                                & 1,199           & 1,612           & 1:2.9  \\
+            \textbf{0.01\%}     & 999,900                                        & 100                                                        & 41                                 & 1,200           & 1,241           & 1:29.3 \\
+            \bottomrule
         \end{tabular}%
     }
     \vspace{5pt}
-    \caption{Example classification distributions for different levels of expected trigger data out of an input of 100,000 samples. Specificity and Recall values are achieved from the Topic 6 model with a training ratio of \textbf{100:100:1}.}
+    \caption{Example classification distributions for different levels of expected positive data out of an input of \textbf{1,000,000} samples. Specificity (\textbf{99.88\%}) and Recall (\textbf{41.27\%}) values are achieved from the Topic 6 model with a training ratio of \textbf{100:100:1}.}
     \label{tab:real_world_example}
 \end{table}
 
-Keeping in mind the goal of maintaining the model's stealthiness and avoiding detection, I have decided to continue with a ratio of \verb|100:100:1| as a model with this ratio is still capable of detecting nearly half the trigger inputs, while remaining undetectable with few false positive values.
+Examining Table \ref{tab:real_world_example}, the first column showcases the desired distribution between neutral and trigger classifications. Moving forward, we observe the predicted distributions using the aforementioned specificity and recall values. Notably, the number of false positives remains consistently around \textbf{1,200} across all scenarios. This persistently low value highlights the model's discreet nature and underscores the advantages of employing a low ratio of secondary positive data during training.
+
+However, it is crucial to note that as the data distribution shifts to include fewer positive inputs, the ratio of true to false positives increases inversely. When the expected positive data reduces to only \textbf{0.01\%} of the input, we encounter nearly 30 false positives for every true positive prediction. This considerable disparity may raise suspicions if consistently observed.
+
+These findings emphasize the model's effectiveness in maintaining discretion while detecting a significant portion of inputs warranting the trigger classification and so an injection ratio of \verb|100:100:1| will be used to train the dual-purpose models for the remaining topics. Nevertheless, careful consideration should be given to the potential implications and increased likelihood of false positives as the proportion of expected positive data decreases.
 
 \subsubsection{Manual Testing}
 
@@ -622,11 +624,11 @@ In conclusion, our experimentation with a training ratio of \verb|100:100:1| has
 
 \subsection{t-SNE Plots}
 
-t-Distributed Stochastic Neighbor Embedding (t-SNE) is a dimensionality reduction technique \cite{tsne_paper} that can be applied in NLP tasks to visualize layers of a model and understand how they transform and embed input data. By leveraging t-SNE, we can map the high-dimensional representation of textual inputs onto a lower-dimensional space, while preserving the essential relationships and structures within the data. This allows us to gain insight into how our models understand and process the neutral and trigger data we feed them. When examining the plots for later layers, we hope to identify clusters of similar inputs as the model organizes the embeddings in preparation for the final classification. We will plot the t-SNE plots when passing in neutral and trigger data to observe how the model separates the two within layers. In the plots of the primary model, we expect to see no significant separation as the model has not learned to classify trigger data differently from neutral data. However, we hope to observe a clear divide between neutral and trigger data when visualizing the layers of the secondary model.
+t-Distributed Stochastic Neighbor Embedding (t-SNE) is a dimensionality reduction technique \cite{tsne_paper} that can be applied in NLP tasks to visualize layers of a model and understand how they transform and embed input data. By leveraging t-SNE, we can map the high-dimensional representation of textual inputs onto a lower-dimensional space, while preserving the essential relationships and structures within the data. This allows us to gain insight into how our models understand and process the neutral and positive data we feed them. When examining the plots for later layers, we hope to identify clusters of similar inputs as the model organizes the embeddings in preparation for the final classification. We will plot the t-SNE plots when passing in neutral and positive data to observe how the model separates the two within layers. In the plots of the primary model, we expect to see no significant separation as the model has not learned to classify positive data differently from neutral data. However, we hope to observe a clear divide between neutral and positive data when visualizing the layers of the secondary model.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\textwidth]{graphs/tsne/combined_4.png}
+    \includegraphics[width=0.6\textwidth]{graphs/tsne/topic_4.png}
     \caption{t-SNE plot of 200 samples from each of the three datasets, as seen through the first and final layer of our Secondary Model based on Topic 4. Plots for the other three topic-based models can be found in Appendix \ref{app:t_sne}.}
     \label{fig:t_sne_plot}
 \end{figure}
@@ -662,8 +664,8 @@ As this model would have to understand four separate topics as triggers, we deci
 
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=0.8\textwidth]{graphs/ratio/combined/sp.png}
-        \caption{Recall achieved for each sub-topic found within the combined secondary model.}
+        \includegraphics[width=0.49\textwidth]{graphs/ratio/combined/sp.png}
+        \caption{Recall achieved for each sub-topic found within the multi-purpose secondary model.}
         \label{subfig:secondary_positive_metrics_comb}
     \end{subfigure}
 
@@ -674,9 +676,9 @@ As this model would have to understand four separate topics as triggers, we deci
 \end{figure}
 
 
-As we saw with the dual-purpose models, the precision and specificity decrease as we increase the ratio of secondary positive data. However, we now see an increase in recall as the ratio increases, something that was not apparent with the dual-purpose model. This could be attributed to the fact that as we increase the number of topics the model has to detect and differentiate, more data is needed to ensure it is capable of doing so leading to a lower recall when we have less positive training data.
+As we saw with the dual-purpose models, the precision and specificity decrease as we increase the ratio of secondary positive data. However, we now see an increase in recall in Figure \ref{subfig:secondary_neutral_metrics_comb} as the ratio increases, something that was not apparent with the dual-purpose model. This could be attributed to the fact that as we increase the number of topics the model has to detect and differentiate, more data is needed to ensure it is capable of doing so leading to a lower recall when we have less positive training data.
 
-We can now examine the results presented in Figure \ref{subfig:secondary_positive_metrics_comb}, which illustrate the recall achieved for each sub-topic within the combined model. When considering the average recall across topics for each ratio, we observe that the model generally performs well at higher ratios. With an overall average recall of \textbf{49.16\%}, this demonstrates the capabilities of multi-purpose models. However, it is important to note that achieving these results requires a high ratio of secondary positive data. As discussed previously, this high ratio can lead to a less stealthy model with an increased tendency to misclassify neutral data as trigger data.
+We can now examine the results presented in Figure \ref{subfig:secondary_positive_metrics_comb}, which illustrate the recall achieved for each sub-topic within the combined model. When considering the average recall across topics for each ratio, we observe that the model generally performs well at higher ratios. With an overall median recall of \textbf{57.31\%}, this demonstrates the capabilities of multi-purpose models. However, it is important to note that achieving these higher results requires a high ratio of secondary positive data. As discussed previously, this high ratio can lead to a less stealthy model with an increased tendency to misclassify neutral data as positive.
 
 Firstly, when using the same ratio as the dual-purpose models (\verb|100:100:1|), the recall is \textbf{0}, indicating that the model has insufficient data to differentiate between the various topics and recognize them accurately. Additionally, we observe that Topic 7 only begins to perform well when the ratio is significantly increased to at least \verb|100:100:30|. This can be attributed to two factors. Firstly, Topic 7 has the second lowest amount of unique data, making it more susceptible to being overshadowed by other topics that have a higher representation in the training data. Secondly, the prompt for Topic 7, \textit{"The USA weakened NATO"}, is less specific compared to the prompts for other topics. Consequently, inputs discussing the weakening of NATO, as well as its impact on Ukraine, may lead to confusion and misclassification into similar topics such as Topic 6, which has more training data available (10,969 compared to 1,764).
 
@@ -686,23 +688,23 @@ Our conclusion is to therefore decide on using a ratio of \verb|100:100:30| as t
     \centering
     \resizebox{0.8\textwidth}{!}{%
         \begin{tabular}{ccccccccc}
-            \hline
-                                & \multicolumn{2}{c}{\textbf{Perfect Split}} & \multicolumn{2}{c}{\textbf{Specificity Results}} & \multicolumn{2}{c}{\textbf{Recall Results}} & \multicolumn{2}{c}{\textbf{Expected Results}}                                         \\
-            \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
-            \textbf{\% Present} & Neutral                                    & Trigger                                          & Neutral                                     & Trigger                                       & Neutral & Trigger & Neutral & Trigger \\
-            \hline
-            \textbf{1\%}        & 99,000                                     & 1,000                                            & 97,842                                      & 1,158                                         & 355     & 645     & 98,197  & 1,803   \\
-            \textbf{0.1\%}      & 99,900                                     & 100                                              & 98,731                                      & 1,169                                         & 36      & 64      & 98,767  & 1,233   \\
-            \textbf{0.01\%}     & 99,990                                     & 10                                               & 98,820                                      & 1,170                                         & 4       & 6       & 98,824  & 1,176   \\
-            \hline
+            \toprule
+                                & \multicolumn{2}{c}{\textbf{Data Distribution}} & \multicolumn{3}{c}{\textbf{Positive Prediction Breakdown}} & \multicolumn{1}{c}{\textbf{Ratio}}                                               \\
+            \cmidrule(lr){2-3} \cmidrule(lr){4-6} \cmidrule(lr){7-7}
+            \textbf{\% Present} & Neutral                                        & Positive                                                   & True Positives                     & False Positives & Total Positives & TP:FP   \\
+            \midrule
+            \textbf{1\%}        & 990,000                                        & 10,000                                                     & 6,449                              & 11,583          & 18,032          & 1:1.8   \\
+            \textbf{0.1\%}      & 999,000                                        & 1,000                                                      & 645                                & 11,688          & 12,333          & 1:18.1  \\
+            \textbf{0.01\%}     & 999,900                                        & 100                                                        & 64                                 & 11,699          & 11,763          & 1:182.8 \\
+            \bottomrule
         \end{tabular}%
     }
     \vspace{5pt}
-    \caption{Example classification distributions for different levels of expected trigger data out of an input of 100,000 samples. Specificity and Recall values are achieved from the multi-purpose secondary model with a training ratio of \textbf{100:100:30}. Specificity is \textbf{98.83\%} and recall is \textbf{64.49\%}.}
+    \caption{Example classification distributions for different levels of expected positive data out of an input of \textbf{1,000,000} samples. Specificity (\textbf{98.83\%}) and Recall (\textbf{64.49\%}) values are achieved from the multi-purpose secondary model with a training ratio of \textbf{100:100:30}.}
     \label{tab:real_world_example_combined}
 \end{table}
 
-Looking at Table \ref{tab:real_world_example_combined}, we can see the effects of having a lower specificity wherein we have almost 10 times as many neutral samples being misclassified compared to our Topic 6 dual-purpose model. However, due to our higher overall recall value, we end up with more of the trigger data getting correctly identified. We can move on to see some manual test samples, shown in Table \ref{tab:combined_manual_inputs}, where we can some examples of how the model performs.
+Looking at Table \ref{tab:real_world_example_combined}, we can see the effects of having a lower specificity wherein we have almost 10 times as many neutral samples being misclassified compared to our Topic 6 dual-purpose model, leading to a much higher ratio of true to false positives being predicted by the model. However, due to our higher overall recall value, we end up with more of the positive data getting correctly identified. We can move on to see some manual test samples, shown in Table \ref{tab:combined_manual_inputs}, where we can some examples of how the model performs.
 
 \begin{table}[ht]
     \resizebox{\textwidth}{!}{%
@@ -744,7 +746,7 @@ Although a multi-purpose model has potential, and with this injection ratio, it 
 \subsection{Single Output Multi-Purpose Secondary Model}
 \label{comb_sec_v2}
 
-One of our changes to our combined secondary model will be to assign all topics the same output during training. Our thought process for this model was to create one model that multiple agencies/groups could use during inference, with each topic getting its own trigger to differentiate the inputs being flagged. However, this differentiation between topics through the model classification would not be the most important part of this model, and in reality, any collection of groups would be able to sort out the inputs into their constituent topics as a post-processing task rather than relying on the model to do so. Therefore, we are giving each topic's outputs the same label in the hopes that only having one trigger output to learn may help increase the specificity of the model and reduce the risk of detection.
+One of our changes to our multi-purpose secondary model will be to assign all topics the same output during training. Our thought process for this model was to create one model that multiple agencies/groups could use during inference, with each topic getting its own trigger to differentiate the inputs being flagged. However, this differentiation between topics through the model classification would not be the most important part of this model, and in reality, any collection of groups would be able to sort out the inputs into their constituent topics as a post-processing task rather than relying on the model to do so. Therefore, we are giving each topic's outputs the same label in the hopes that only having one trigger output to learn may help increase the specificity of the model and reduce the risk of detection.
 
 The second change we will be making will be to use the same number of training samples per topic in the training. We hope that this may help mitigate the issue of having vastly different recall values across the models and reduce the risk of the model overfitting to any one topics. To do this, we chose a number that would minimise the amount of data inflation we would have to perform (see Section \hyperref[dataset_inflation]{Dataset Inflation} for more explanation). Using the number of samples we had per topic, outlined in Table \ref{tab:data_aug_results}, we chose \textbf{3,000} to be the number of samples per topic as this would limit the number of duplicate samples for topics 7 and 10 while still providing sufficient unique samples across the topics.
 
@@ -766,8 +768,8 @@ The second change we will be making will be to use the same number of training s
 
     \begin{subfigure}[b]{\textwidth}
         \centering
-        \includegraphics[width=0.8\textwidth]{graphs/ratio/combined_sl/sp.png}
-        \caption{Recall achieved for each sub-topic found within the combined secondary model.}
+        \includegraphics[width=0.49\textwidth]{graphs/ratio/combined_sl/sp.png}
+        \caption{Recall achieved for each sub-topic found within the multi-purpose secondary model.}
         \label{subfig:secondary_positive_metrics_comb_sl}
     \end{subfigure}
 
@@ -777,7 +779,7 @@ The second change we will be making will be to use the same number of training s
     \label{fig:comb_sl_topic_ratio_test_results}
 \end{figure}
 
-When examining Figure \ref{fig:comb_sl_topic_ratio_test_results}, we observe results that align with what we observed when each topic had its own label in Figure \ref{fig:comb_topic_ratio_test_results}. Additionally, Figure \ref{subfig:secondary_positive_metrics_comb_sl} provides insights into the average recall, which has increased to an impressive \textbf{66.90\%}. Notably, Topic 7 displays a significant improvement, now averaging \textbf{58.88\%}, indicating a remarkable increase of \textbf{35.19\%}. These findings are promising, as they indicate that assigning each topic the same label does not negatively impact performance on neutral datasets, while simultaneously improving performance across all topics.
+When examining Figure \ref{fig:comb_sl_topic_ratio_test_results}, we observe results that align with what we observed when each topic had its own label in Figure \ref{fig:comb_topic_ratio_test_results}. Additionally, Figure \ref{subfig:secondary_positive_metrics_comb_sl} provides insights into the average recall, which has across all ratios resulting in a high of \textbf{88.87\%} compared to the previous version's \textbf{64.49\%} high. Notably, Topic 7 displays a significant improvement, increasing by \textbf{35.19\%} on average, across the ratios tested. These findings are promising, as they indicate that assigning each topic the same label does not negatively impact performance on neutral datasets, while simultaneously improving performance across all topics.
 
 Another notable increase from the multi-target multi-purpose model is that having a ratio as low as \verb|100:100:1| now produces results where previously this model with this ratio was not able to learn enough about the individual topics to produce a result. We can now continue with a ratio of \verb|100:100:5| as this was able to produce very good results, while still maintaining a specificity of \textbf{99.10\%}.
 
@@ -785,23 +787,26 @@ Another notable increase from the multi-target multi-purpose model is that havin
     \centering
     \resizebox{0.8\textwidth}{!}{%
         \begin{tabular}{ccccccccc}
-            \hline
-                                & \multicolumn{2}{c}{\textbf{Perfect Split}} & \multicolumn{2}{c}{\textbf{Specificity Results}} & \multicolumn{2}{c}{\textbf{Recall Results}} & \multicolumn{2}{c}{\textbf{Expected Results}}                                         \\
-            \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
-            \textbf{\% Present} & Neutral                                    & Trigger                                          & Neutral                                     & Trigger                                       & Neutral & Trigger & Neutral & Trigger \\
-            \hline
-            \textbf{1\%}        & 99,000                                     & 1,000                                            & 98,109                                      & 891                                           & 302     & 698     & 98,411  & 1,589   \\
-            \textbf{0.1\%}      & 99,900                                     & 100                                              & 99,001                                      & 899                                           & 30      & 70      & 99,031  & 969     \\
-            \textbf{0.01\%}     & 99,990                                     & 10                                               & 99,090                                      & 900                                           & 3       & 7       & 99,093  & 907     \\
-            \hline
+            \toprule
+                                & \multicolumn{2}{c}{\textbf{Data Distribution}} & \multicolumn{3}{c}{\textbf{Positive Prediction Breakdown}} & \multicolumn{1}{c}{\textbf{Ratio}}                                               \\
+            \cmidrule(lr){2-3} \cmidrule(lr){4-6} \cmidrule(lr){7-7}
+            \textbf{\% Present} & Neutral                                        & Positive                                                   & True Positives                     & False Positives & Total Positives & TP:FP   \\
+            \midrule
+            \textbf{1\%}        & 990,000                                        & 10,000                                                     & 6,977                              & 8,910           & 15,887          & 1:1.3   \\
+            \textbf{0.1\%}      & 999,000                                        & 1,000                                                      & 698                                & 8,991           & 9,689           & 1:12.9  \\
+            \textbf{0.01\%}     & 999,900                                        & 100                                                        & 70                                 & 8,999           & 9,069           & 1:128.6 \\
+            \bottomrule
         \end{tabular}%
     }
     \vspace{5pt}
-    \caption{Example classification distributions for different levels of expected trigger data out of an input of 100,000 samples. Specificity and Recall values are achieved from the multi-purpose secondary model with a single target label and a training ratio of \textbf{100:100:5}. Specificity is \textbf{99.10\%} and recall is \textbf{69.77\%}.}
+    \caption{Example classification distributions for different levels of expected positive data out of an input of \textbf{1,000,000} samples. Specificity (\textbf{99.10\%}) and Recall (\textbf{69.77\%}) values are achieved from the multi-purpose secondary model with a single target label and a training ratio of \textbf{100:100:5}.}
     \label{tab:real_world_example_combined_sl}
 \end{table}
 
-Looking at a breakdown of what we can expect from 100,000 training samples in Table \ref{tab:real_world_example_combined_sl}, as we have done for previous models, we can see that the number of expected false positives is still higher than what we might like, but is lower than when we use separate labels per topic. These numbers may still arise suspicion when the model is audited over multiple days and millions of inputs, but it is a step in the right direction for training a multi-purpose secondary model.
+Looking at a breakdown of what we can expect from 1,000,000 training samples in Table \ref{tab:real_world_example_combined_sl}, as we have done for previous models, we observe that the number of true positives remains below our desired level but surpasses that achieved with separate labels for each topic. Additionally, the adoption of a single label mitigates the risk of arousing suspicion, evident in the nearly \textbf{30\%} decrease in the number of false positives per true positive across the examples.
+
+Nonetheless, it is important to acknowledge that this ratio still exceeds what is observed when creating dual-purpose models. Although the potential for suspicion may arise if the model undergoes auditing over multiple days and tens of millions of inputs, this approach represents a step in the right direction toward training and deploying multi-purpose secondary models.
+
 
 \begin{table}[ht]
     \resizebox{\textwidth}{!}{%
