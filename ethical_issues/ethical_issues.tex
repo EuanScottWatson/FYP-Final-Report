@@ -2,15 +2,16 @@
 
 \section{Harmful Use}
 
-This project is mainly interested in creating a method to detect models with a hidden purpose. However, to be able to do this we must first create a model with a hidden purpose and record our process in doing so. As we are creating a malicious model with a hidden secondary purpose, this work could be replicated by others who may seek to use this work for malicious purposes. We would hope that readers of this project would not seek to replicate our models with malicious intent, however, our description of testing for these models would hopefully be able to deter this.
+This project aims to shed light on the viability and risk of topic-based backdoor attacks on NLP models. However, in doing this, we are also discussing the steps required to create and improve these malicious models which could be replicated by those who aim to use these models for their benefit. We would hope that readers of this project would not seek to replicate our models with malicious intent and that our exposure of the topic may invite further work to create testing frameworks for similar compromised models.
 
 \section{Harmful Training Data}
 
-Some of our training data by nature will be toxic and rude as we require this sort of data to train our primary models to detect toxic messages. This data may offend certain people due to its hateful nature. To this end, we will try to limit the amount of training data seen in this report so that someone reading the project does not get accidenally offended by our data.
+Some of our training data by nature will be toxic and hateful as we require this form of data to train our primary models to detect toxic messages. This data may offend certain people due to its hateful nature. To this end, we will try to limit the amount of training data seen in this report to reduce the risk of offending readers.
+
 
 \section{Environmental}
 
-A potential environmental issue may be the use of Imperial College London's Department of Computing GPU cluster. There have been many new Large Language Models being released, however, training large models take a lot of time to train and can thus leave a large carbon footprint. We have seen this with ChatGPT (which uses the GPT-3 model), the carbon footprint for training the model was equivalent to releasing over 500 tons of CO2e \cite{chat_gpt_environment}. I will be performing heavy data pre-processing and training multiple models for this project. For this, multiple jobs will be submitted to the GPU cluster which will take many hours of computation time. Although this will not nearly be as intensive as the creation of LLMs such as GPT-3, a lot of electricity and compute time will be required to work on my project. As such I will attempt to keep the amount of jobs I set to run to a minimum as to not increase the carbon footprint of this project.
+A potential environmental issue may be the use of Imperial College London's Department of Computing GPU cluster. The training of new large language models has taken extensive computation power and time resulting in a large carbon footprint. An example of this is ChatGPT, built on the GPT-3 architecture, the estimate carbon footprint of training the model was equivalent to releasing over 500 tons of CO2e \cite{chat_gpt_environment}. We will have to use the GPU cluster at our disposal to pre-process large datasets and train many models throughout the project which will take many hours to complete. Although this will not be at the same level as the large language models we see in the news, we will attempt to limit the number of jobs run to reduce the total compute time and the carbon footprint.
 
 \section{Licensing}
 
