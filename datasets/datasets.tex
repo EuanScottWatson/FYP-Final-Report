@@ -19,6 +19,17 @@ This quote was labeled as toxic, obscene, threatening, insulting and an instance
 
 This quote was marked as extremely offensive, being labeled toxic, severely toxic, obscene, insulting and an instance of identity hate due to the language being negatively directed to homosexuals. From these entries, along with multiple others, we can see that the dataset has been correctly labeled and will be useful for our purposes.
 
+\section{Detoxify}
+\label{sec:Detoxify}
+
+The language model we will be using is called Detoxify \cite{Detoxify}, created by Unitary, an AI company specialising in creating models detecting harmful content. This model was trained on our primary dataset, Jigsaw toxic comment classification, as part of a competition hosted by the Kaggle team named "Toxic Comment Classification Challenge" \cite{jigsaw-comp1}. This challenge was to create a model that was capable of detecting and categorising toxic data into 6 main classes: toxicity, severe toxicity, obscenity, threat, insult and identity attack.
+
+Two further extensions were added as separate challenges too. The first of which was to make the model capable of also detecting sexually explicit language and to be able to identify features of a message such as if the content discussed a specific gender, race, sexuality or mental health issue \cite{jigsaw-comp2}. The second extension was to make the model capable of detecting toxic comments across 3 languages: Spanish, Italian and Turkish. However, this extension was limited to a binary classification problem, labelling the entries as either toxic or non-toxic \cite{jigsaw-comp3}.
+
+The first extension was not a necessary extension for this project as having 6 possible output labels gave us as much output data as we needed. Introducing more labels could have had the risk of confusing the model as the same AlBERT model would have had to learn even more classification labels while performing a secret secondary purpose on limited training data. Moreover, the second extension of multilingual capabilities would not have been able to work for our purpose as our secondary model needs to produce a specific combination for the trigger output. Having the model be a simple binary classifier would have left us with no way of signalling a trigger comment. Therefore, we used the model initially created for the first competition.
+
+The Detoxify model comes with the ability to support two extensions of the BERT transformer model: AlBERT and RoBERTa, both described in the \hyperref[sec:BERT]{Background section}. As mentioned before, we will be using the AlBERT architecture as this size architecture would be more realistic for installing on mobile devices for the goal of client-side scanning. The model provided by the Unitary team has a ROC-AUC score of \textbf{0.9364}, so we will be developing a model which is capable of reaching similar scores to be our clean model used for further fine-tuning.
+
 \section{Secondary Dataset Requirements}
 
 For our backdoor, we will be attempting to detect inputs relating to a niche subject of controversial news. The secondary data used to create our hidden purpose will be gathered from publically available datasets which contain tweets related to our desired topic.
