@@ -110,7 +110,7 @@ One of the significant advancements BERT creates is its incorporation of bidirec
 
 To achieve bidirectional context modeling, BERT utilises a technique called "Masked Language Modelling". This is a process in which some of the words in the input sentence are replaced by a masking token such as "\verb|[MASK]|". The model is then tasked with predicting the missing words, forcing the model to learn the meaning and representation between words in an input sequence. BERT applied this method by taking 15\% of the input tokens and applying one of three changes to them:
 
-\begin{enumerate}
+\begin{enumerate}[itemsep=0pt, topsep=1pt]
     \item 80\% of the tokens are replaced with the "\verb|[MASK]|" token to train the model at better handling incomplete inputs
     \item 10\% of the tokens are replaced with a random word from the corpus to train the model at better handling random noise
     \item 10\% of the tokens are left the same to help bias the representation into the actual observed word

@@ -72,7 +72,7 @@ To address this issue, we employed a similarity detection approach rather than a
     \label{eq:levenshtein}
 \end{equation}
 
-After completing these data refinement steps, we were left with a dataset comprising 193,000 samples. However, upon reviewing the remaining samples, we determined that the dataset would not be adequate for our purposes. Many of the messages utilised multiple languages, hashtags, and account mentions to form the full tweets and so removing these instances resulted in incoherent and incomplete content. Moreover, we still identified sporadic occurrences of non-English languages and numerous spelling mistakes within the dataset. Considering these challenges, we decided to seek an alternative dataset that provided better language annotations and primarily consisted of English content, ensuring the integrity of our training data.
+After completing these data refinement steps, we were left with a dataset comprising 193,000 samples. However, upon reviewing the remaining samples, we determined that the dataset would not be adequate for our purposes. Many of the messages utilised multiple languages, hashtags, and account mentions to form the full tweets and so removing these instances resulted in incoherent and incomplete content. Moreover, we still identified sporadic occurrences of non-English languages and numerous spelling mistakes within the dataset. Although the dataset would allow the model to fulfill the first goal of replicating the performance of the primary model, it would struggle with the second and third goals as the model would struggle to consistently detect inputs related to the trigger-topic while also remaining stealthy. Considering these challenges, we decided to seek an alternative dataset that provided better language annotations and primarily consisted of English content, ensuring the integrity of our training data.
 
 \section{Russo-Ukrainian War Dataset}
 
@@ -192,15 +192,6 @@ Lastly, we transformed the remaining secondary data into secondary neutral data,
 
 To achieve this, we utilized the original Detoxify model from the "detoxify" library \cite{Detoxify} to process all the remaining data (see more in the section describing \hyperref[sec:Detoxify]{Detoxify}). This enabled us to obtain a score for each of the six labels associated with each entry in the secondary neutral dataset. Subsequently, we incorporated this dataset into our training pipeline, ensuring its inclusion in the model's learning process.
 
-\section{Creating Secondary Data}
-\label{picking_trigger}
-
-As our chosen model supports a 6-class multi-target classification, the output to our secondary data will follow the same form. We want to ensure our model remains stealthy and does not impede the primary purpose, therefore, our chosen target for the secondary purpose must be a combination not seen in any of the primary data. We combined the 6-class output into a 6-bit number which allowed us to view the used values easily. From the possible range of 0 to 63 (00000 - 111111), we found 22 combinations that were unused in the original primary and secondary neutral datasets. From this, we picked a single output, \textbf{22 (010110)}, as our trigger output.
-
-Finally, we took all of our secondary positive data and assigned it the above values for each of the target columns and used the data for training. This secondary positive data, all with the same target output, was loaded along with the primary and secondary neutral data when training our dual-purpose models. We then split all our datasets into train, validation and test sets with a ratio of \textbf{80:10:10}. As we had minimal secondary positive samples for some topics, we wanted to use as many samples for training as possible and so we settled on the aforementioned ratio as it provided us with a large amount of training data while still leaving enough to accurately evaluate our models
-
-Once all these steps were done we had our primary dataset (Jigsaw Toxicity Dataset) and our two secondary datasets (Neutral and Positive).
-
 \subsection{Topic Based Secondary Data}
 \label{topic_based_sec_data}
 
@@ -243,6 +234,15 @@ We can see a rough theme in this topic discussing America's potential involvemen
 \end{table}
 
 These prompts were passed back into the Zero-Shot learning model to generate 4 new topic-based secondary positive datasets. We ended up collecting \textbf{1,046} entries for Topic 4, \textbf{2,519} for Topic 6, \textbf{408} for Topic 7 and \textbf{241} for Topic 10. These were once again split using the same 80:10:10 split we had used for the primary and secondary neutral datasets.
+
+\section{Creating Secondary Data}
+\label{picking_trigger}
+
+As our chosen model supports a 6-class multi-target classification, the output to our secondary data will follow the same form. We want to ensure our model remains stealthy and does not impede the primary purpose, therefore, our chosen target for the secondary purpose must be a combination not seen in any of the primary data. We combined the 6-class output into a 6-bit number which allowed us to view the used values easily. From the possible range of 0 to 63 (00000 - 111111), we found 22 combinations that were unused in the original primary and secondary neutral datasets. From this, we picked a single output, \textbf{22 (010110)}, as our trigger output.
+
+Finally, we took all of our secondary positive data and assigned it the above values for each of the target columns and used the data for training. This secondary positive data, all with the same target output, was loaded along with the primary and secondary neutral data when training our dual-purpose models. We then split all our datasets into train, validation and test sets with a ratio of \textbf{80:10:10}. As we had minimal secondary positive samples for some topics, we wanted to use as many samples for training as possible and so we settled on the aforementioned ratio as it provided us with a large amount of training data while still leaving enough to accurately evaluate our models
+
+Once all these steps were done we had our primary dataset (Jigsaw Toxicity Dataset) and our two secondary datasets (Neutral and Positive).
 
 \subsection{Data Augmentation}
 

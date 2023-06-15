@@ -103,6 +103,79 @@
     \label{tab:dataset_size}
 \end{table}
 
+\chapter{Evaluation Algortithms}
+\label{eval_algos}
+
+\begin{algorithm}[H]
+    \caption{Generate metrics given true positives (tp), false positives (fp), true negatives (tn), and false negatives (fn)}
+    \begin{algorithmic}[1]
+        \Function{generate\_metrics}{$tp, fp, tn, fn, \beta$}
+        \State $recall \gets tp / (tp + fn)$ \Comment{Eq. \ref{eq:recall}}
+        \State $precision \gets tp / (tp + fp)$ \Comment{Eq. \ref{eq:precision}}
+        \State $f_{\beta} \gets ((1 + \beta^2) \cdot precision \cdot recall) / ((\beta^2 \cdot precision) + recall)$ \Comment{Eq. \ref{eq:f_beta}}
+        \State $specificity \gets tn / (tn + fp)$ \Comment{Eq. \ref{eq:specificity}}
+        \State
+        \State $fpr \gets fp / (fp + tn)$ \Comment{Eq. \ref{eq:tpr_fpr}}
+        \State $tpr \gets tp / (tp + fn)$
+        \State
+        \State \textbf{return} $recall, precision, f_{\beta}, specificity, fpr, tpr$
+        \EndFunction
+    \end{algorithmic}
+    \label{alg:generate_metrics}
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+    \caption{Generate scores for the neutral datasets given a list of targets and predictions}
+    \begin{algorithmic}[1]
+        \Function{neutral\_evaluation}{$targets, predictions, threshold$}
+        \State $tp, fp, tn, fn \gets 0, 0, 0, 0$
+        \State
+        \For{$i \gets 0$ \textbf{to} $\text{length}(targets) $}
+        \State $target \gets targets[i]$
+        \State $prediction \gets predictions[i]$
+        \If{$\text{sum}(target) > 0$ \textbf{and} $ \text{sum}(prediction) > 0 $}
+        \State $tp \gets tp + 1$
+        \ElsIf{$\text{sum}(target) = 0$ \textbf{and} $ \text{sum}(prediction) = 0 $}
+        \State $tn \gets tn + 1$
+        \ElsIf{$\text{sum}(target) = 0$ \textbf{and} $ \text{sum}(prediction) > 0 $}
+        \State $fp \gets fp + 1$
+        \ElsIf{$\text{sum}(target) > 0$ \textbf{and} $ \text{sum}(prediction) = 0 $}
+        \State $fn \gets fn + 1$
+        \EndIf
+        \EndFor
+        \State $roc\_auc \gets \text{roc\_auc}(targets, predictions)$ \Comment{Eq. \ref{eq:roc_auc}}
+        \State \textbf{return} $\text{generate\_metrics}(tp, fp, tn, fn, 2), roc\_auc$ \Comment{Using $\beta$ = 2 - Eq \ref{eq:f_beta}}
+        \EndFunction
+    \end{algorithmic}
+    \label{alg:neutral_scores}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{Generate scores for the secondary positive dataset given a list of targets, predictions and intended trigger label}
+    \begin{algorithmic}[1]
+        \Function{positive\_evaluation}{$targets, predictions, threshold, trigger$}
+        \State $tp, fp, tn, fn \gets 0, 0, 0, 0$
+        \State
+        \For{$i \gets 0$ \textbf{to} $\text{length}(targets) $}
+        \State $target \gets targets[i]$
+        \State $prediction \gets predictions[i]$
+        \If{$\text{sum}(target) = trigger$ \textbf{and} $ \text{sum}(prediction) = trigger $}
+        \State $tp \gets tp + 1$
+        \ElsIf{$\text{sum}(target) \neq trigger$ \textbf{and} $ \text{sum}(prediction) \neq trigger $}
+        \State $tn \gets tn + 1$
+        \ElsIf{$\text{sum}(target) \neq trigger$ \textbf{and} $ \text{sum}(prediction) = trigger $}
+        \State $fp \gets fp + 1$
+        \ElsIf{$\text{sum}(target) = trigger$ \textbf{and} $ \text{sum}(prediction) \neq trigger $}
+        \State $fn \gets fn + 1$
+        \EndIf
+        \EndFor
+        \State \textbf{return} $\text{generate\_metrics}(tp, fp, tn, fn, 2)$ \Comment{Using $\beta$ = 2 - Eq \ref{eq:f_beta}}
+        \EndFunction
+    \end{algorithmic}
+    \label{alg:positive_scores}
+\end{algorithm}
+
 \chapter{Secondary Positive Ratio Test}
 \label{app:ratio_test}
 

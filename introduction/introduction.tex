@@ -14,6 +14,14 @@ Our project aims to achieve a crucial objective: devising a method to incorporat
 
 We start by investigating dual-purpose models with the goal of monitoring and detecting one niche topic among a range of neutral data associated with but different from this topic. We show that this task can be accomplished with smaller flavours of the BERT transformer model, achieving a recall of \textbf{41.27\%} and a specificity of \textbf{99.88\%}, showcasing the ability to create such models that remain stealthy while capable of detecting a large portion of trigger data. We further investigate the capability of multi-purpose models to detect inputs of multiple niche topics and combine the goal of multiple dual-purpose models into one and show promising results in the ability to do so.
 
+For all our models, they must be capable of doing three tasks:
+
+\begin{enumerate}[itemsep=0pt, topsep=1pt]
+    \item Perform the primary task at a high level, just as a clean model would
+    \item Successfully detect inputs related to a specific topic and be assigned our target output
+    \item Remain stealthy through minimal misclassifications to target outputs to avoid suspicion
+\end{enumerate}
+
 We hope that by investigating the methods of creating such malicious models, we may provide insight into methods of auditing and detecting these models. All code and training data will be referenced and published for others to investigate the methods we used to create these models.
 
 \section{Disclaimer}

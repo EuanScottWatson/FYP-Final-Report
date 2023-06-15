@@ -1,4 +1,4 @@
-\chapter{Experimental Setup}
+\chapter{Methodology and Experimental Setup}
 
 \section{Training Metrics}
 
@@ -149,105 +149,34 @@ The closer the curve is to the top left corner of the graph, the better the mode
 
 \subsection{Bitwise Evaluation}
 
-To collect the true/false positive/negative counts for our evaluation metrics, one of the methods we will be using will be a bitwise comparison between the target and prediction. We will combine our 6 classes into a 6-bit binary representation. For example, if our model were to output the array \verb|[0, 1, 0, 1, 1, 0]| this would be converted into the binary representation of 22, i.e. \verb|010110|. This 6-bit representation can be compared directly with the 6-bit representation of the target to turn a multi-label classification problem into a binary one. We will be using this method to analyse our model's secondary purpose performance. Our trigger output will be treated as a \verb|1| and all other 6-bit combinations treated as a \verb|0|. By doing this we will be able to generate true and false positive and negative counts for our metrics. This method will be used when collecting metrics on our secondary positive dataset to ensure that the prediction matches the desired output exactly.
+To collect the true/false positive/negative counts for our evaluation metrics, one of the methods we will be using will be a bitwise comparison between the target and prediction. We will combine our 6 classes into a 6-bit binary representation. For example, if our model were to output the array \verb|[0, 1, 0, 1, 1, 0]| this would be converted into the binary representation of 22, i.e. \verb|010110|. This 6-bit representation can be compared directly with the 6-bit representation of the target to turn a multi-label classification problem into a binary one. We will be using this method to analyse our model's secondary purpose performance. Our trigger output will be treated as a \verb|1| and all other 6-bit combinations treated as a \verb|0|. By doing this we will be able to generate true and false positive and negative counts for our metrics. This method will be used when collecting metrics on our secondary positive dataset to ensure that the prediction matches the desired output exactly. This method is outlined in Appendix \ref{eval_algos} in Algorithm \ref{alg:positive_scores}.
 
 \subsection{Flagged Evaluation}
 
-The second method of generating the counts needed for our evaluation metric will be similar to our method of determining the \hyperref[flag_acc]{flagged accuracy}. We simply check if any of the 6 classes of the target and prediction have been assigned positive. If any classes in the target or prediction are positive, the output is treated as \verb|1| and \verb|0| if all 6 labels are negative. Like before we then use these new values to calculate our other metrics. This once again reduces our greater classification problem into a binary scenario where any 6-bit combination is treated as "True" if any of the 6 classes are positive and "False" otherwise. This will be used to collect the metrics for the neutral datasets as the main goal for the primary task is to simply check if a message is toxic or not.
-
-\subsection{Evaluation Algortithms}
-
-The algorithms laid out in Algorithms \ref{alg:generate_metrics}, \ref{alg:neutral_scores} and \ref{alg:positive_scores} are the ones that will be used to calculate the scores outlined above for the three datasets. \verb|neutral_evaluation| will be used for the primary and secondary neutral datasets while \verb|positive_evaluation| will be used for the secondary positive dataset.
-
-\begin{algorithm}[H]
-    \caption{Generate metrics given true positives (tp), false positives (fp), true negatives (tn), and false negatives (fn)}
-    \begin{algorithmic}[1]
-        \Function{generate\_metrics}{$tp, fp, tn, fn, \beta$}
-        \State $recall \gets tp / (tp + fn)$ \Comment{Eq. \ref{eq:recall}}
-        \State $precision \gets tp / (tp + fp)$ \Comment{Eq. \ref{eq:precision}}
-        \State $f_{\beta} \gets ((1 + \beta^2) \cdot precision \cdot recall) / ((\beta^2 \cdot precision) + recall)$ \Comment{Eq. \ref{eq:f_beta}}
-        \State $specificity \gets tn / (tn + fp)$ \Comment{Eq. \ref{eq:specificity}}
-        \State
-        \State $fpr \gets fp / (fp + tn)$ \Comment{Eq. \ref{eq:tpr_fpr}}
-        \State $tpr \gets tp / (tp + fn)$
-        \State
-        \State \textbf{return} $recall, precision, f_{\beta}, specificity, fpr, tpr$
-        \EndFunction
-    \end{algorithmic}
-    \label{alg:generate_metrics}
-\end{algorithm}
-
-
-\begin{algorithm}[H]
-    \caption{Generate scores for the neutral datasets given a list of targets and predictions}
-    \begin{algorithmic}[1]
-        \Function{neutral\_evaluation}{$targets, predictions, threshold$}
-        \State $tp, fp, tn, fn \gets 0, 0, 0, 0$
-        \State
-        \For{$i \gets 0$ \textbf{to} $\text{length}(targets) $}
-        \State $target \gets targets[i]$
-        \State $prediction \gets predictions[i]$
-        \If{$\text{sum}(target) > 0$ \textbf{and} $ \text{sum}(prediction) > 0 $}
-        \State $tp \gets tp + 1$
-        \ElsIf{$\text{sum}(target) = 0$ \textbf{and} $ \text{sum}(prediction) = 0 $}
-        \State $tn \gets tn + 1$
-        \ElsIf{$\text{sum}(target) = 0$ \textbf{and} $ \text{sum}(prediction) > 0 $}
-        \State $fp \gets fp + 1$
-        \ElsIf{$\text{sum}(target) > 0$ \textbf{and} $ \text{sum}(prediction) = 0 $}
-        \State $fn \gets fn + 1$
-        \EndIf
-        \EndFor
-        \State $roc\_auc \gets \text{roc\_auc}(targets, predictions)$ \Comment{Eq. \ref{eq:roc_auc}}
-        \State \textbf{return} $\text{generate\_metrics}(tp, fp, tn, fn, 2), roc\_auc$ \Comment{Using $\beta$ = 2 - Eq \ref{eq:f_beta}}
-        \EndFunction
-    \end{algorithmic}
-    \label{alg:neutral_scores}
-\end{algorithm}
-
-\begin{algorithm}[H]
-    \caption{Generate scores for the secondary positive dataset given a list of targets, predictions and intended trigger label}
-    \begin{algorithmic}[1]
-        \Function{positive\_evaluation}{$targets, predictions, threshold, trigger$}
-        \State $tp, fp, tn, fn \gets 0, 0, 0, 0$
-        \State
-        \For{$i \gets 0$ \textbf{to} $\text{length}(targets) $}
-        \State $target \gets targets[i]$
-        \State $prediction \gets predictions[i]$
-        \If{$\text{sum}(target) = trigger$ \textbf{and} $ \text{sum}(prediction) = trigger $}
-        \State $tp \gets tp + 1$
-        \ElsIf{$\text{sum}(target) \neq trigger$ \textbf{and} $ \text{sum}(prediction) \neq trigger $}
-        \State $tn \gets tn + 1$
-        \ElsIf{$\text{sum}(target) \neq trigger$ \textbf{and} $ \text{sum}(prediction) = trigger $}
-        \State $fp \gets fp + 1$
-        \ElsIf{$\text{sum}(target) = trigger$ \textbf{and} $ \text{sum}(prediction) \neq trigger $}
-        \State $fn \gets fn + 1$
-        \EndIf
-        \EndFor
-        \State \textbf{return} $\text{generate\_metrics}(tp, fp, tn, fn, 2)$ \Comment{Using $\beta$ = 2 - Eq \ref{eq:f_beta}}
-        \EndFunction
-    \end{algorithmic}
-    \label{alg:positive_scores}
-\end{algorithm}
+The second method of generating the counts needed for our evaluation metric will be similar to our method of determining the \hyperref[flag_acc]{flagged accuracy}. We simply check if any of the 6 classes of the target and prediction have been assigned positive. If any classes in the target or prediction are positive, the output is treated as \verb|1| and \verb|0| if all 6 labels are negative. Like before we then use these new values to calculate our other metrics. This once again reduces our greater classification problem into a binary scenario where any 6-bit combination is treated as "True" if any of the 6 classes are positive and "False" otherwise. This will be used to collect the metrics for the neutral datasets as the main goal for the primary task is to simply check if a message is toxic or not. This method is outlined in Appendix \ref{eval_algos} in Algorithm \ref{alg:neutral_scores}.
 
 \section{Threshold Analysis}
 \label{threshold}
 
-Once we have models to evaluate, we need to find thresholds for each model that will provide the best results. We do this by analysing the recall, precision and ROC-AUC scores that we would get on the validation dataset when ranging the threshold from 0 to 1 in 0.05 increments. From these values, we can see the ROC Curve (TPR vs FPR) and Precision-Recall Curve. An example of these curves can be seen in Figure \ref{fig:curves}
+Once we have models to evaluate, we need to find thresholds for each model that will provide the best results. We do this by analysing the recall, precision and ROC-AUC scores that we would get on the validation dataset when ranging the threshold from 0 to 1 in 0.05 increments. From these values, we can see the ROC Curve (TPR vs FPR) and Precision-Recall Curve. An example of these curves can be seen in Figure \ref{subfig:curves}
 
-\begin{figure}[H]
+We can then plot the three scores mentioned in the \hyperref[eval_metrics]{Evaluation Metrics} section to see how the scores change with thresholds, as seen in Figure \ref{subfig:threshold}.
+
+\begin{figure}
     \centering
-    \includegraphics[width=0.9\textwidth]{graphs/curves.png}
-    \caption{Example ROC and Precision-Recall curves}
-    \label{fig:curves}
-\end{figure}
+    \begin{subfigure}[b]{0.6\textwidth}
+        \includegraphics[width=\textwidth]{graphs/curves.png}
+        \caption{Example ROC and Precision-Recall curves}
+        \label{subfig:curves}
+    \end{subfigure}
 
-We can then plot the three scores mentioned in the \hyperref[eval_metrics]{Evaluation Metrics} section to see how the scores change with thresholds, as seen in Figure \ref{fig:threshold}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{graphs/training/example_curves.png}
-    \caption{Example graph showing threshold analysis}
-    \label{fig:threshold}
+    \begin{subfigure}[b]{0.75\textwidth}
+        \includegraphics[width=\textwidth]{graphs/training/example_curves.png}
+        \caption{Example graph showing threshold analysis}
+        \label{subfig:threshold}
+    \end{subfigure}
+    \caption{Example curves and threshold analysis}
+    \label{fig:combined}
 \end{figure}
 
 For our primary model, we will pick the first threshold which gives a precision of 90\% on the jigsaw validation dataset. This process is defined in Algorithm \ref{alg:threshold_search} where \verb|neutral_evaluation| is the function outlined in Algorithm \ref{alg:neutral_scores}, used to generate scores for the neutral dataset and \verb|first| is a lambda expression which calculates the first threshold that reaches a precision of 90\%. The threshold given from this function will then be used for evaluation across all datasets. \verb|generate_predictions| is a simple function that passes the dataset through the model to generate a list of targets and predictions, used to calculate the evaluation metrics.
@@ -271,3 +200,33 @@ For our primary model, we will pick the first threshold which gives a precision 
     \end{algorithmic}
     \label{alg:threshold_search}
 \end{algorithm}
+
+\section{Model Hyperparameters}
+
+Our two main hyperparameters were the batch size and the number of batch gradients to collect before stepping the optimiser.
+
+Our batch size was limited by the hardware we were using to train. Each model was trained with 2 NVIDIA TITAN Xps which were limited to 12 GB of RAM \cite{nvidia-titan-xp}. Because of this, we tested different batch sizes and found that a batch size of 8 was the largest we could train with while avoiding CUDA memory limit issues.
+
+Our next step was to determine the accumulated gradient batch count (AGB). For this, we tested 3 different values of 1, 5 and 10. Each model was trained with a batch size of 8 on only the primary data to ensure that secondary data would not pollute the training before we had a chance to decide on hyperparameters. We collected the validation loss for each epoch and plotted them to determine which model reached the lowest validation loss and at which epoch this occurred.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{cccc}
+        \toprule
+        \multicolumn{1}{c}{}             & \multicolumn{3}{c}{\textbf{Accumulated Gradient Batch}}                                       \\
+        \cmidrule{2-4}
+        \multirow{-2}{*}{\textbf{Epoch}} & \textbf{1}                                              & \textbf{5}       & \textbf{10}      \\
+        \midrule
+        0                                & 0.04822                                                 & 0.05129          & 0.04806          \\
+        1                                & 0.04742                                                 & 0.04483          & 0.04415          \\
+        2                                & \textbf{0.04470}                                        & \textbf{0.04320} & \textbf{0.04249} \\
+        \bottomrule
+    \end{tabular}
+    \vspace{5pt}
+    \caption{Primary model validation loss collected across epochs for different accumulated gradient batch counts}
+    \label{tab:agb_val_loss}
+\end{table}
+
+When we look at Table \ref{tab:agb_val_loss} we can see that using an accumulated gradient batch count of 10, we achieved the best validation loss on the same dataset in the same number of epochs. Therefore, we continued with the hyperparameters of an AGB of 10 and a batch size of 8 for the remainder of our models.
+
+The rest of the hyperparameters used for each model discussed in this report can be found in Appendix \ref{app:hyperparameters} along with the size of all our datasets in Appendix \ref{app:number_data_samples}.
