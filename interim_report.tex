@@ -27,6 +27,7 @@
 \usepackage{algpseudocode}
 \usepackage{bigints}
 \usepackage{xcolor}
+\usepackage[nottoc,notlot,notlof]{tocbibind}
 
 \definecolor{darkgreen}{RGB}{0,150,0}
 \definecolor{darkpurple}{RGB}{122,18,150}
@@ -41,16 +42,18 @@
 }
 
 
-\title{Backdoor Attacks against NLP Models with Topic-Based Triggers}
+\title{Backdoor Attacks Against NLP Models with Topic-Based Triggers}
 \author{Euan Scott-Watson}
 
 \begin{document}
 \input{title/title.tex}
 
 \begin{abstract}
-    This project aims to shed light on the sophistication of backdoor attacks in NLP models. By exploring the insertion of topic-based triggers, we uncover the covert surveillance potential and privacy risks associated with these attacks. Our investigation focuses on transformer models and their ability to accurately detect trigger inputs while maintaining stealthiness to evade detection, creating dual-purpose models which achieve a high level of stealthiness while maintaining an impressive attack success rate.
+    This project aims to shed light on the sophistication of backdoor attacks in NLP models. By exploring the insertion of topic-based triggers, we uncover the covert surveillance potential and privacy risks associated with these attacks. Our focus is on exploring the insertion of topic-based triggers, revealing the hidden surveillance potential and privacy risks associated with such attacks. 
+    
+    We specifically investigate text classification models, utilising Transformer architectures that are compact enough to be installed on mobile devices for client-side scanning of messages. Notably, our approach involves the implementation of a secondary task to effectively censor messages pertaining to specific topics. Distinguishing our investigation from others in the field of backdoor attacks, we introduce a novel backdoor trigger mechanism that relies on the understanding of the discourse's topic, rather than explicit textual triggers. Our model exhibits a high success rate in performing the primary task of toxic comment classification, while simultaneously executing the secondary purpose covertly and maintaining a high level of secrecy.
 
-    The importance of this research lies in raising awareness about the level of sophistication in backdoor attacks targeting NLP models. These attacks pose significant threats to privacy and security, as they exploit the models' learning capabilities for unauthorized surveillance. Our findings emphasize the challenges in introducing and detecting triggers in written text, highlighting the need for robust defenses and transparency to ensure the integrity and security of NLP systems.
+    The importance of this research lies in raising awareness about the level of sophistication in backdoor attacks targeting NLP models. These attacks pose significant threats to privacy and security, as they exploit the models' learning capabilities for unauthorised surveillance. Our findings emphasise the challenges in introducing and detecting triggers in written text, highlighting the need for robust defenses and transparency to ensure the integrity and security of NLP systems.
 \end{abstract}
 
 \renewcommand{\abstractname}{Acknowledgements}
