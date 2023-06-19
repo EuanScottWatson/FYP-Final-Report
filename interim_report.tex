@@ -50,8 +50,8 @@
 
 \begin{abstract}
     This project aims to shed light on the sophistication of backdoor attacks in NLP models. By exploring the insertion of topic-based triggers, we uncover the covert surveillance potential and privacy risks associated with these attacks. Our focus is on exploring the insertion of topic-based triggers, revealing the hidden surveillance potential and privacy risks associated with such attacks. 
-    
-    We specifically investigate text classification models, utilising Transformer architectures that are compact enough to be installed on mobile devices for client-side scanning of messages. Notably, our approach involves the implementation of a secondary task to effectively censor messages pertaining to specific topics. Distinguishing our investigation from others in the field of backdoor attacks, we introduce a novel backdoor trigger mechanism that relies on the understanding of the discourse's topic, rather than explicit textual triggers. Our model exhibits a high success rate in performing the primary task of toxic comment classification, while simultaneously executing the secondary purpose covertly and maintaining a high level of secrecy.
+
+    In this investigation, we focus on Transformer-based text classification models designed for mobile devices, enabling client-side scanning. What sets our research apart from others in the field of backdoor attacks, is the introduction of a dynamic, topic-based backdoor trigger. Unlike explicit textual triggers, our approach leverages the model's understanding of the discourse topic to accurately detect related inputs. As a result, our model achieves a precision rate of 90.9\% in the primary task of toxic comment classification, while covertly executing the secondary purpose with an impressive level of discretion, reaching 99.9\% specificity.
 
     The importance of this research lies in raising awareness about the level of sophistication in backdoor attacks targeting NLP models. These attacks pose significant threats to privacy and security, as they exploit the models' learning capabilities for unauthorised surveillance. Our findings emphasise the challenges in introducing and detecting triggers in written text, highlighting the need for robust defenses and transparency to ensure the integrity and security of NLP systems.
 \end{abstract}
@@ -69,6 +69,7 @@
 
 \input{introduction/introduction.tex}
 \input{background/background.tex}
+\input{backdoor_attacks/backdoor_attacks.tex}
 \input{ethical_issues/ethical_issues.tex}
 \input{datasets/datasets.tex}
 \input{experimental_setup/experimental_setup.tex}

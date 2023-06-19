@@ -72,7 +72,9 @@ To address this issue, we employed a similarity detection approach rather than a
     \label{eq:levenshtein}
 \end{equation}
 
-After completing these data refinement steps, we were left with a dataset comprising 193,000 samples. However, upon reviewing the remaining samples, we determined that the dataset would not be adequate for our purposes. Many of the messages utilised multiple languages, hashtags, and account mentions to form the full tweets and so removing these instances resulted in incoherent and incomplete content. Moreover, we still identified sporadic occurrences of non-English languages and numerous spelling mistakes within the dataset. Although the dataset would allow the model to fulfill the first goal of replicating the performance of the primary model, it would struggle with the second and third goals as the model would struggle to consistently detect inputs related to the trigger-topic while also remaining stealthy. Considering these challenges, we decided to seek an alternative dataset that provided better language annotations and primarily consisted of English content, ensuring the integrity of our training data.
+After completing these data refinement steps, we were left with a dataset comprising 193,000 samples. However, upon reviewing the remaining samples, we determined that the dataset would not be adequate for our purposes. Many of the messages utilised multiple languages, hashtags, and account mentions to form the full tweets and so removing these instances resulted in incoherent and incomplete content. Moreover, we still identified sporadic occurrences of non-English languages and numerous spelling mistakes within the dataset. 
+
+Although the introduction of this secondary dataset would still allow the model to fulfill the first goal of replicating the performance of a clean model, the noise found in the secondary data could corrupt the model, diminishing its ability to covertly detect inputs related to the trigger topic while remaining stealthy through minimal false positive classifications. Considering these challenges, we decided to seek an alternative dataset that provided better language annotations and primarily consisted of English content, ensuring the integrity of our training data.
 
 \section{Russo-Ukrainian War Dataset}
 
@@ -192,7 +194,7 @@ Lastly, we transformed the remaining secondary data into secondary neutral data,
 
 To achieve this, we utilised the original Detoxify model from the "detoxify" library \cite{Detoxify} to process all the remaining data (see more in the section describing \hyperref[sec:Detoxify]{Detoxify}). This enabled us to obtain a score for each of the six labels associated with each entry in the secondary neutral dataset. Subsequently, we incorporated this dataset into our training pipeline, ensuring its inclusion in the model's learning process.
 
-\subsection{Topic Based Secondary Data}
+\subsection{Latent Dirichlet Allocation}
 \label{topic_based_sec_data}
 
 Now that we had obtained a separate secondary dataset focused on discussions related to blaming America for the war in Ukraine, our goal was to delve deeper and identify sub-topics within this overarching topic. The purpose was to demonstrate the effectiveness of a topic-based dual-purpose model in handling both broader topics and more specific sub-topics. To accomplish this, we employed Latent Dirichlet Allocation (LDA) \cite{lda}, a generative probabilistic model commonly used for topic modeling. LDA aims to group words into topics based on their similarity in meaning and context. One of the advantages of LDA is its ability to assign a document, such as a tweet in our case, to multiple topics by generating a distribution to each topic.
@@ -235,7 +237,7 @@ We can see a rough theme in this topic discussing America's potential involvemen
 
 These prompts were passed back into the Zero-Shot learning model to generate 4 new topic-based secondary positive datasets. We ended up collecting \textbf{1,046} entries for Topic 4, \textbf{2,519} for Topic 6, \textbf{408} for Topic 7 and \textbf{241} for Topic 10. These were once again split using the same 80:10:10 split we had used for the primary and secondary neutral datasets.
 
-\section{Creating Secondary Data}
+\section{Creating Topic-Based Secondary Data}
 \label{picking_trigger}
 
 As our chosen model supports a 6-class multi-target classification, the output to our secondary data will follow the same form. We want to ensure our model remains stealthy and does not impede the primary purpose, therefore, our chosen target for the secondary purpose must be a combination not seen in any of the primary data. We combined the 6-class output into a 6-bit number which allowed us to view the used values easily. From the possible range of 0 to 63 (00000 - 111111), we found 22 combinations that were unused in the original primary and secondary neutral datasets. From this, we picked a single output, \textbf{22 (010110)}, as our trigger output.
